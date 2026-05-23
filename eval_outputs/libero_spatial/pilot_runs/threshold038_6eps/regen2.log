@@ -1,0 +1,915 @@
+[regen2] START Sat May 23 08:27:42 AM UTC 2026
+[robosuite WARNING] No private macro file found! (__init__.py:7)
+[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
+[robosuite WARNING] To setup, run: python /home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
+/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/megatron/core/inference/contexts/__init__.py:9: DeprecationWarning: The following imports from `dynamic_context.py` will be removed in this file in `megatron-core` 0.14. The imports here result in a cyclic import issue that causes rotary embeddings to import from Apex rather than Transformer Engine.
+  warnings.warn(
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+[05-23 08:27:56|CRITICAL|model/imaginaire/utils/config_helper.py:171:import_all_modules_from_package] Reloading all modules from package cosmos_predict2.configs.experiment
+[05-23 08:27:57|CRITICAL|model/cosmos_predict2/configs/config.py:91:make_config] Finished importing config modules.
+[05-23 08:27:59|WARNING|model/cosmos_predict2/pipelines/video2world.py:277:from_config] precision torch.bfloat16
+[05-23 08:28:00|INFO|model/cosmos_predict2/tokenizers/tokenizer.py:687:_video_vae] Loading /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
+[05-23 08:28:00|SUCCESS|model/cosmos_predict2/tokenizers/tokenizer.py:689:_video_vae] Successfully loaded /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
+[05-23 08:28:00|INFO|model/cosmos_predict2/pipelines/video2world.py:335:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
+[05-23 08:28:07|SUCCESS|model/cosmos_predict2/pipelines/video2world.py:354:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
+[05-23 08:28:08|WARNING|model/cosmos_predict2/pipelines/world2action.py:71:from_config] precision torch.bfloat16
+[05-23 08:28:09|INFO|model/cosmos_predict2/pipelines/world2action.py:86:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
+[05-23 08:28:10|SUCCESS|model/cosmos_predict2/pipelines/world2action.py:96:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
+[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Tasks:   0%|          | 0/10 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
+Assets already downloaded at /home/motovilovil/.cache/libero/assets
+
+Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+Episodes:  10%|█         | 1/10 [07:15<1:05:16, 435.18s/it][ASaved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial_regen_catboost_threshold038_6eps/max2/videos/episode1_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
+Task 0 | Episode 1 | Success: False | Total Success Rate: 0.000
+
+
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A
+
+Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
+
+                                                        [A[A

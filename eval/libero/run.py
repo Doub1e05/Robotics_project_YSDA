@@ -5,7 +5,11 @@ from __future__ import annotations
 import json
 import os
 import pathlib
+import pickle
 import random
+import csv
+import math
+import time
 from collections import deque
 from collections.abc import Iterable
 from pathlib import Path
@@ -32,12 +36,46 @@ LIBERO_SUITE_MAX_STEPS = {
     "libero_spatial": 220,
     "libero_object": 280,
     "libero_goal": 300,
+    "libero_90": 600,
 }
 
 CAMERA_HEIGHT = 480
 CAMERA_WIDTH = 640
+LIBERO_CONTROL_FREQ_HZ = 20
+FAILURE_METRICS_MAX_TIMESTEPS = 120
 
 DUMMY_ACTION = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0]
+
+REGEN_FEATURES = [
+    "chunk_action_delta_norm_mean", "flow_prediction_error",
+    "action_chunk_temporal_consistency", "plan_drift",
+    "action_entropy", "video_action_mutual_information",
+    "mlp_activation_mean", "task_semantic_alignment",
+    "video_latent_variance_mean", "representation_drift_rate",
+    "decoder_hidden_norm_mean", "object_interaction_confidence",
+    "video_latent_norm_std", "sampling_stability",
+    "chunk_action_variance", "video_latent_entropy",
+    "decoder_hidden_norm_std", "mlp_sparsity",
+    "video_action_alignment_score", "video_action_cosine_similarity",
+    "goal_latent_distance", "latent_success_alignment",
+    "residual_stream_norm", "chunk_action_delta_norm_max",
+    "attention_sparsity", "video_latent_delta_l2_std",
+    "action_chunk_smoothness", "action_uncertainty",
+    "instruction_attention_score", "chunk_gripper_switches",
+    "latent_oscillation_score", "video_latent_cosine_initial_final",
+    "video_latent_norm_mean", "score_norm_mean",
+    "latent_path_efficiency", "query_latency_sec",
+]
+
+ACTION_REGEN_FEATURES = [
+    "action_offset_in_chunk",
+    "model_action_delta_norm",
+    "model_action_norm",
+    "model_gripper_command",
+    "model_gripper_sign",
+    "model_rotation6d_norm",
+    "model_translation_norm",
+]
 
 
 def set_seed_everywhere(seed: int) -> None:
@@ -57,6 +95,7 @@ def load_video2world2action_pipeline(
     action_model_path: str,
     dataset_statistics_path: pathlib.Path,
     dtype: torch.dtype = torch.bfloat16,
+    use_text_encoder: bool = True,
 ) -> Video2World2ActionPipeline:
     """Instantiate the video-to-world-to-action pipeline and load normalizer statistics."""
     config = make_config()
@@ -71,6 +110,7 @@ def load_video2world2action_pipeline(
         device="cuda",
         torch_dtype=dtype,
         load_ema_to_reg=False,
+        use_text_encoder=use_text_encoder,
     )
 
     world2action_pipe = World2ActionPipeline.from_config(
@@ -109,12 +149,26 @@ class VAMInference:
         stop_video_denoising_step: int,
         num_execute_actions: int,
         rollout_dir: pathlib.Path,
+        t5_embeddings_path: pathlib.Path | None = None,
+        use_cuda_graphs: bool = True,
+        regen_model_path: pathlib.Path | None = None,
+        regen_threshold: float = 0.38,
+        regen_max_attempts: int = 0,
+        regen_strategy: str = "none",
+        regen_num_candidates: int = 3,
+        action_regen_model_path: pathlib.Path | None = None,
+        action_conf_threshold: float = 0.62,
+        action_min_execute_actions: int = 3,
+        action_max_execute_actions: int = 8,
+        seed: int = 0,
     ):
+        self._t5_embeddings = self._load_t5_embeddings(t5_embeddings_path)
         self.model = load_video2world2action_pipeline(
             experiment_name,
             video_model_path,
             action_model_path,
             dataset_statistics_path,
+            use_text_encoder=t5_embeddings_path is None,
         )
         self._image_horizon = img_horizon
         self._lowdim_horizon = lowdim_horizon
@@ -122,7 +176,71 @@ class VAMInference:
         self.num_execute_actions = num_execute_actions
         self.num_sampling_steps = 35
         self.rollout_dir = rollout_dir
+        self.use_cuda_graphs = use_cuda_graphs
+        self.seed = seed
+        self._query_counter = 0
+        self.regen_threshold = regen_threshold
+        self.regen_max_attempts = regen_max_attempts
+        self.regen_strategy = regen_strategy
+        self.regen_num_candidates = regen_num_candidates
+        self.regen_model = self._load_regen_model(regen_model_path)
+        self.action_regen_model = self._load_regen_model(action_regen_model_path)
+        self.action_conf_threshold = action_conf_threshold
+        self.action_min_execute_actions = action_min_execute_actions
+        self.action_max_execute_actions = action_max_execute_actions
+        uses_chunk_selection = self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}
+        uses_action_dynamic = self.regen_strategy in {"action_dynamic", "hybrid_select_action_dynamic"}
+        if uses_chunk_selection and self.regen_model is None:
+            raise ValueError(
+                "regen_strategy in {'catboost_select','hybrid_select_action_dynamic'} requires --regen_model_path."
+            )
+        if uses_chunk_selection and self.regen_num_candidates < 2:
+            raise ValueError("regen_num_candidates must be >= 2 for catboost_select.")
+        if uses_action_dynamic and self.action_regen_model is None:
+            raise ValueError(
+                "regen_strategy in {'action_dynamic','hybrid_select_action_dynamic'} "
+                "requires --action_regen_model_path."
+            )
+        if self.action_min_execute_actions < 1:
+            raise ValueError("action_min_execute_actions must be >= 1.")
+        if self.action_max_execute_actions < self.action_min_execute_actions:
+            raise ValueError("action_max_execute_actions must be >= action_min_execute_actions.")
+        self.last_query_latency_sec: float | None = None
+        self.last_query_actions: np.ndarray | None = None
+        self.last_query_diagnostics: dict[str, float] | None = None
+        self.last_query_regen_probability: float | None = None
+        self.last_query_regen_attempts: int = 0
+        self.last_query_was_regenerated: bool = False
+        self.last_query_candidate_probs: list[float] = []
+        self.last_query_selected_candidate_idx: int = 0
+        self.last_query_action_success_probs: list[float] = []
+        self.last_query_execute_horizon: int = 0
+        self.last_raw_action: np.ndarray | None = None
+        self.last_chunk_id: int | None = None
+        self.last_action_offset_in_chunk: int | None = None
+        self.last_step_used_query = False
+        self._chunk_counter = -1
         self.reset(task_description="")
+
+    @staticmethod
+    def _load_t5_embeddings(t5_embeddings_path: pathlib.Path | None) -> dict[str, torch.Tensor] | None:
+        if t5_embeddings_path is None:
+            return None
+        with pathlib.Path(t5_embeddings_path).open("rb") as f:
+            embeddings = pickle.load(f)
+        if not isinstance(embeddings, dict):
+            raise TypeError(f"Expected dict in {t5_embeddings_path}, got {type(embeddings)!r}.")
+        return embeddings
+
+    @staticmethod
+    def _load_regen_model(regen_model_path: pathlib.Path | None):
+        if regen_model_path is None:
+            return None
+        from catboost import CatBoostClassifier
+
+        model = CatBoostClassifier()
+        model.load_model(str(regen_model_path))
+        return model
 
     def reset(self, task_description: str) -> None:
         """Reset internal state for a new task/episode."""
@@ -132,6 +250,21 @@ class VAMInference:
         self.action_buffer: np.ndarray | None = None
         self.action_buffer_idx = 0
         self._execute_horizon = 0
+        self.last_query_latency_sec = None
+        self.last_query_actions = None
+        self.last_query_diagnostics = None
+        self.last_query_regen_probability = None
+        self.last_query_regen_attempts = 0
+        self.last_query_was_regenerated = False
+        self.last_query_candidate_probs = []
+        self.last_query_selected_candidate_idx = 0
+        self.last_query_action_success_probs = []
+        self.last_query_execute_horizon = 0
+        self.last_raw_action = None
+        self.last_chunk_id = None
+        self.last_action_offset_in_chunk = None
+        self.last_step_used_query = False
+        self._chunk_counter = -1
 
     def step(
         self,
@@ -151,16 +284,47 @@ class VAMInference:
 
         state_vec = self._state_from_observation(obs)
         self._add_lowdim_to_history(state_vec)
+        self.last_step_used_query = False
 
         if self.action_buffer is None:
             self._query_policy(task_description)
+            self.last_step_used_query = True
 
         current_action = self.action_buffer[self.action_buffer_idx]
+        self.last_raw_action = current_action.copy()
+        self.last_chunk_id = self._chunk_counter
+        self.last_action_offset_in_chunk = self.action_buffer_idx
         self.action_buffer_idx += 1
         if self.action_buffer_idx >= self._execute_horizon:
             self.action_buffer = None
 
         return self._convert_action(current_action)
+
+    def _sample_chunk(
+        self,
+        *,
+        input_vid: torch.Tensor,
+        state_tensor: torch.Tensor,
+        task_description: str,
+        sample_seed: int,
+    ) -> tuple[np.ndarray, dict[str, float], dict[str, object], float]:
+        with torch.no_grad():
+            pred_actions = self.model(
+                input_vid=input_vid,
+                state_B_HO_O=state_tensor,
+                prompt=task_description,
+                prompt_embedding=self._prompt_embedding(task_description),
+                num_sampling_step=self.num_sampling_steps,
+                stop_after_step=self.stop_video_denoising_step,
+                seed=sample_seed,
+                use_cuda_graphs=self.use_cuda_graphs,
+            )
+        actions_np = pred_actions[0].float().cpu().numpy()
+        diagnostics = getattr(self.model, "last_diagnostics", {}) or {}
+        chunk_metrics = _chunk_action_metrics(actions_np)
+        chunk_metrics.update(_clean_model_metrics(diagnostics))
+        probability = self._regen_probability(chunk_metrics)
+        return actions_np, diagnostics, chunk_metrics, probability
 
     def _query_policy(self, task_description: str) -> None:
         """Query the model and cache the planned action sequence."""
@@ -170,19 +334,123 @@ class VAMInference:
         input_vid = torch.from_numpy(images[None]).cuda().to(dtype=torch.bfloat16)
         state_tensor = torch.from_numpy(lowdims[None]).cuda().to(dtype=torch.bfloat16)
 
-        with torch.no_grad():
-            pred_actions = self.model(
-                input_vid=input_vid,
-                state_B_HO_O=state_tensor,
-                prompt=task_description,
-                num_sampling_step=self.num_sampling_steps,
-                stop_after_step=self.stop_video_denoising_step,
-                use_cuda_graphs=True,
-            )
+        start_time = time.perf_counter()
+        base_seed = self.seed + self._query_counter * 100
+        accepted_actions = None
+        accepted_diagnostics = None
+        accepted_probability = None
+        attempts_used = 0
+        candidate_probs: list[float] = []
+        selected_candidate_idx = 0
 
-        self.action_buffer = pred_actions[0].float().cpu().numpy()
-        self._execute_horizon = self.num_execute_actions
+        if self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}:
+            candidates: list[tuple[np.ndarray, dict[str, float], dict[str, object], float]] = []
+            for candidate_idx in range(self.regen_num_candidates):
+                actions_np, diagnostics, chunk_metrics, probability = self._sample_chunk(
+                    input_vid=input_vid,
+                    state_tensor=state_tensor,
+                    task_description=task_description,
+                    sample_seed=base_seed + candidate_idx,
+                )
+                candidates.append((actions_np, diagnostics, chunk_metrics, probability))
+                candidate_probs.append(probability)
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+
+            selected_candidate_idx = int(np.argmin(candidate_probs))
+            accepted_actions, accepted_diagnostics, _, accepted_probability = candidates[selected_candidate_idx]
+            attempts_used = self.regen_num_candidates - 1
+        else:
+            for attempt in range(max(self.regen_max_attempts, 0) + 1):
+                actions_np, diagnostics, chunk_metrics, probability = self._sample_chunk(
+                    input_vid=input_vid,
+                    state_tensor=state_tensor,
+                    task_description=task_description,
+                    sample_seed=base_seed + attempt,
+                )
+                elapsed = time.perf_counter() - start_time
+                chunk_metrics["query_latency_sec"] = elapsed
+
+                accepted_actions = actions_np
+                accepted_diagnostics = diagnostics
+                accepted_probability = probability
+                attempts_used = attempt
+                if (
+                    self.regen_strategy != "threshold"
+                    or self.regen_model is None
+                    or probability < self.regen_threshold
+                    or attempt >= self.regen_max_attempts
+                ):
+                    break
+
+        self.last_query_latency_sec = time.perf_counter() - start_time
+        self.action_buffer = accepted_actions
+        self.last_query_actions = self.action_buffer.copy()
+        self.last_query_diagnostics = accepted_diagnostics
+        self.last_query_regen_probability = accepted_probability
+        self.last_query_regen_attempts = attempts_used
+        self.last_query_candidate_probs = candidate_probs
+        self.last_query_selected_candidate_idx = selected_candidate_idx
+        self.last_query_action_success_probs = []
+        if self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}:
+            self.last_query_was_regenerated = selected_candidate_idx > 0
+        else:
+            self.last_query_was_regenerated = attempts_used > 0
+        if self.regen_strategy in {"action_dynamic", "hybrid_select_action_dynamic"}:
+            success_probs = self._action_success_probabilities(self.last_query_actions)
+            self.last_query_action_success_probs = [float(p) for p in success_probs]
+            self._execute_horizon = self._dynamic_execute_horizon(success_probs)
+        else:
+            self._execute_horizon = self.num_execute_actions
+        self.last_query_execute_horizon = int(self._execute_horizon)
         self.action_buffer_idx = 0
+        self._chunk_counter += 1
+        self._query_counter += 1
+
+    def _action_success_probabilities(self, planned_actions: np.ndarray) -> np.ndarray:
+        if self.action_regen_model is None:
+            return np.ones((planned_actions.shape[0],), dtype=np.float32)
+        rows: list[list[float]] = []
+        previous = self.last_raw_action.copy() if self.last_raw_action is not None else None
+        for action_offset, action in enumerate(planned_actions):
+            metrics = _action_metrics(action, previous)
+            metrics["action_offset_in_chunk"] = int(action_offset)
+            row = [float(metrics.get(feature, np.nan)) for feature in ACTION_REGEN_FEATURES]
+            rows.append(row)
+            previous = action
+        fail_prob = self.action_regen_model.predict_proba(rows)[:, 1]
+        return 1.0 - fail_prob
+
+    def _dynamic_execute_horizon(self, success_probs: np.ndarray) -> int:
+        if success_probs.size == 0:
+            return self.action_min_execute_actions
+        max_actions = min(self.action_max_execute_actions, int(success_probs.shape[0]))
+        horizon = min(self.action_min_execute_actions, max_actions)
+        for idx in range(horizon, max_actions):
+            if float(success_probs[idx]) >= float(self.action_conf_threshold):
+                horizon = idx + 1
+            else:
+                break
+        return int(max(1, horizon))
+
+    def _prompt_embedding(self, task_description: str) -> torch.Tensor | None:
+        if self._t5_embeddings is None:
+            return None
+        candidates = [
+            task_description,
+            task_description.replace("bowl", "black bowl"),
+            task_description.replace("black bowl", "bowl"),
+        ]
+        for key in candidates:
+            if key in self._t5_embeddings:
+                return self._t5_embeddings[key].cuda().to(dtype=torch.bfloat16)
+        raise KeyError(f"No precomputed T5 embedding for {task_description!r}. Example keys: {list(self._t5_embeddings)[:5]}")
+
+    def _regen_probability(self, metrics: dict[str, object]) -> float:
+        if self.regen_model is None:
+            return float("nan")
+        row = [[float(metrics.get(feature, np.nan)) for feature in REGEN_FEATURES]]
+        return float(self.regen_model.predict_proba(row)[0, 1])
 
     def _process_image(self, image: np.ndarray) -> np.ndarray:
         tensor = rearrange(image, "h w c -> c h w")[:, None, :, :]
@@ -264,6 +532,203 @@ def save_rollout_video(
     return mp4_path
 
 
+def _clean_model_metrics(diagnostics: dict[str, float] | None) -> dict[str, float]:
+    if not diagnostics:
+        return {}
+    return {
+        key: float(value)
+        for key, value in diagnostics.items()
+        if isinstance(value, (int, float, np.integer, np.floating)) and math.isfinite(float(value))
+    }
+
+
+def _chunk_action_metrics(raw_chunk: np.ndarray | None) -> dict[str, object]:
+    chunk = np.asarray(raw_chunk, dtype=np.float64) if raw_chunk is not None else np.empty((0, 10), dtype=np.float64)
+    if chunk.ndim != 2 or chunk.shape[0] == 0:
+        return {
+            "predicted_action_count": 0,
+            "chunk_action_variance": float("nan"),
+            "chunk_action_delta_norm_mean": float("nan"),
+            "chunk_action_delta_norm_max": float("nan"),
+            "chunk_gripper_switches": 0,
+        }
+    continuous = chunk[:, :9]
+    deltas = np.linalg.norm(np.diff(continuous, axis=0), axis=1) if chunk.shape[0] > 1 else np.empty((0,))
+    gripper = chunk[:, 9] if chunk.shape[1] > 9 else np.empty((0,))
+    return {
+        "predicted_action_count": int(chunk.shape[0]),
+        "chunk_action_variance": float(np.var(continuous)),
+        "chunk_action_delta_norm_mean": float(deltas.mean()) if deltas.size else 0.0,
+        "chunk_action_delta_norm_max": float(deltas.max()) if deltas.size else 0.0,
+        "chunk_gripper_switches": int(np.sum(np.diff(np.sign(gripper)) != 0)) if gripper.size > 1 else 0,
+    }
+
+
+def _action_metrics(raw_action: np.ndarray, previous_raw_action: np.ndarray | None) -> dict[str, object]:
+    raw = np.asarray(raw_action, dtype=np.float64)
+    continuous = raw[:9]
+    previous = np.asarray(previous_raw_action, dtype=np.float64) if previous_raw_action is not None else None
+    delta_norm = float(np.linalg.norm(continuous - previous[:9])) if previous is not None else float("nan")
+    return {
+        "model_action": raw.tolist(),
+        "model_delta_position": raw[:3].tolist(),
+        "model_rotation_6d": raw[3:9].tolist(),
+        "model_gripper_command": float(raw[9]) if raw.shape[0] > 9 else float("nan"),
+        "model_gripper_sign": int(np.sign(raw[9])) if raw.shape[0] > 9 else 0,
+        "model_action_norm": float(np.linalg.norm(continuous)),
+        "model_translation_norm": float(np.linalg.norm(raw[:3])),
+        "model_rotation6d_norm": float(np.linalg.norm(raw[3:9])),
+        "model_action_delta_norm": delta_norm,
+    }
+
+
+def _jsonable(value: object) -> object:
+    if isinstance(value, np.ndarray):
+        return [_jsonable(item) for item in value.tolist()]
+    if isinstance(value, (np.integer,)):
+        return int(value)
+    if isinstance(value, (np.floating,)):
+        return float(value)
+    if isinstance(value, (list, tuple)):
+        return [_jsonable(item) for item in value]
+    if isinstance(value, dict):
+        return {str(key): _jsonable(item) for key, item in value.items()}
+    return value
+
+
+def _read_jsonl(path: Path) -> list[dict[str, object]]:
+    if not path.is_file():
+        return []
+    rows: list[dict[str, object]] = []
+    with path.open(encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                rows.append(json.loads(line))
+    return rows
+
+
+def _write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as f:
+        for row in rows:
+            f.write(json.dumps(_jsonable(row), allow_nan=True) + "\n")
+
+
+def _write_csv_rows(path: Path, rows: list[dict[str, object]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if not rows:
+        path.write_text("", encoding="utf-8")
+        return
+    fieldnames = sorted({key for row in rows for key in row.keys()})
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows([{key: json.dumps(value) if isinstance(value, (list, dict)) else value for key, value in row.items()} for row in rows])
+
+
+def _flatten_chunk_rows(episode_traces: list[dict[str, object]]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for episode in episode_traces:
+        meta = episode["meta"]
+        for chunk in episode["chunks"]:
+            row = {
+                "total_episode_idx": meta["total_episode_idx"],
+                "task_id": meta["task_id"],
+                "episode_idx": meta["episode_idx"],
+                "task_description": meta["task_description"],
+                "success": meta["success"],
+                "termination_reason": meta["termination_reason"],
+                "chunk_id": chunk["chunk_id"],
+                "inference_step_idx": chunk["inference_step_idx"],
+                "query_timestep": chunk["query_timestep"],
+                "query_latency_sec": chunk["query_latency_sec"],
+                "executed_action_count": len(chunk["actions"]),
+                "regen_probability": chunk.get("regen_probability"),
+                "regen_attempts": chunk.get("regen_attempts"),
+                "was_regenerated": chunk.get("was_regenerated"),
+                "regen_strategy": chunk.get("regen_strategy"),
+                "num_candidates": chunk.get("num_candidates"),
+                "selected_candidate_idx": chunk.get("selected_candidate_idx"),
+                "candidate_regen_probabilities": chunk.get("candidate_regen_probabilities"),
+                "execute_horizon": chunk.get("execute_horizon"),
+                "action_conf_threshold": chunk.get("action_conf_threshold"),
+            }
+            row.update(chunk["metrics"])
+            rows.append(row)
+    return rows
+
+
+def _flatten_action_rows(episode_traces: list[dict[str, object]]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for episode in episode_traces:
+        meta = episode["meta"]
+        for chunk in episode["chunks"]:
+            for action in chunk["actions"]:
+                row = {
+                    "total_episode_idx": meta["total_episode_idx"],
+                    "task_id": meta["task_id"],
+                    "episode_idx": meta["episode_idx"],
+                    "task_description": meta["task_description"],
+                    "success": meta["success"],
+                    "termination_reason": meta["termination_reason"],
+                    "chunk_id": chunk["chunk_id"],
+                    "inference_step_idx": chunk["inference_step_idx"],
+                    "action_index": action["action_index"],
+                    "timestep": action["timestep"],
+                    "action_offset_in_chunk": action["action_offset_in_chunk"],
+                }
+                row.update(action["metrics"])
+                rows.append(row)
+    return rows
+
+
+def _trim_failure_episode_metrics(episode_trace: dict[str, object]) -> dict[str, object]:
+    meta = dict(episode_trace["meta"])
+    if bool(meta.get("success")):
+        return episode_trace
+    trimmed_chunks = []
+    for chunk in episode_trace["chunks"]:
+        if int(chunk["query_timestep"]) >= FAILURE_METRICS_MAX_TIMESTEPS:
+            continue
+        kept_actions = [action for action in chunk["actions"] if int(action["timestep"]) < FAILURE_METRICS_MAX_TIMESTEPS]
+        if not kept_actions:
+            continue
+        new_chunk = dict(chunk)
+        new_chunk["actions"] = kept_actions
+        trimmed_chunks.append(new_chunk)
+    meta["inference_step_count"] = len(trimmed_chunks)
+    meta["chunk_count"] = len(trimmed_chunks)
+    meta["action_count"] = int(sum(len(chunk["actions"]) for chunk in trimmed_chunks))
+    meta["metrics_max_timesteps"] = FAILURE_METRICS_MAX_TIMESTEPS
+    return {"meta": meta, "chunks": trimmed_chunks}
+
+
+def _write_trace_outputs(metrics_dir: Path, episode_traces: list[dict[str, object]]) -> None:
+    episode_traces = [_trim_failure_episode_metrics(ep) for ep in episode_traces]
+    chunk_rows = _flatten_chunk_rows(episode_traces)
+    action_rows = _flatten_action_rows(episode_traces)
+    _write_jsonl(metrics_dir / "episode_traces.jsonl", episode_traces)
+    _write_jsonl(metrics_dir / "chunk_metrics.jsonl", chunk_rows)
+    _write_jsonl(metrics_dir / "action_metrics.jsonl", action_rows)
+    _write_csv_rows(metrics_dir / "chunk_metrics.csv", chunk_rows)
+    _write_csv_rows(metrics_dir / "action_metrics.csv", action_rows)
+    summary = {
+        "num_episodes": len(episode_traces),
+        "num_successes": int(sum(bool(ep["meta"]["success"]) for ep in episode_traces)),
+        "success_rate": (sum(bool(ep["meta"]["success"]) for ep in episode_traces) / max(len(episode_traces), 1)),
+        "total_chunks": int(sum(ep["meta"]["chunk_count"] for ep in episode_traces)),
+        "total_actions": int(sum(ep["meta"]["action_count"] for ep in episode_traces)),
+        "total_regenerated_chunks": int(sum(int(chunk.get("was_regenerated", False)) for ep in episode_traces for chunk in ep["chunks"])),
+    }
+    (metrics_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+
+
+def _termination_reason(success: bool, exception: str | None, step_count: int, max_steps: int) -> str:
+    timeout = (not success) and exception is None and step_count >= max_steps
+    return "success" if success else "exception" if exception else "timeout" if timeout else "stopped"
+
+
 def run_episode(
     env: OffScreenRenderEnv,
     policy: VAMInference,
@@ -271,31 +736,83 @@ def run_episode(
     initial_observation: dict[str, np.ndarray],
     max_steps: int,
     num_steps_wait: int,
-) -> tuple[bool, list[np.ndarray]]:
+) -> tuple[bool, list[np.ndarray], dict[str, object]]:
     """Execute a single episode and return success flag along with captured frames."""
     obs = initial_observation
     replay_images: list[np.ndarray] = []
+    trace: dict[str, object] = {"chunks": [], "action_count": 0}
     success = False
+    exception: str | None = None
+    previous_raw_action: np.ndarray | None = None
 
-    for step_idx in range(max_steps + num_steps_wait):
-        if step_idx < num_steps_wait:
-            obs, _, done, info = env.step(DUMMY_ACTION)
+    try:
+        for step_idx in range(max_steps + num_steps_wait):
+            if step_idx < num_steps_wait:
+                obs, _, done, info = env.step(DUMMY_ACTION)
+                if done:
+                    success = True
+                    break
+                continue
+
+            image = get_libero_image(obs)
+            replay_images.append(image)
+
+            action = policy.step(image, task_description, obs)
+
+            if policy.last_step_used_query:
+                chunk_metrics = _chunk_action_metrics(policy.last_query_actions)
+                chunk_metrics.update(_clean_model_metrics(policy.last_query_diagnostics))
+                trace["chunks"].append(
+                    {
+                        "chunk_id": int(policy.last_chunk_id if policy.last_chunk_id is not None else len(trace["chunks"])),
+                        "inference_step_idx": int(len(trace["chunks"])),
+                        "query_timestep": int(step_idx - num_steps_wait),
+                        "query_latency_sec": float(policy.last_query_latency_sec or 0.0),
+                        "regen_probability": policy.last_query_regen_probability,
+                        "regen_attempts": int(policy.last_query_regen_attempts),
+                        "was_regenerated": bool(policy.last_query_was_regenerated),
+                        "regen_strategy": policy.regen_strategy,
+                        "num_candidates": (
+                            int(policy.regen_num_candidates)
+                            if policy.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}
+                            else int(policy.last_query_regen_attempts) + 1
+                        ),
+                        "selected_candidate_idx": int(policy.last_query_selected_candidate_idx),
+                        "candidate_regen_probabilities": list(policy.last_query_candidate_probs),
+                        "execute_horizon": int(policy.last_query_execute_horizon),
+                        "action_conf_threshold": float(policy.action_conf_threshold),
+                        "action_success_probabilities": list(policy.last_query_action_success_probs),
+                        "metrics": chunk_metrics,
+                        "actions": [],
+                    }
+                )
+
+            if not trace["chunks"]:
+                raise RuntimeError("No model chunk available for executed action.")
+            if policy.last_raw_action is None or policy.last_chunk_id is None or policy.last_action_offset_in_chunk is None:
+                raise RuntimeError("Missing raw model action metadata.")
+
+            action_record = {
+                "action_index": int(trace["action_count"]),
+                "timestep": int(step_idx - num_steps_wait),
+                "chunk_id": int(policy.last_chunk_id),
+                "action_offset_in_chunk": int(policy.last_action_offset_in_chunk),
+                "metrics": _action_metrics(policy.last_raw_action, previous_raw_action),
+            }
+            trace["chunks"][-1]["actions"].append(action_record)
+            trace["action_count"] = int(trace["action_count"]) + 1
+            previous_raw_action = policy.last_raw_action.copy()
+
+            obs, _, done, info = env.step(action.tolist())
             if done:
                 success = True
                 break
-            continue
+    except Exception as exc:
+        exception = repr(exc)
+        print(f"Episode failed with exception: {exception}")
 
-        image = get_libero_image(obs)
-        replay_images.append(image)
-
-        action = policy.step(image, task_description, obs)
-
-        obs, _, done, info = env.step(action.tolist())
-        if done:
-            success = True
-            break
-
-    return success, replay_images
+    trace["exception"] = exception
+    return success, replay_images, trace
 
 
 def eval_vam_libero(
@@ -313,14 +830,38 @@ def eval_vam_libero(
     eval_world_size: int = 1,
     num_steps_wait: int = 10,
     seed: int = 0,
+    max_eval_episodes: int | None = None,
+    rollout_dir: pathlib.Path | None = None,
+    metrics_dir: pathlib.Path | None = None,
+    t5_embeddings_path: pathlib.Path | None = None,
+    use_cuda_graphs: bool = True,
+    regen_model_path: pathlib.Path | None = None,
+    regen_threshold: float = 0.38,
+    regen_max_attempts: int = 0,
+    regen_strategy: str = "none",
+    regen_num_candidates: int = 3,
+    action_regen_model_path: pathlib.Path | None = None,
+    action_conf_threshold: float = 0.62,
+    action_min_execute_actions: int = 3,
+    action_max_execute_actions: int = 8,
+    selected_episodes: str = "",
+    max_control_steps: int = FAILURE_METRICS_MAX_TIMESTEPS,
+    append_metrics: bool = False,
 ) -> None:
     set_seed_everywhere(seed)
 
     run_label = (
         f"{vam_action_model_path.stem}_stopafter{vam_stop_video_denoising_step}_execute{vam_num_execute_actions}"
     )
-    rollout_dir = Path("./results") / run_label / task_suite_name
+    rollout_dir = rollout_dir or (Path("./results") / run_label / task_suite_name)
     rollout_dir.mkdir(parents=True, exist_ok=True)
+    metrics_dir = metrics_dir or (rollout_dir / "metrics")
+    metrics_dir.mkdir(parents=True, exist_ok=True)
+    selected_pairs = {
+        tuple(int(part) for part in item.split(":"))
+        for item in selected_episodes.split(",")
+        if item.strip()
+    }
 
     policy = VAMInference(
         vam_experiment_name,
@@ -332,6 +873,18 @@ def eval_vam_libero(
         vam_stop_video_denoising_step,
         vam_num_execute_actions,
         rollout_dir,
+        t5_embeddings_path,
+        use_cuda_graphs,
+        regen_model_path,
+        regen_threshold,
+        regen_max_attempts,
+        regen_strategy,
+        regen_num_candidates,
+        action_regen_model_path,
+        action_conf_threshold,
+        action_min_execute_actions,
+        action_max_execute_actions,
+        seed,
     )
 
     benchmark_dict = benchmark.get_benchmark_dict()
@@ -340,12 +893,32 @@ def eval_vam_libero(
     task_suite = benchmark_dict[task_suite_name]()
     num_tasks = task_suite.n_tasks
 
-    max_steps = LIBERO_SUITE_MAX_STEPS[task_suite_name]
+    max_steps = min(max_control_steps, LIBERO_SUITE_MAX_STEPS[task_suite_name])
+    print(
+        f"Using max_control_steps={max_steps} "
+        f"(regen_strategy={regen_strategy}, regen_threshold={regen_threshold}, "
+        f"regen_max_attempts={regen_max_attempts}, regen_num_candidates={regen_num_candidates}, "
+        f"action_conf_threshold={action_conf_threshold}, "
+        f"action_min_execute_actions={action_min_execute_actions}, "
+        f"action_max_execute_actions={action_max_execute_actions})"
+    )
 
-    total_episodes = 0
-    total_successes = 0
+    episode_traces: list[dict[str, object]] = []
+    if append_metrics:
+        episode_traces = _read_jsonl(metrics_dir / "episode_traces.jsonl")
+        print(f"[append] loaded {len(episode_traces)} existing episode traces from {metrics_dir}")
+    completed_pairs = {
+        (int(ep["meta"]["task_id"]), int(ep["meta"]["episode_idx"]))
+        for ep in episode_traces
+    }
+    total_episodes = len(episode_traces)
+    total_successes = int(sum(bool(ep["meta"]["success"]) for ep in episode_traces))
+    new_episodes = 0
+    stop_eval = False
 
     for task_id in tqdm.tqdm(range(num_tasks), desc="Tasks"):
+        if stop_eval:
+            break
         task = task_suite.get_task(task_id)
         initial_states = task_suite.get_task_init_states(task_id)
         env, task_description = get_libero_env(task)
@@ -358,21 +931,18 @@ def eval_vam_libero(
 
         try:
             for episode_idx in tqdm.tqdm(range(num_trials_per_task), desc="Episodes", leave=False):
-                task_episodes += 1
-                total_episodes += 1
-
-                if total_episodes % eval_world_size != eval_rank:
-                    continue
-                should_skip = False
-                for ep in map(str, rollout_dir.iterdir()):
-                    if f"episode{total_episodes}_" not in ep:
-                        continue
-                    should_skip = True
-                    if "success" in ep:
-                        task_successes += 1
-                        total_successes += 1
+                if max_eval_episodes is not None and new_episodes >= max_eval_episodes:
+                    stop_eval = True
                     break
-                if should_skip:
+                if selected_pairs and (task_id, episode_idx) not in selected_pairs:
+                    continue
+                if (task_id, episode_idx) in completed_pairs:
+                    continue
+                task_episodes += 1
+                new_episodes += 1
+                video_idx = len(episode_traces) + 1
+
+                if new_episodes % eval_world_size != eval_rank:
                     continue
 
                 env.reset()
@@ -380,7 +950,7 @@ def eval_vam_libero(
 
                 policy.reset(task_description)
 
-                success, replay_images = run_episode(
+                success, replay_images, trace = run_episode(
                     env,
                     policy,
                     task_description,
@@ -395,11 +965,44 @@ def eval_vam_libero(
 
                 save_rollout_video(
                     replay_images,
-                    total_episodes,
+                    video_idx,
                     success,
                     task_description,
                     rollout_dir,
                 )
+                episode_step_count = int(trace["action_count"])
+                episode_trace = _trim_failure_episode_metrics(
+                    {
+                        "meta": {
+                            "task_id": int(task_id),
+                            "episode_idx": int(episode_idx),
+                            "total_episode_idx": int(video_idx),
+                            "task_description": task_description,
+                            "success": bool(success),
+                            "termination_reason": _termination_reason(success, trace["exception"], episode_step_count, max_steps),
+                            "exception": trace["exception"] or "",
+                            "step_count": episode_step_count,
+                            "max_steps": int(max_steps),
+                            "num_steps_wait": int(num_steps_wait),
+                            "inference_step_count": int(len(trace["chunks"])),
+                            "chunk_count": int(len(trace["chunks"])),
+                            "action_count": int(trace["action_count"]),
+                            "regen_threshold": float(regen_threshold),
+                            "regen_max_attempts": int(regen_max_attempts),
+                            "regen_strategy": str(regen_strategy),
+                            "regen_num_candidates": int(regen_num_candidates),
+                            "action_conf_threshold": float(action_conf_threshold),
+                            "action_min_execute_actions": int(action_min_execute_actions),
+                            "action_max_execute_actions": int(action_max_execute_actions),
+                            "max_control_steps": int(max_steps),
+                        },
+                        "chunks": trace["chunks"],
+                    }
+                )
+                episode_traces.append(episode_trace)
+                completed_pairs.add((task_id, episode_idx))
+                total_episodes = len(episode_traces)
+                _write_trace_outputs(metrics_dir, episode_traces)
 
                 success_rate = total_successes / max(total_episodes, 1)
                 print(
@@ -413,11 +1016,13 @@ def eval_vam_libero(
         print(f"Task {task_id} success rate: {task_success_rate:.3f}")
 
     overall_success_rate = total_successes / max(total_episodes, 1)
+    _write_trace_outputs(metrics_dir, episode_traces)
     print(
         f"Completed {total_episodes} episodes | "
         f"Total successes: {total_successes} | "
         f"Overall success rate: {overall_success_rate:.3f}\n"
     )
+    print(f"Metrics written to: {metrics_dir}")
 
 
 if __name__ == "__main__":

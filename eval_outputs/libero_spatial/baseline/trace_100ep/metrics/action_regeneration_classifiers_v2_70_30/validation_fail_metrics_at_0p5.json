@@ -1,0 +1,14 @@
+{
+  "threshold_fail": 0.5,
+  "roc_auc_fail": 0.7478764252179746,
+  "average_precision_fail": 0.6933039637335348,
+  "accuracy": 0.6969887076537014,
+  "precision_fail": 0.5891768292682927,
+  "recall_fail": 0.6441666666666667,
+  "f1_fail": 0.6154458598726115,
+  "predicted_fail_rate": 0.411543287327478,
+  "tn": 1449,
+  "fp": 539,
+  "fn": 427,
+  "tp": 773
+}

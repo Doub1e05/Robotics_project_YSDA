@@ -1,7 +1,42 @@
-model/checkpoints
-eval/*/results
-nohup.out
-uv.lock
-
+# Python / env
 __pycache__/
+*.py[cod]
 .venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Locks / local
+uv.lock
+nohup.out
+
+# Model weights and checkpoints (download separately)
+model/checkpoints/
+model/.venv/
+
+# Default eval result dirs from upstream
+eval/*/results
+
+# Logs (local only)
+logs/
+
+# --- eval_outputs: exclude bulk, keep summaries + sample media ---
+eval_outputs/**/rank*/
+
+# Videos: ignore all except curated samples (see scripts/git/prepare_eval_video_samples.py)
+eval_outputs/**/videos/*.mp4
+!eval_outputs/**/videos/_git_samples/
+!eval_outputs/**/videos/_git_samples/*.mp4
+
+# Large metric traces (regenerate from eval)
+eval_outputs/**/metrics/episode_traces.jsonl
+eval_outputs/**/metrics/chunk_metrics.jsonl
+eval_outputs/**/metrics/action_metrics.jsonl
+eval_outputs/**/metrics/chunk_metrics.csv
+eval_outputs/**/metrics/action_metrics.csv
+
+# Distribution plots (large PNG grids)
+eval_outputs/**/metrics/chunk_distribution_plots/*.png
+
+# HuggingFace / local caches
+.cache/

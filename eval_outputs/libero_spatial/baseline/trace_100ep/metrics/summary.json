@@ -1,0 +1,13 @@
+{
+  "num_episodes": 100,
+  "num_successes": 69,
+  "success_rate": 0.69,
+  "total_inference_steps": 2144,
+  "total_chunks": 2144,
+  "total_actions": 10563,
+  "termination_reason_counts": {
+    "timeout": 31,
+    "success": 69
+  },
+  "note": "No episode-level action/model metric averages are computed; metrics are stored per chunk and per action."
+}

@@ -1,0 +1,17 @@
+{
+  "features": [
+    "action_offset_in_chunk",
+    "model_action_delta_norm",
+    "model_action_norm",
+    "model_gripper_command",
+    "model_gripper_sign",
+    "model_rotation6d_norm",
+    "model_translation_norm"
+  ],
+  "action_success_threshold": 0.46,
+  "max_timesteps_failure": 120,
+  "min_execute_actions": 3,
+  "max_execute_actions": 8,
+  "train_episodes": 70,
+  "val_episodes": 30
+}

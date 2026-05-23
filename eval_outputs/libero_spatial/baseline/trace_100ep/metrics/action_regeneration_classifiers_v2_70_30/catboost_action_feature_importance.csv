@@ -1,0 +1,8 @@
+feature,importance
+model_gripper_command,46.25342045402311
+model_rotation6d_norm,15.797377850156463
+model_action_delta_norm,11.834687918187843
+model_translation_norm,11.070828348169043
+model_action_norm,7.482546476259452
+model_gripper_sign,4.71931239583854
+action_offset_in_chunk,2.841826557365563

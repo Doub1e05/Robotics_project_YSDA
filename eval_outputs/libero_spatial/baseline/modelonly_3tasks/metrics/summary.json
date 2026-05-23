@@ -1,0 +1,16 @@
+{
+  "num_episodes": 3,
+  "num_successes": 2,
+  "success_rate": 0.6666666666666666,
+  "task_ids": [
+    0,
+    1,
+    2
+  ],
+  "total_episode_indices": [
+    1,
+    2,
+    3
+  ],
+  "note": "Metric columns are model-output diagnostics only; success/termination/task fields are labels/identifiers."
+}

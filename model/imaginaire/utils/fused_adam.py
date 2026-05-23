@@ -14,7 +14,16 @@
 # limitations under the License.
 
 import torch
-from apex.multi_tensor_apply import multi_tensor_applier
+try:
+    from apex.multi_tensor_apply import multi_tensor_applier
+except ModuleNotFoundError:
+    class _UnavailableMultiTensorApplier:
+        available = False
+
+        def __call__(self, *args, **kwargs):
+            raise ModuleNotFoundError("apex is required for FusedAdam execution")
+
+    multi_tensor_applier = _UnavailableMultiTensorApplier()
 
 from imaginaire.utils import distributed, log
 

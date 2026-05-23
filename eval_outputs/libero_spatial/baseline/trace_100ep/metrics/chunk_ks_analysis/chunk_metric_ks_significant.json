@@ -1,0 +1,2857 @@
+{
+  "alpha": 0.05,
+  "n_total_pairs": 936,
+  "n_significant_pairs": 475,
+  "significant_pairs": [
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 0,
+      "p_value": 9.12729171956641e-11,
+      "ks_statistic": 0.7035998129967275
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 0,
+      "p_value": 2.0676395970639604e-09,
+      "ks_statistic": 0.6601215521271622
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 0,
+      "p_value": 2.0676395970639604e-09,
+      "ks_statistic": 0.6601215521271622
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 0,
+      "p_value": 2.0676395970639604e-09,
+      "ks_statistic": 0.6601215521271622
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 0,
+      "p_value": 8.437127641191647e-08,
+      "ks_statistic": 0.6021505376344086
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 0,
+      "p_value": 8.437127641191647e-08,
+      "ks_statistic": 0.6021505376344086
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 0,
+      "p_value": 1.0857150840812247e-05,
+      "ks_statistic": 0.5133239831697055
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 0,
+      "p_value": 5.700400552300146e-05,
+      "ks_statistic": 0.4777933613838242
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 0,
+      "p_value": 0.00015350696787222963,
+      "ks_statistic": 0.45535296867695185
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 0,
+      "p_value": 0.00021280918032523597,
+      "ks_statistic": 0.4474053295932679
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 0,
+      "p_value": 0.0007330197149093222,
+      "ks_statistic": 0.4165497896213184
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 0,
+      "p_value": 0.0007330197149093222,
+      "ks_statistic": 0.4165497896213184
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 0,
+      "p_value": 0.0011943738879048136,
+      "ks_statistic": 0.40345956054230947
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 0,
+      "p_value": 0.0011943738879048136,
+      "ks_statistic": 0.40345956054230947
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 0,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 0,
+      "p_value": 0.0033643236292139247,
+      "ks_statistic": 0.3744740532959327
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 0,
+      "p_value": 0.017237044861989185,
+      "ks_statistic": 0.3230481533426835
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 0,
+      "p_value": 0.023745360510438632,
+      "ks_statistic": 0.3118279569892473
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 0,
+      "p_value": 0.029444147396247514,
+      "ks_statistic": 0.30388031790556336
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 0,
+      "p_value": 0.029444147396247514,
+      "ks_statistic": 0.30388031790556336
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 0,
+      "p_value": 0.030394005062667272,
+      "ks_statistic": 0.3024777933613838
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 0,
+      "p_value": 0.0375545514173061,
+      "ks_statistic": 0.29453015427769985
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 0,
+      "p_value": 0.04099651203299035,
+      "ks_statistic": 0.2912575970079476
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 1,
+      "p_value": 4.0280285256829646e-11,
+      "ks_statistic": 0.7148200093501637
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 1,
+      "p_value": 2.6483884747763177e-09,
+      "ks_statistic": 0.65684899485741
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 1,
+      "p_value": 2.6483884747763177e-09,
+      "ks_statistic": 0.65684899485741
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 1,
+      "p_value": 2.6483884747763177e-09,
+      "ks_statistic": 0.65684899485741
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 1,
+      "p_value": 1.4854694477621959e-06,
+      "ks_statistic": 0.552127162225339
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 1,
+      "p_value": 1.4854694477621959e-06,
+      "ks_statistic": 0.552127162225339
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 1,
+      "p_value": 2.6466078844210876e-06,
+      "ks_statistic": 0.5409069658719028
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 1,
+      "p_value": 1.0857150840812247e-05,
+      "ks_statistic": 0.5133239831697055
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 1,
+      "p_value": 3.1689940611853097e-05,
+      "ks_statistic": 0.4904160822814399
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 1,
+      "p_value": 4.5545064032335036e-05,
+      "ks_statistic": 0.48246844319775595
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 1,
+      "p_value": 0.0003649780595944115,
+      "ks_statistic": 0.434315100514259
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 1,
+      "p_value": 0.0003649780595944115,
+      "ks_statistic": 0.434315100514259
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 1,
+      "p_value": 0.0005165593627186578,
+      "ks_statistic": 0.42496493688639553
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 1,
+      "p_value": 0.0005357685349684274,
+      "ks_statistic": 0.42449742870500234
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 1,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 1,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 1,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 1,
+      "p_value": 0.0044205769784114,
+      "ks_statistic": 0.36652641421224874
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 1,
+      "p_value": 0.018405851958679914,
+      "ks_statistic": 0.32024310425432445
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 1,
+      "p_value": 0.02229275423689423,
+      "ks_statistic": 0.31369798971482
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 1,
+      "p_value": 0.04205661221199367,
+      "ks_statistic": 0.29079008882655444
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 2,
+      "p_value": 1.2059057786058117e-10,
+      "ks_statistic": 0.7003272557269752
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 2,
+      "p_value": 7.562342051196239e-10,
+      "ks_statistic": 0.6746143057503506
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 2,
+      "p_value": 7.562342051196239e-10,
+      "ks_statistic": 0.6746143057503506
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 2,
+      "p_value": 7.562342051196239e-10,
+      "ks_statistic": 0.6746143057503506
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 2,
+      "p_value": 3.2002143193535117e-05,
+      "ks_statistic": 0.4894810659186536
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 2,
+      "p_value": 3.689976134328015e-05,
+      "ks_statistic": 0.48714352501168773
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 2,
+      "p_value": 6.107876979741325e-05,
+      "ks_statistic": 0.47639083683964467
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 2,
+      "p_value": 6.107876979741325e-05,
+      "ks_statistic": 0.47639083683964467
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 2,
+      "p_value": 6.560366102077211e-05,
+      "ks_statistic": 0.474520804114072
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 2,
+      "p_value": 0.00017600281870545526,
+      "ks_statistic": 0.4520804114071996
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 2,
+      "p_value": 0.00017600281870545526,
+      "ks_statistic": 0.4520804114071996
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 2,
+      "p_value": 0.00017600281870545526,
+      "ks_statistic": 0.4520804114071996
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 2,
+      "p_value": 0.000689234130998971,
+      "ks_statistic": 0.4179523141654979
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 2,
+      "p_value": 0.00462309433631477,
+      "ks_statistic": 0.3651238896680692
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 2,
+      "p_value": 0.00462309433631477,
+      "ks_statistic": 0.3651238896680692
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 2,
+      "p_value": 0.010469586220458134,
+      "ks_statistic": 0.3394109396914446
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 2,
+      "p_value": 0.015113836628979445,
+      "ks_statistic": 0.3267882187938289
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 2,
+      "p_value": 0.015644905981588325,
+      "ks_statistic": 0.3263207106124357
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 2,
+      "p_value": 0.016169513808975012,
+      "ks_statistic": 0.3249181860682562
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 2,
+      "p_value": 0.025287552425022702,
+      "ks_statistic": 0.30902290790088827
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 2,
+      "p_value": 0.027232144713960123,
+      "ks_statistic": 0.3066853669939224
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 2,
+      "p_value": 0.027739922909635797,
+      "ks_statistic": 0.30575035063113604
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 2,
+      "p_value": 0.04599467690646199,
+      "ks_statistic": 0.2865825151940159
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 2,
+      "p_value": 0.048703980155553044,
+      "ks_statistic": 0.2847124824684432
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 3,
+      "p_value": 5.471006431479715e-09,
+      "ks_statistic": 0.6456287985039738
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 3,
+      "p_value": 5.471006431479715e-09,
+      "ks_statistic": 0.6456287985039738
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 3,
+      "p_value": 5.471006431479715e-09,
+      "ks_statistic": 0.6456287985039738
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 3,
+      "p_value": 5.471006431479715e-09,
+      "ks_statistic": 0.6456287985039738
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 3,
+      "p_value": 3.689976134328015e-05,
+      "ks_statistic": 0.48714352501168773
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 3,
+      "p_value": 4.282410948787098e-05,
+      "ks_statistic": 0.4843384759233287
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 3,
+      "p_value": 5.700400552300146e-05,
+      "ks_statistic": 0.4777933613838242
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 3,
+      "p_value": 5.700400552300146e-05,
+      "ks_statistic": 0.4777933613838242
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 3,
+      "p_value": 0.00014240313779737365,
+      "ks_statistic": 0.45675549322113135
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 3,
+      "p_value": 0.0010611106473214047,
+      "ks_statistic": 0.4057971014492754
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 3,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 3,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 3,
+      "p_value": 0.0016957981006650558,
+      "ks_statistic": 0.394109396914446
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 3,
+      "p_value": 0.0016957981006650558,
+      "ks_statistic": 0.394109396914446
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 3,
+      "p_value": 0.0016957981006650558,
+      "ks_statistic": 0.394109396914446
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 3,
+      "p_value": 0.005156569319737205,
+      "ks_statistic": 0.36185133239831696
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 3,
+      "p_value": 0.027739922909635797,
+      "ks_statistic": 0.30575035063113604
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 3,
+      "p_value": 0.03226721898568408,
+      "ks_statistic": 0.3006077606358111
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 3,
+      "p_value": 0.03637985278271265,
+      "ks_statistic": 0.2959326788218794
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 3,
+      "p_value": 0.03705043333607217,
+      "ks_statistic": 0.2954651706404862
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 3,
+      "p_value": 0.04029802174909301,
+      "ks_statistic": 0.292192613370734
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 3,
+      "p_value": 0.04599467690646199,
+      "ks_statistic": 0.2865825151940159
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 4,
+      "p_value": 2.4888281469540065e-06,
+      "ks_statistic": 0.5423094904160822
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 4,
+      "p_value": 2.4888281469540065e-06,
+      "ks_statistic": 0.5423094904160822
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 4,
+      "p_value": 2.4888281469540065e-06,
+      "ks_statistic": 0.5423094904160822
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 4,
+      "p_value": 2.4888281469540065e-06,
+      "ks_statistic": 0.5423094904160822
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 4,
+      "p_value": 0.0001241774571126605,
+      "ks_statistic": 0.4600280504908836
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 4,
+      "p_value": 0.00013367036890387727,
+      "ks_statistic": 0.4581580177653109
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 4,
+      "p_value": 0.00020117402469304783,
+      "ks_statistic": 0.4488078541374474
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 4,
+      "p_value": 0.0003205868432990637,
+      "ks_statistic": 0.4375876577840112
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 4,
+      "p_value": 0.0006081012600003093,
+      "ks_statistic": 0.4212248714352501
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 4,
+      "p_value": 0.0006091772955428283,
+      "ks_statistic": 0.42028985507246375
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 4,
+      "p_value": 0.0010296135672709203,
+      "ks_statistic": 0.4071996259934549
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 4,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 4,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 4,
+      "p_value": 0.0035439157068557735,
+      "ks_statistic": 0.37307152875175315
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 4,
+      "p_value": 0.006646212685700924,
+      "ks_statistic": 0.353903693314633
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 4,
+      "p_value": 0.011177974931182555,
+      "ks_statistic": 0.3375409069658719
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 4,
+      "p_value": 0.017824241100151624,
+      "ks_statistic": 0.32164562879850395
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 4,
+      "p_value": 0.017824241100151624,
+      "ks_statistic": 0.32164562879850395
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 4,
+      "p_value": 0.020267479088422347,
+      "ks_statistic": 0.3169705469845722
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 5,
+      "p_value": 4.5545064032335036e-05,
+      "ks_statistic": 0.48246844319775595
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 5,
+      "p_value": 4.5545064032335036e-05,
+      "ks_statistic": 0.48246844319775595
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 5,
+      "p_value": 5.700400552300146e-05,
+      "ks_statistic": 0.4777933613838242
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 5,
+      "p_value": 0.00014240313779737365,
+      "ks_statistic": 0.45675549322113135
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 5,
+      "p_value": 0.00020117402469304783,
+      "ks_statistic": 0.4488078541374474
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 5,
+      "p_value": 0.0004149269837930919,
+      "ks_statistic": 0.4310425432445068
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 5,
+      "p_value": 0.0005021883928573367,
+      "ks_statistic": 0.426367461430575
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 5,
+      "p_value": 0.0005165593627186578,
+      "ks_statistic": 0.42496493688639553
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 5,
+      "p_value": 0.0006091772955428283,
+      "ks_statistic": 0.42028985507246375
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 5,
+      "p_value": 0.0006937720099129235,
+      "ks_statistic": 0.4170172978027116
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 5,
+      "p_value": 0.0006937720099129235,
+      "ks_statistic": 0.4170172978027116
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 5,
+      "p_value": 0.0006937720099129235,
+      "ks_statistic": 0.4170172978027116
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 5,
+      "p_value": 0.0007330197149093222,
+      "ks_statistic": 0.4165497896213184
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 5,
+      "p_value": 0.0010296135672709203,
+      "ks_statistic": 0.4071996259934549
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 5,
+      "p_value": 0.0011231842288574614,
+      "ks_statistic": 0.4053295932678822
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 5,
+      "p_value": 0.00943432646973924,
+      "ks_statistic": 0.3426834969611968
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 5,
+      "p_value": 0.00943432646973924,
+      "ks_statistic": 0.3426834969611968
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 5,
+      "p_value": 0.010101637334832114,
+      "ks_statistic": 0.34081346423562414
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 5,
+      "p_value": 0.038640042618533904,
+      "ks_statistic": 0.2935951379149135
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 6,
+      "p_value": 5.700400552300146e-05,
+      "ks_statistic": 0.4777933613838242
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 6,
+      "p_value": 8.729210041610522e-05,
+      "ks_statistic": 0.46797568957456753
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 6,
+      "p_value": 0.0001007675314280361,
+      "ks_statistic": 0.46470313230481536
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 6,
+      "p_value": 0.0001007675314280361,
+      "ks_statistic": 0.46470313230481536
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 6,
+      "p_value": 0.00011710241700553979,
+      "ks_statistic": 0.46049555867227676
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 6,
+      "p_value": 0.00013615120428160665,
+      "ks_statistic": 0.45722300140252453
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 6,
+      "p_value": 0.0002892044741517101,
+      "ks_statistic": 0.43945769050958394
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 6,
+      "p_value": 0.0002892044741517101,
+      "ks_statistic": 0.43945769050958394
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 6,
+      "p_value": 0.0002892044741517101,
+      "ks_statistic": 0.43945769050958394
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 6,
+      "p_value": 0.0003649780595944115,
+      "ks_statistic": 0.434315100514259
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 6,
+      "p_value": 0.0006473778820800687,
+      "ks_statistic": 0.4198223468910706
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 6,
+      "p_value": 0.0007330197149093222,
+      "ks_statistic": 0.4165497896213184
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 6,
+      "p_value": 0.0007330197149093222,
+      "ks_statistic": 0.4165497896213184
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 6,
+      "p_value": 0.0015039874801957467,
+      "ks_statistic": 0.39738195418419825
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 6,
+      "p_value": 0.002403108515482419,
+      "ks_statistic": 0.38429172510518933
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 6,
+      "p_value": 0.018947450279904868,
+      "ks_statistic": 0.31977559607293127
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 6,
+      "p_value": 0.018947450279904868,
+      "ks_statistic": 0.31977559607293127
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 6,
+      "p_value": 0.028561298679587968,
+      "ks_statistic": 0.30434782608695654
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 6,
+      "p_value": 0.029444147396247514,
+      "ks_statistic": 0.30388031790556336
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 7,
+      "p_value": 3.7738206900222016e-05,
+      "ks_statistic": 0.48620850864890136
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 7,
+      "p_value": 6.560366102077211e-05,
+      "ks_statistic": 0.474520804114072
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 7,
+      "p_value": 7.560882056252345e-05,
+      "ks_statistic": 0.47124824684431976
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 7,
+      "p_value": 0.0004497615304422754,
+      "ks_statistic": 0.42823749415614776
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 7,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 7,
+      "p_value": 0.0019816620207064022,
+      "ks_statistic": 0.38943431510051424
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 7,
+      "p_value": 0.0019816620207064022,
+      "ks_statistic": 0.38943431510051424
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 7,
+      "p_value": 0.0019816620207064022,
+      "ks_statistic": 0.38943431510051424
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 7,
+      "p_value": 0.0044205769784114,
+      "ks_statistic": 0.36652641421224874
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 7,
+      "p_value": 0.004651204163507011,
+      "ks_statistic": 0.364656381486676
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 7,
+      "p_value": 0.004651204163507011,
+      "ks_statistic": 0.364656381486676
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 7,
+      "p_value": 0.005743209364528978,
+      "ks_statistic": 0.35857877512856473
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 7,
+      "p_value": 0.005743209364528978,
+      "ks_statistic": 0.35857877512856473
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 7,
+      "p_value": 0.005743209364528978,
+      "ks_statistic": 0.35857877512856473
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 7,
+      "p_value": 0.00739777961003739,
+      "ks_statistic": 0.3506311360448808
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 7,
+      "p_value": 0.00739777961003739,
+      "ks_statistic": 0.3506311360448808
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 7,
+      "p_value": 0.010802963421421754,
+      "ks_statistic": 0.3380084151472651
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 7,
+      "p_value": 0.014176588697678587,
+      "ks_statistic": 0.32959326788218796
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 7,
+      "p_value": 0.02229275423689423,
+      "ks_statistic": 0.31369798971482
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 7,
+      "p_value": 0.022782722369920513,
+      "ks_statistic": 0.3132304815334268
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 7,
+      "p_value": 0.04380694296508164,
+      "ks_statistic": 0.28892005610098176
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 8,
+      "p_value": 3.689976134328015e-05,
+      "ks_statistic": 0.48714352501168773
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 8,
+      "p_value": 0.00024495002268417427,
+      "ks_statistic": 0.44413277232351567
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 8,
+      "p_value": 0.00024495002268417427,
+      "ks_statistic": 0.44413277232351567
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 8,
+      "p_value": 0.00025016183471618944,
+      "ks_statistic": 0.4427302477793361
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 8,
+      "p_value": 0.0007330197149093222,
+      "ks_statistic": 0.4165497896213184
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 8,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 8,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "chunk_action_delta_norm_max",
+      "chunk_id": 8,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 8,
+      "p_value": 0.0025418010890830684,
+      "ks_statistic": 0.38242169237961665
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 8,
+      "p_value": 0.0025418010890830684,
+      "ks_statistic": 0.38242169237961665
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 8,
+      "p_value": 0.005958179718041387,
+      "ks_statistic": 0.35717625058438524
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 8,
+      "p_value": 0.00871526199949294,
+      "ks_statistic": 0.34548854604955587
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 8,
+      "p_value": 0.013671186918248836,
+      "ks_statistic": 0.3300607760635811
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 9,
+      "p_value": 6.136139186114507e-05,
+      "ks_statistic": 0.47592332865825154
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 9,
+      "p_value": 0.00013615120428160665,
+      "ks_statistic": 0.45722300140252453
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 9,
+      "p_value": 0.0005712817716900554,
+      "ks_statistic": 0.42262739597942967
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 9,
+      "p_value": 0.0005712817716900554,
+      "ks_statistic": 0.42262739597942967
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 9,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 9,
+      "p_value": 0.004651204163507011,
+      "ks_statistic": 0.364656381486676
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 9,
+      "p_value": 0.004651204163507011,
+      "ks_statistic": 0.364656381486676
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 9,
+      "p_value": 0.00574729382939025,
+      "ks_statistic": 0.3581112669471716
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 9,
+      "p_value": 0.00943432646973924,
+      "ks_statistic": 0.3426834969611968
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 9,
+      "p_value": 0.016442668916723576,
+      "ks_statistic": 0.324450677886863
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 9,
+      "p_value": 0.016693483257326894,
+      "ks_statistic": 0.3235156615240767
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 9,
+      "p_value": 0.020791501446204147,
+      "ks_statistic": 0.31650303880317904
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 9,
+      "p_value": 0.026051630116664073,
+      "ks_statistic": 0.3085553997194951
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 9,
+      "p_value": 0.027739922909635797,
+      "ks_statistic": 0.30575035063113604
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 9,
+      "p_value": 0.04029802174909301,
+      "ks_statistic": 0.292192613370734
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 9,
+      "p_value": 0.04029802174909301,
+      "ks_statistic": 0.292192613370734
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 9,
+      "p_value": 0.04099651203299035,
+      "ks_statistic": 0.2912575970079476
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 9,
+      "p_value": 0.04099651203299035,
+      "ks_statistic": 0.2912575970079476
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 9,
+      "p_value": 0.04205661221199367,
+      "ks_statistic": 0.29079008882655444
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 9,
+      "p_value": 0.04380694296508164,
+      "ks_statistic": 0.28892005610098176
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 10,
+      "p_value": 3.689976134328015e-05,
+      "ks_statistic": 0.48714352501168773
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 10,
+      "p_value": 9.922126606857893e-05,
+      "ks_statistic": 0.4651706404862085
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 10,
+      "p_value": 0.001329152012870226,
+      "ks_statistic": 0.4006545114539504
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 10,
+      "p_value": 0.001329152012870226,
+      "ks_statistic": 0.4006545114539504
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 10,
+      "p_value": 0.002037871278820021,
+      "ks_statistic": 0.38803179055633474
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 10,
+      "p_value": 0.002829685871254607,
+      "ks_statistic": 0.3796166432912576
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 10,
+      "p_value": 0.004651204163507011,
+      "ks_statistic": 0.364656381486676
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 10,
+      "p_value": 0.004651204163507011,
+      "ks_statistic": 0.364656381486676
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 10,
+      "p_value": 0.007458636790610289,
+      "ks_statistic": 0.3501636278634876
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 10,
+      "p_value": 0.007458636790610289,
+      "ks_statistic": 0.3501636278634876
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 10,
+      "p_value": 0.008217915369724257,
+      "ks_statistic": 0.34735857877512855
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 10,
+      "p_value": 0.009130703853609323,
+      "ks_statistic": 0.3436185133239832
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 10,
+      "p_value": 0.00963013410974524,
+      "ks_statistic": 0.34221598877980364
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 10,
+      "p_value": 0.012908521163908943,
+      "ks_statistic": 0.332398316970547
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 10,
+      "p_value": 0.02229275423689423,
+      "ks_statistic": 0.31369798971482
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 10,
+      "p_value": 0.023745360510438632,
+      "ks_statistic": 0.3118279569892473
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 10,
+      "p_value": 0.03705043333607217,
+      "ks_statistic": 0.2954651706404862
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 11,
+      "p_value": 3.689976134328015e-05,
+      "ks_statistic": 0.48714352501168773
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 11,
+      "p_value": 0.0010296135672709203,
+      "ks_statistic": 0.4071996259934549
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 11,
+      "p_value": 0.002037871278820021,
+      "ks_statistic": 0.38803179055633474
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 11,
+      "p_value": 0.0028413111213709545,
+      "ks_statistic": 0.3791491351098644
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 11,
+      "p_value": 0.006390656089542788,
+      "ks_statistic": 0.35530621785881256
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 11,
+      "p_value": 0.008252634669679433,
+      "ks_statistic": 0.3468910705937354
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 11,
+      "p_value": 0.010469586220458134,
+      "ks_statistic": 0.3394109396914446
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 11,
+      "p_value": 0.010469586220458134,
+      "ks_statistic": 0.3394109396914446
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 11,
+      "p_value": 0.014962824695552554,
+      "ks_statistic": 0.3277232351566152
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 11,
+      "p_value": 0.015113836628979445,
+      "ks_statistic": 0.3267882187938289
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 11,
+      "p_value": 0.019788369965592998,
+      "ks_statistic": 0.3179055633473586
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 11,
+      "p_value": 0.019788369965592998,
+      "ks_statistic": 0.3179055633473586
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 11,
+      "p_value": 0.023789232310825636,
+      "ks_statistic": 0.31136044880785413
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 11,
+      "p_value": 0.032468072652466734,
+      "ks_statistic": 0.30014025245441794
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 11,
+      "p_value": 0.03637985278271265,
+      "ks_statistic": 0.2959326788218794
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 11,
+      "p_value": 0.04029802174909301,
+      "ks_statistic": 0.292192613370734
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 12,
+      "p_value": 3.689976134328015e-05,
+      "ks_statistic": 0.48714352501168773
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 12,
+      "p_value": 0.000689234130998971,
+      "ks_statistic": 0.4179523141654979
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 12,
+      "p_value": 0.005743209364528978,
+      "ks_statistic": 0.35857877512856473
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 12,
+      "p_value": 0.006140228915763427,
+      "ks_statistic": 0.3557737260402057
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 12,
+      "p_value": 0.00963013410974524,
+      "ks_statistic": 0.34221598877980364
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 12,
+      "p_value": 0.011718567561802387,
+      "ks_statistic": 0.33567087424029923
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 12,
+      "p_value": 0.011718567561802387,
+      "ks_statistic": 0.33567087424029923
+    },
+    {
+      "metric": "attention_sparsity",
+      "chunk_id": 12,
+      "p_value": 0.011973385412212855,
+      "ks_statistic": 0.33473585787751287
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 12,
+      "p_value": 0.017237044861989185,
+      "ks_statistic": 0.3230481533426835
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 12,
+      "p_value": 0.020791501446204147,
+      "ks_statistic": 0.31650303880317904
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 12,
+      "p_value": 0.025287552425022702,
+      "ks_statistic": 0.30902290790088827
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 12,
+      "p_value": 0.038640042618533904,
+      "ks_statistic": 0.2935951379149135
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 13,
+      "p_value": 1.5993492378101318e-05,
+      "ks_statistic": 0.5049088359046283
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 13,
+      "p_value": 1.5993492378101318e-05,
+      "ks_statistic": 0.5049088359046283
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 13,
+      "p_value": 1.5993492378101318e-05,
+      "ks_statistic": 0.5049088359046283
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 13,
+      "p_value": 3.1689940611853097e-05,
+      "ks_statistic": 0.4904160822814399
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 13,
+      "p_value": 0.0002149883991064918,
+      "ks_statistic": 0.4469378214118747
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 13,
+      "p_value": 0.0005357685349684274,
+      "ks_statistic": 0.42449742870500234
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 13,
+      "p_value": 0.000773064044155359,
+      "ks_statistic": 0.41514726507713884
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 13,
+      "p_value": 0.0014273552746528354,
+      "ks_statistic": 0.39878447872837774
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 13,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 13,
+      "p_value": 0.0044205769784114,
+      "ks_statistic": 0.36652641421224874
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 13,
+      "p_value": 0.005501491555185534,
+      "ks_statistic": 0.3590462833099579
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 13,
+      "p_value": 0.005501491555185534,
+      "ks_statistic": 0.3590462833099579
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 13,
+      "p_value": 0.011177974931182555,
+      "ks_statistic": 0.3375409069658719
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 13,
+      "p_value": 0.017237044861989185,
+      "ks_statistic": 0.3230481533426835
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 13,
+      "p_value": 0.018947450279904868,
+      "ks_statistic": 0.31977559607293127
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 13,
+      "p_value": 0.018947450279904868,
+      "ks_statistic": 0.31977559607293127
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 13,
+      "p_value": 0.027232144713960123,
+      "ks_statistic": 0.3066853669939224
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 13,
+      "p_value": 0.027739922909635797,
+      "ks_statistic": 0.30575035063113604
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 14,
+      "p_value": 3.49343647215575e-08,
+      "ks_statistic": 0.6161757830762038
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 14,
+      "p_value": 3.49343647215575e-08,
+      "ks_statistic": 0.6161757830762038
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 14,
+      "p_value": 3.49343647215575e-08,
+      "ks_statistic": 0.6161757830762038
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 14,
+      "p_value": 3.418033152378281e-06,
+      "ks_statistic": 0.5357643758765779
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 14,
+      "p_value": 3.792556056004283e-06,
+      "ks_statistic": 0.5343618513323983
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 14,
+      "p_value": 3.1689940611853097e-05,
+      "ks_statistic": 0.4904160822814399
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 14,
+      "p_value": 3.921511535229842e-05,
+      "ks_statistic": 0.4857410004675082
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 14,
+      "p_value": 0.00021280918032523597,
+      "ks_statistic": 0.4474053295932679
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 14,
+      "p_value": 0.0003649780595944115,
+      "ks_statistic": 0.434315100514259
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 14,
+      "p_value": 0.0011231842288574614,
+      "ks_statistic": 0.4053295932678822
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 14,
+      "p_value": 0.0011943738879048136,
+      "ks_statistic": 0.40345956054230947
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 14,
+      "p_value": 0.0019068781497442323,
+      "ks_statistic": 0.3908368396446938
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 14,
+      "p_value": 0.0028413111213709545,
+      "ks_statistic": 0.3791491351098644
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 14,
+      "p_value": 0.018405851958679914,
+      "ks_statistic": 0.32024310425432445
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 14,
+      "p_value": 0.018405851958679914,
+      "ks_statistic": 0.32024310425432445
+    },
+    {
+      "metric": "video_latent_cosine_initial_final",
+      "chunk_id": 14,
+      "p_value": 0.019788369965592998,
+      "ks_statistic": 0.3179055633473586
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 14,
+      "p_value": 0.019788369965592998,
+      "ks_statistic": 0.3179055633473586
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 14,
+      "p_value": 0.024929103644630617,
+      "ks_statistic": 0.30995792426367463
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 14,
+      "p_value": 0.024929103644630617,
+      "ks_statistic": 0.30995792426367463
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 14,
+      "p_value": 0.027232144713960123,
+      "ks_statistic": 0.3066853669939224
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 15,
+      "p_value": 5.851055098603285e-06,
+      "ks_statistic": 0.5270398481973435
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 15,
+      "p_value": 7.956589224777998e-06,
+      "ks_statistic": 0.5189753320683111
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 15,
+      "p_value": 7.956589224777998e-06,
+      "ks_statistic": 0.5189753320683111
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 15,
+      "p_value": 7.956589224777998e-06,
+      "ks_statistic": 0.5189753320683111
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 15,
+      "p_value": 1.631250909752586e-05,
+      "ks_statistic": 0.50426944971537
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 15,
+      "p_value": 1.87622629364907e-05,
+      "ks_statistic": 0.5033206831119544
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 15,
+      "p_value": 4.266280501432817e-05,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 15,
+      "p_value": 5.450727527202727e-05,
+      "ks_statistic": 0.48007590132827327
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 15,
+      "p_value": 0.00012195980251229151,
+      "ks_statistic": 0.4601518026565465
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 15,
+      "p_value": 0.0006393977008429315,
+      "ks_statistic": 0.42125237191650855
+    },
+    {
+      "metric": "video_latent_cosine_initial_final",
+      "chunk_id": 15,
+      "p_value": 0.0012906148362399636,
+      "ks_statistic": 0.40132827324478176
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 15,
+      "p_value": 0.0013652086394916117,
+      "ks_statistic": 0.400853889943074
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 15,
+      "p_value": 0.001998316418625131,
+      "ks_statistic": 0.3894686907020873
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 15,
+      "p_value": 0.0026658376676804247,
+      "ks_statistic": 0.38092979127134724
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 15,
+      "p_value": 0.003669001094520304,
+      "ks_statistic": 0.3719165085388994
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 15,
+      "p_value": 0.005988527300669889,
+      "ks_statistic": 0.3572106261859583
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 15,
+      "p_value": 0.008519686000456123,
+      "ks_statistic": 0.34582542694497154
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 15,
+      "p_value": 0.009298409909849443,
+      "ks_statistic": 0.3444022770398482
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 15,
+      "p_value": 0.01585359523743738,
+      "ks_statistic": 0.325426944971537
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 15,
+      "p_value": 0.018681385552332532,
+      "ks_statistic": 0.321157495256167
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 15,
+      "p_value": 0.028394243987051804,
+      "ks_statistic": 0.305977229601518
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 15,
+      "p_value": 0.028394243987051804,
+      "ks_statistic": 0.305977229601518
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 15,
+      "p_value": 0.042749519580858236,
+      "ks_statistic": 0.2898481973434535
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 16,
+      "p_value": 4.192860448466627e-06,
+      "ks_statistic": 0.5344913151364764
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 16,
+      "p_value": 4.192860448466627e-06,
+      "ks_statistic": 0.5344913151364764
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 16,
+      "p_value": 4.192860448466627e-06,
+      "ks_statistic": 0.5344913151364764
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 16,
+      "p_value": 1.8847021891113123e-05,
+      "ks_statistic": 0.5052109181141439
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 16,
+      "p_value": 2.053557455612419e-05,
+      "ks_statistic": 0.5022332506203474
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 16,
+      "p_value": 0.0002156596610847469,
+      "ks_statistic": 0.4511166253101737
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 16,
+      "p_value": 0.000314813087313484,
+      "ks_statistic": 0.44069478908188586
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 16,
+      "p_value": 0.000328885243766699,
+      "ks_statistic": 0.4401985111662531
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 16,
+      "p_value": 0.00037402995740590337,
+      "ks_statistic": 0.43622828784119105
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 16,
+      "p_value": 0.000582933105497589,
+      "ks_statistic": 0.4253101736972705
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 16,
+      "p_value": 0.0026332396800524695,
+      "ks_statistic": 0.38511166253101736
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 16,
+      "p_value": 0.0026332396800524695,
+      "ks_statistic": 0.38511166253101736
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 16,
+      "p_value": 0.0036445188462609144,
+      "ks_statistic": 0.3746898263027295
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 16,
+      "p_value": 0.007256343783946426,
+      "ks_statistic": 0.3543424317617866
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 16,
+      "p_value": 0.00905127759934313,
+      "ks_statistic": 0.34689826302729526
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 16,
+      "p_value": 0.011200496827728947,
+      "ks_statistic": 0.3404466501240695
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 16,
+      "p_value": 0.014425381546653411,
+      "ks_statistic": 0.3315136476426799
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 16,
+      "p_value": 0.016978578919642304,
+      "ks_statistic": 0.32655086848635234
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 16,
+      "p_value": 0.019788624596430708,
+      "ks_statistic": 0.3205955334987593
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 16,
+      "p_value": 0.019788624596430708,
+      "ks_statistic": 0.3205955334987593
+    },
+    {
+      "metric": "action_uncertainty",
+      "chunk_id": 16,
+      "p_value": 0.0425332893236919,
+      "ks_statistic": 0.29280397022332505
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 17,
+      "p_value": 9.132655249328077e-10,
+      "ks_statistic": 0.6774193548387096
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 17,
+      "p_value": 9.132655249328077e-10,
+      "ks_statistic": 0.6774193548387096
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 17,
+      "p_value": 9.132655249328077e-10,
+      "ks_statistic": 0.6774193548387096
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 17,
+      "p_value": 2.412798515135915e-06,
+      "ks_statistic": 0.5468006345848757
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 17,
+      "p_value": 2.519245308487608e-05,
+      "ks_statistic": 0.4997355896351137
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 17,
+      "p_value": 2.5292765343974863e-05,
+      "ks_statistic": 0.4992067689053411
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 17,
+      "p_value": 2.7967902250281135e-05,
+      "ks_statistic": 0.49762030671602325
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 17,
+      "p_value": 9.090556261989408e-05,
+      "ks_statistic": 0.4785827604442094
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 17,
+      "p_value": 0.0002126166028037406,
+      "ks_statistic": 0.45055526176626126
+    },
+    {
+      "metric": "action_entropy",
+      "chunk_id": 17,
+      "p_value": 0.00024912084405635766,
+      "ks_statistic": 0.4484399788471708
+    },
+    {
+      "metric": "video_action_mutual_information",
+      "chunk_id": 17,
+      "p_value": 0.00024912084405635766,
+      "ks_statistic": 0.4484399788471708
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 17,
+      "p_value": 0.00026790869345187955,
+      "ks_statistic": 0.4479111581173982
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 17,
+      "p_value": 0.00045758959659743,
+      "ks_statistic": 0.4325753569539926
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 17,
+      "p_value": 0.0007586119751014284,
+      "ks_statistic": 0.4188260179799048
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 17,
+      "p_value": 0.0013845337295866893,
+      "ks_statistic": 0.402432575356954
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 17,
+      "p_value": 0.001528547032422747,
+      "ks_statistic": 0.40031729243786357
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 17,
+      "p_value": 0.0026390963187756184,
+      "ks_statistic": 0.38445267054468535
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 17,
+      "p_value": 0.004248976511165976,
+      "ks_statistic": 0.370174510840825
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 17,
+      "p_value": 0.009759959769014613,
+      "ks_statistic": 0.3490216816499207
+    },
+    {
+      "metric": "video_latent_norm_mean",
+      "chunk_id": 17,
+      "p_value": 0.011893712248640201,
+      "ks_statistic": 0.3373876255949233
+    },
+    {
+      "metric": "score_norm_mean",
+      "chunk_id": 17,
+      "p_value": 0.011893712248640201,
+      "ks_statistic": 0.3373876255949233
+    },
+    {
+      "metric": "video_latent_cosine_initial_final",
+      "chunk_id": 17,
+      "p_value": 0.01921881468815781,
+      "ks_statistic": 0.3209941829719725
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 17,
+      "p_value": 0.029479228755807517,
+      "ks_statistic": 0.3120042305658382
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 17,
+      "p_value": 0.029479228755807517,
+      "ks_statistic": 0.3120042305658382
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 18,
+      "p_value": 3.7934169087773715e-08,
+      "ks_statistic": 0.6396835057821059
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 18,
+      "p_value": 3.7934169087773715e-08,
+      "ks_statistic": 0.6396835057821059
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 18,
+      "p_value": 3.7934169087773715e-08,
+      "ks_statistic": 0.6396835057821059
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 18,
+      "p_value": 7.196443840370808e-05,
+      "ks_statistic": 0.4917833231892879
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 18,
+      "p_value": 0.00013888282710272743,
+      "ks_statistic": 0.47778454047474134
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 18,
+      "p_value": 0.00015883242757432927,
+      "ks_statistic": 0.472915398660986
+    },
+    {
+      "metric": "latent_oscillation_score",
+      "chunk_id": 18,
+      "p_value": 0.00042202022112506845,
+      "ks_statistic": 0.4485696895922094
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 18,
+      "p_value": 0.0005254034289418494,
+      "ks_statistic": 0.4430919050517346
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 18,
+      "p_value": 0.0005626984213812544,
+      "ks_statistic": 0.44065733414485697
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 18,
+      "p_value": 0.0008049284331544056,
+      "ks_statistic": 0.43213633597078516
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 18,
+      "p_value": 0.0012115956705176776,
+      "ks_statistic": 0.4211807668898357
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 18,
+      "p_value": 0.001381523308859271,
+      "ks_statistic": 0.4163116250760803
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 18,
+      "p_value": 0.0015806620165018121,
+      "ks_statistic": 0.4132684114424833
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 18,
+      "p_value": 0.0015806620165018121,
+      "ks_statistic": 0.4132684114424833
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 18,
+      "p_value": 0.006237019163423187,
+      "ks_statistic": 0.37066342057212415
+    },
+    {
+      "metric": "video_latent_norm_mean",
+      "chunk_id": 18,
+      "p_value": 0.009351956653813748,
+      "ks_statistic": 0.357273280584297
+    },
+    {
+      "metric": "score_norm_mean",
+      "chunk_id": 18,
+      "p_value": 0.009351956653813748,
+      "ks_statistic": 0.357273280584297
+    },
+    {
+      "metric": "latent_path_efficiency",
+      "chunk_id": 18,
+      "p_value": 0.010421193672659049,
+      "ks_statistic": 0.3542300669506999
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 18,
+      "p_value": 0.01620619093923065,
+      "ks_statistic": 0.33840535605599514
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 18,
+      "p_value": 0.01620619093923065,
+      "ks_statistic": 0.33840535605599514
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 18,
+      "p_value": 0.039844999379354415,
+      "ks_statistic": 0.3055386488131467
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 18,
+      "p_value": 0.04199599226402951,
+      "ks_statistic": 0.30310407790626903
+    },
+    {
+      "metric": "query_latency_sec",
+      "chunk_id": 18,
+      "p_value": 0.04330714534375603,
+      "ks_statistic": 0.30249543517954963
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 18,
+      "p_value": 0.04577971684819891,
+      "ks_statistic": 0.3000608642726719
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 19,
+      "p_value": 2.935958676948055e-07,
+      "ks_statistic": 0.649641577060932
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 19,
+      "p_value": 2.935958676948055e-07,
+      "ks_statistic": 0.649641577060932
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 19,
+      "p_value": 2.935958676948055e-07,
+      "ks_statistic": 0.649641577060932
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 19,
+      "p_value": 0.00012177075418305857,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 19,
+      "p_value": 0.00029571254087179316,
+      "ks_statistic": 0.492831541218638
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 19,
+      "p_value": 0.0005185912261043863,
+      "ks_statistic": 0.478494623655914
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 19,
+      "p_value": 0.0007961527328137234,
+      "ks_statistic": 0.4650537634408602
+    },
+    {
+      "metric": "latent_path_efficiency",
+      "chunk_id": 19,
+      "p_value": 0.0015320267254990236,
+      "ks_statistic": 0.44623655913978494
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 19,
+      "p_value": 0.0017519161186260739,
+      "ks_statistic": 0.44175627240143367
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 19,
+      "p_value": 0.002002702371340019,
+      "ks_statistic": 0.43727598566308246
+    },
+    {
+      "metric": "mlp_sparsity",
+      "chunk_id": 19,
+      "p_value": 0.002189128143849267,
+      "ks_statistic": 0.43637992831541217
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 19,
+      "p_value": 0.002623331587334148,
+      "ks_statistic": 0.4283154121863799
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 19,
+      "p_value": 0.0030049167177587026,
+      "ks_statistic": 0.42383512544802865
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 19,
+      "p_value": 0.007781165287005923,
+      "ks_statistic": 0.39157706093189965
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 19,
+      "p_value": 0.008273966801674176,
+      "ks_statistic": 0.3906810035842294
+    },
+    {
+      "metric": "video_latent_norm_mean",
+      "chunk_id": 19,
+      "p_value": 0.011725726849337146,
+      "ks_statistic": 0.3772401433691756
+    },
+    {
+      "metric": "score_norm_mean",
+      "chunk_id": 19,
+      "p_value": 0.011725726849337146,
+      "ks_statistic": 0.3772401433691756
+    },
+    {
+      "metric": "video_latent_variance_mean",
+      "chunk_id": 19,
+      "p_value": 0.012501543006429439,
+      "ks_statistic": 0.3763440860215054
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 19,
+      "p_value": 0.020731375606513835,
+      "ks_statistic": 0.35663082437275984
+    },
+    {
+      "metric": "query_latency_sec",
+      "chunk_id": 19,
+      "p_value": 0.036433347932644335,
+      "ks_statistic": 0.3342293906810036
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 20,
+      "p_value": 2.4706412610574993e-05,
+      "ks_statistic": 0.5806451612903226
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 20,
+      "p_value": 2.4706412610574993e-05,
+      "ks_statistic": 0.5806451612903226
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 20,
+      "p_value": 2.4706412610574993e-05,
+      "ks_statistic": 0.5806451612903226
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 20,
+      "p_value": 2.8149538279301714e-05,
+      "ks_statistic": 0.5761957730812013
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 20,
+      "p_value": 0.0009317265258137467,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "chunk_gripper_switches",
+      "chunk_id": 20,
+      "p_value": 0.0009317265258137467,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 20,
+      "p_value": 0.0009540121763671555,
+      "ks_statistic": 0.48164627363737483
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 20,
+      "p_value": 0.0009540121763671555,
+      "ks_statistic": 0.48164627363737483
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 20,
+      "p_value": 0.0009955800003038921,
+      "ks_statistic": 0.4794215795328142
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 20,
+      "p_value": 0.0009955800003038921,
+      "ks_statistic": 0.4794215795328142
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 20,
+      "p_value": 0.0011661626262423471,
+      "ks_statistic": 0.474972191323693
+    },
+    {
+      "metric": "latent_path_efficiency",
+      "chunk_id": 20,
+      "p_value": 0.0026649677104457407,
+      "ks_statistic": 0.44938820912124583
+    },
+    {
+      "metric": "video_latent_norm_mean",
+      "chunk_id": 20,
+      "p_value": 0.007087243446358407,
+      "ks_statistic": 0.41490545050055616
+    },
+    {
+      "metric": "score_norm_mean",
+      "chunk_id": 20,
+      "p_value": 0.007087243446358407,
+      "ks_statistic": 0.41490545050055616
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 20,
+      "p_value": 0.0074354794348455286,
+      "ks_statistic": 0.41268075639599555
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 20,
+      "p_value": 0.00845456025908337,
+      "ks_statistic": 0.4082313681868743
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 20,
+      "p_value": 0.00845456025908337,
+      "ks_statistic": 0.4082313681868743
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 20,
+      "p_value": 0.015222973998199956,
+      "ks_statistic": 0.3882091212458287
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 20,
+      "p_value": 0.02678289355852345,
+      "ks_statistic": 0.36484983314794217
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 20,
+      "p_value": 0.03439514239065621,
+      "ks_statistic": 0.3526140155728587
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 20,
+      "p_value": 0.03439514239065621,
+      "ks_statistic": 0.3526140155728587
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 21,
+      "p_value": 2.534355612659301e-06,
+      "ks_statistic": 0.7698924731182796
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 21,
+      "p_value": 2.534355612659301e-06,
+      "ks_statistic": 0.7698924731182796
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 21,
+      "p_value": 6.3026103329976034e-06,
+      "ks_statistic": 0.7397849462365591
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 21,
+      "p_value": 6.3026103329976034e-06,
+      "ks_statistic": 0.7397849462365591
+    },
+    {
+      "metric": "latent_path_efficiency",
+      "chunk_id": 21,
+      "p_value": 2.6317521826338246e-05,
+      "ks_statistic": 0.7053763440860215
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 21,
+      "p_value": 3.213321574961319e-05,
+      "ks_statistic": 0.7010752688172043
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 21,
+      "p_value": 5.509346599039939e-05,
+      "ks_statistic": 0.6752688172043011
+    },
+    {
+      "metric": "query_latency_sec",
+      "chunk_id": 21,
+      "p_value": 0.0016755394316594397,
+      "ks_statistic": 0.5698924731182796
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 21,
+      "p_value": 0.001709795441466797,
+      "ks_statistic": 0.567741935483871
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 21,
+      "p_value": 0.002137372847890727,
+      "ks_statistic": 0.546236559139785
+    },
+    {
+      "metric": "representation_drift_rate",
+      "chunk_id": 21,
+      "p_value": 0.008236423497644356,
+      "ks_statistic": 0.5032258064516129
+    },
+    {
+      "metric": "video_latent_cosine_initial_final",
+      "chunk_id": 21,
+      "p_value": 0.00881098023375604,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 21,
+      "p_value": 0.00881098023375604,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 21,
+      "p_value": 0.00881098023375604,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 21,
+      "p_value": 0.00881098023375604,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 21,
+      "p_value": 0.017751049227428914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 21,
+      "p_value": 0.017751049227428914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 21,
+      "p_value": 0.03387849828215102,
+      "ks_statistic": 0.41935483870967744
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 22,
+      "p_value": 2.6317521826338246e-05,
+      "ks_statistic": 0.7053763440860215
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 22,
+      "p_value": 2.6317521826338246e-05,
+      "ks_statistic": 0.7053763440860215
+    },
+    {
+      "metric": "latent_path_efficiency",
+      "chunk_id": 22,
+      "p_value": 7.437646497509628e-05,
+      "ks_statistic": 0.6731182795698925
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 22,
+      "p_value": 0.0002707051696704318,
+      "ks_statistic": 0.6344086021505376
+    },
+    {
+      "metric": "decoder_hidden_norm_std",
+      "chunk_id": 22,
+      "p_value": 0.00038141729149558445,
+      "ks_statistic": 0.610752688172043
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 22,
+      "p_value": 0.0006657525680443487,
+      "ks_statistic": 0.6043010752688172
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 22,
+      "p_value": 0.0007038426591276957,
+      "ks_statistic": 0.6
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 22,
+      "p_value": 0.0007038426591276957,
+      "ks_statistic": 0.6
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 22,
+      "p_value": 0.004684774296657698,
+      "ks_statistic": 0.513978494623656
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 22,
+      "p_value": 0.004684774296657698,
+      "ks_statistic": 0.513978494623656
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 22,
+      "p_value": 0.007164486059454474,
+      "ks_statistic": 0.5075268817204301
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 22,
+      "p_value": 0.008236423497644356,
+      "ks_statistic": 0.5032258064516129
+    },
+    {
+      "metric": "flow_prediction_error",
+      "chunk_id": 22,
+      "p_value": 0.017751049227428914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 22,
+      "p_value": 0.017751049227428914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "action_chunk_temporal_consistency",
+      "chunk_id": 22,
+      "p_value": 0.017751049227428914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "plan_drift",
+      "chunk_id": 22,
+      "p_value": 0.017751049227428914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 22,
+      "p_value": 0.03387849828215102,
+      "ks_statistic": 0.41935483870967744
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 22,
+      "p_value": 0.03387849828215102,
+      "ks_statistic": 0.41935483870967744
+    },
+    {
+      "metric": "video_latent_norm_mean",
+      "chunk_id": 22,
+      "p_value": 0.036392289327864466,
+      "ks_statistic": 0.4172043010752688
+    },
+    {
+      "metric": "score_norm_mean",
+      "chunk_id": 22,
+      "p_value": 0.036392289327864466,
+      "ks_statistic": 0.4172043010752688
+    },
+    {
+      "metric": "instruction_attention_score",
+      "chunk_id": 23,
+      "p_value": 3.659246190183992e-06,
+      "ks_statistic": 0.8064516129032258
+    },
+    {
+      "metric": "task_semantic_alignment",
+      "chunk_id": 23,
+      "p_value": 3.659246190183992e-06,
+      "ks_statistic": 0.8064516129032258
+    },
+    {
+      "metric": "latent_path_efficiency",
+      "chunk_id": 23,
+      "p_value": 3.305434740032043e-05,
+      "ks_statistic": 0.7419354838709677
+    },
+    {
+      "metric": "video_latent_norm_std",
+      "chunk_id": 23,
+      "p_value": 0.0003136845246498613,
+      "ks_statistic": 0.6666666666666666
+    },
+    {
+      "metric": "video_latent_delta_l2_std",
+      "chunk_id": 23,
+      "p_value": 0.0003136845246498613,
+      "ks_statistic": 0.6666666666666666
+    },
+    {
+      "metric": "video_latent_entropy",
+      "chunk_id": 23,
+      "p_value": 0.0003136845246498613,
+      "ks_statistic": 0.6666666666666666
+    },
+    {
+      "metric": "sampling_stability",
+      "chunk_id": 23,
+      "p_value": 0.0003136845246498613,
+      "ks_statistic": 0.6666666666666666
+    },
+    {
+      "metric": "video_action_alignment_score",
+      "chunk_id": 23,
+      "p_value": 0.000571907556115097,
+      "ks_statistic": 0.6451612903225806
+    },
+    {
+      "metric": "video_action_cosine_similarity",
+      "chunk_id": 23,
+      "p_value": 0.000571907556115097,
+      "ks_statistic": 0.6451612903225806
+    },
+    {
+      "metric": "goal_latent_distance",
+      "chunk_id": 23,
+      "p_value": 0.007885594176903847,
+      "ks_statistic": 0.5376344086021505
+    },
+    {
+      "metric": "video_latent_norm_mean",
+      "chunk_id": 23,
+      "p_value": 0.011811476118200687,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "decoder_hidden_norm_mean",
+      "chunk_id": 23,
+      "p_value": 0.011811476118200687,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "residual_stream_norm",
+      "chunk_id": 23,
+      "p_value": 0.011811476118200687,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "action_chunk_smoothness",
+      "chunk_id": 23,
+      "p_value": 0.011811476118200687,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "object_interaction_confidence",
+      "chunk_id": 23,
+      "p_value": 0.011811476118200687,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "score_norm_mean",
+      "chunk_id": 23,
+      "p_value": 0.011811476118200687,
+      "ks_statistic": 0.5161290322580645
+    },
+    {
+      "metric": "chunk_action_delta_norm_mean",
+      "chunk_id": 23,
+      "p_value": 0.01523815050926346,
+      "ks_statistic": 0.5053763440860215
+    },
+    {
+      "metric": "chunk_action_variance",
+      "chunk_id": 23,
+      "p_value": 0.02223993541872754,
+      "ks_statistic": 0.4838709677419355
+    },
+    {
+      "metric": "mlp_activation_mean",
+      "chunk_id": 23,
+      "p_value": 0.039878317249512914,
+      "ks_statistic": 0.45161290322580644
+    },
+    {
+      "metric": "latent_success_alignment",
+      "chunk_id": 23,
+      "p_value": 0.039878317249512914,
+      "ks_statistic": 0.45161290322580644
+    }
+  ]
+}

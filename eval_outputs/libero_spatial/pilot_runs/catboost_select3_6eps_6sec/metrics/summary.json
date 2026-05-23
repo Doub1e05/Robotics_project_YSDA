@@ -1,0 +1,8 @@
+{
+  "num_episodes": 6,
+  "num_successes": 2,
+  "success_rate": 0.3333333333333333,
+  "total_chunks": 133,
+  "total_actions": 659,
+  "total_regenerated_chunks": 80
+}
