@@ -1,0 +1,19 @@
+{
+  "threshold": 0.5,
+  "roc_auc": 0.5853658536585366,
+  "average_precision": 0.609180808166753,
+  "accuracy": 0.5955056179775281,
+  "precision_failure": 0.603448275862069,
+  "recall_failure": 0.7291666666666666,
+  "f1_failure": 0.660377358490566,
+  "tn": 54,
+  "fp": 69,
+  "fn": 39,
+  "tp": 105,
+  "train_chunks": 580,
+  "val_chunks": 267,
+  "train_rollouts": 28,
+  "val_rollouts": 12,
+  "train_episode_success_rate": 0.5,
+  "val_episode_success_rate": 0.5
+}

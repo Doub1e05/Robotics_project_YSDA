@@ -1,0 +1,10 @@
+{
+  "baseline_220_sr": 0.5,
+  "catboost_select3_120_sr": 0.475,
+  "baseline_220_n": 40,
+  "catboost_select3_120_n": 40,
+  "paired_improved": 10,
+  "paired_regressed": 11,
+  "paired_both_success": 9,
+  "paired_both_fail": 10
+}

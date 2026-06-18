@@ -11,18 +11,22 @@ class Video2World2ActionPipeline(nn.Module):
         self,
         video2world_pipeline: Video2WorldPipeline,
         world2action_pipeline: World2ActionPipeline,
+        diagnostics_mode: str = "default",
     ) -> None:
         super().__init__()
 
         self.video2world_pipeline = video2world_pipeline
         self.world2action_pipeline = world2action_pipeline
-        self.last_diagnostics: dict[str, float] = {}
+        if diagnostics_mode not in {"default", "encoder_hidden"}:
+            raise ValueError(f"Unsupported diagnostics_mode={diagnostics_mode!r}")
+        self.diagnostics_mode = diagnostics_mode
+        self.last_diagnostics: dict[str, object] = {}
 
     @staticmethod
     def _entropy(prob: torch.Tensor) -> torch.Tensor:
         return -(prob * torch.log(prob.clamp_min(1e-12))).sum(dim=-1)
 
-    def _collect_diagnostics(
+    def _collect_default_diagnostics(
         self,
         *,
         flat_crossattn_emb: torch.Tensor,
@@ -125,6 +129,86 @@ class Video2World2ActionPipeline(nn.Module):
         }
         return {key: float(value.detach().float().cpu().item()) for key, value in metrics.items()}
 
+    @staticmethod
+    def _to_serializable_list(tensor: torch.Tensor) -> list:
+        return tensor.detach().float().cpu().tolist()
+
+    def _collect_encoder_hidden_diagnostics(
+        self,
+        *,
+        hidden_state_grid: torch.Tensor,
+        video_sigma: torch.Tensor,
+    ) -> dict[str, object]:
+        hidden = hidden_state_grid.detach().float()
+        hidden_norm = F.normalize(hidden, dim=-1, eps=1e-12)
+        pooled_t_d = hidden_norm.mean(dim=(2, 3))
+        pooled_delta_t_d = pooled_t_d[:, 1:, :] - pooled_t_d[:, :-1, :] if pooled_t_d.shape[1] > 1 else pooled_t_d[:, :0, :]
+        pooled_adjacent_cos = (
+            F.cosine_similarity(pooled_t_d[:, 1:, :], pooled_t_d[:, :-1, :], dim=-1)
+            if pooled_t_d.shape[1] > 1
+            else torch.empty((hidden.shape[0], 0), device=hidden.device, dtype=hidden.dtype)
+        )
+        token_adjacent_cos = (
+            F.cosine_similarity(hidden_norm[:, 1:, :, :, :], hidden_norm[:, :-1, :, :, :], dim=-1).mean(dim=(2, 3))
+            if hidden_norm.shape[1] > 1
+            else torch.empty((hidden.shape[0], 0), device=hidden.device, dtype=hidden.dtype)
+        )
+        pooled_initial_final_cos = F.cosine_similarity(pooled_t_d[:, 0, :], pooled_t_d[:, -1, :], dim=-1)
+        pooled_norms = torch.linalg.norm(pooled_t_d, dim=-1)
+        pooled_delta_norms = (
+            torch.linalg.norm(pooled_delta_t_d, dim=-1)
+            if pooled_delta_t_d.numel()
+            else torch.empty((hidden.shape[0], 0), device=hidden.device, dtype=hidden.dtype)
+        )
+
+        batch_idx = 0
+        return {
+            "diagnostics_mode": self.diagnostics_mode,
+            "encoder_xattn_layer_idx": int(self.world2action_pipeline.config.xattn_layer_idx),
+            "encoder_hidden_state_shape": list(hidden.shape),
+            "encoder_context_sigma": self._to_serializable_list(video_sigma),
+            "encoder_pooled_hw_l2_normalized_t_d": self._to_serializable_list(pooled_t_d[batch_idx]),
+            "encoder_pooled_hw_l2_normalized_delta_t_d": self._to_serializable_list(pooled_delta_t_d[batch_idx]),
+            "encoder_adjacent_pooled_cosine_t_minus_1": self._to_serializable_list(pooled_adjacent_cos[batch_idx]),
+            "encoder_adjacent_token_cosine_mean_t_minus_1": self._to_serializable_list(token_adjacent_cos[batch_idx]),
+            "encoder_initial_final_pooled_cosine": float(pooled_initial_final_cos[batch_idx].cpu().item()),
+            "encoder_pooled_norm_mean": float(pooled_norms.mean().cpu().item()),
+            "encoder_pooled_norm_std": float(pooled_norms.std(unbiased=False).cpu().item()),
+            "encoder_delta_norm_mean": (
+                float(pooled_delta_norms.mean().cpu().item()) if pooled_delta_norms.numel() else 0.0
+            ),
+            "encoder_delta_norm_std": (
+                float(pooled_delta_norms.std(unbiased=False).cpu().item()) if pooled_delta_norms.numel() else 0.0
+            ),
+            "encoder_adjacent_pooled_cosine_mean": (
+                float(pooled_adjacent_cos.mean().cpu().item()) if pooled_adjacent_cos.numel() else 1.0
+            ),
+            "encoder_adjacent_token_cosine_mean": (
+                float(token_adjacent_cos.mean().cpu().item()) if token_adjacent_cos.numel() else 1.0
+            ),
+        }
+
+    def _collect_diagnostics(
+        self,
+        *,
+        hidden_state_grid: torch.Tensor,
+        flat_crossattn_emb: torch.Tensor,
+        actions: torch.Tensor,
+        prompt_embedding: torch.Tensor | None,
+        video_sigma: torch.Tensor,
+    ) -> dict[str, object]:
+        if self.diagnostics_mode == "encoder_hidden":
+            return self._collect_encoder_hidden_diagnostics(
+                hidden_state_grid=hidden_state_grid,
+                video_sigma=video_sigma,
+            )
+        return self._collect_default_diagnostics(
+            flat_crossattn_emb=flat_crossattn_emb,
+            actions=actions,
+            prompt_embedding=prompt_embedding,
+            video_sigma=video_sigma,
+        )
+
     def apply_fsdp(self, dp_mesh: DeviceMesh) -> None:
         self.video2world_pipeline.apply_fsdp(dp_mesh)
         self.world2action_pipeline.apply_fsdp(dp_mesh)
@@ -154,7 +238,7 @@ class Video2World2ActionPipeline(nn.Module):
         T = input_vid.shape[2]
         assert T in {1, 5}
 
-        crossattn_emb, video_sigma = self.video2world_pipeline.generate_video(
+        crossattn_grid, video_sigma = self.video2world_pipeline.generate_video(
             vid_input=input_vid,
             num_latent_conditional_frames=1 if T == 1 else 2,
             prompt=prompt,
@@ -167,8 +251,8 @@ class Video2World2ActionPipeline(nn.Module):
             return_context_at_step=stop_after_step,
             hidden_state_layer_idx=self.world2action_pipeline.config.xattn_layer_idx,
         )
-        hidden_state_shape = crossattn_emb.shape
-        crossattn_emb = crossattn_emb.reshape(hidden_state_shape[0], -1, hidden_state_shape[-1])
+        hidden_state_shape = crossattn_grid.shape
+        crossattn_emb = crossattn_grid.reshape(hidden_state_shape[0], -1, hidden_state_shape[-1])
 
         actions = self.world2action_pipeline(
             state_B_HO_O=state_B_HO_O,
@@ -178,6 +262,7 @@ class Video2World2ActionPipeline(nn.Module):
             use_cuda_graphs=use_cuda_graphs,
         )
         self.last_diagnostics = self._collect_diagnostics(
+            hidden_state_grid=crossattn_grid,
             flat_crossattn_emb=crossattn_emb,
             actions=actions,
             prompt_embedding=prompt_embedding,

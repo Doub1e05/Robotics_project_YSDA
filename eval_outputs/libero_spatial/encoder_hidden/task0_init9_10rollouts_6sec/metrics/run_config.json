@@ -1,0 +1,14 @@
+{
+  "task_suite_name": "libero_spatial",
+  "task_id": 0,
+  "episode_idx": 9,
+  "num_rollouts": 10,
+  "seed_base": 50000,
+  "seed_stride": 97,
+  "max_control_steps": 120,
+  "regen_strategy": "none",
+  "eval_rank": 0,
+  "eval_world_size": 2,
+  "video_catchup": false,
+  "diagnostics_mode": "encoder_hidden"
+}

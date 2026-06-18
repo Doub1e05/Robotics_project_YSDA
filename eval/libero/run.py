@@ -96,6 +96,7 @@ def load_video2world2action_pipeline(
     dataset_statistics_path: pathlib.Path,
     dtype: torch.dtype = torch.bfloat16,
     use_text_encoder: bool = True,
+    diagnostics_mode: str = "default",
 ) -> Video2World2ActionPipeline:
     """Instantiate the video-to-world-to-action pipeline and load normalizer statistics."""
     config = make_config()
@@ -132,7 +133,11 @@ def load_video2world2action_pipeline(
         dtype=dtype,
     )
 
-    return Video2World2ActionPipeline(video2world_pipe, world2action_pipe).cuda()
+    return Video2World2ActionPipeline(
+        video2world_pipe,
+        world2action_pipe,
+        diagnostics_mode=diagnostics_mode,
+    ).cuda()
 
 
 class VAMInference:
@@ -161,14 +166,17 @@ class VAMInference:
         action_min_execute_actions: int = 3,
         action_max_execute_actions: int = 8,
         seed: int = 0,
+        diagnostics_mode: str = "default",
     ):
         self._t5_embeddings = self._load_t5_embeddings(t5_embeddings_path)
+        self.diagnostics_mode = diagnostics_mode
         self.model = load_video2world2action_pipeline(
             experiment_name,
             video_model_path,
             action_model_path,
             dataset_statistics_path,
             use_text_encoder=t5_embeddings_path is None,
+            diagnostics_mode=diagnostics_mode,
         )
         self._image_horizon = img_horizon
         self._lowdim_horizon = lowdim_horizon
@@ -183,8 +191,8 @@ class VAMInference:
         self.regen_max_attempts = regen_max_attempts
         self.regen_strategy = regen_strategy
         self.regen_num_candidates = regen_num_candidates
-        self.regen_model = self._load_regen_model(regen_model_path)
-        self.action_regen_model = self._load_regen_model(action_regen_model_path)
+        self.regen_model, self.regen_features = self._load_regen_model(regen_model_path)
+        self.action_regen_model = self._load_regen_model(action_regen_model_path)[0]
         self.action_conf_threshold = action_conf_threshold
         self.action_min_execute_actions = action_min_execute_actions
         self.action_max_execute_actions = action_max_execute_actions
@@ -212,9 +220,12 @@ class VAMInference:
         self.last_query_regen_attempts: int = 0
         self.last_query_was_regenerated: bool = False
         self.last_query_candidate_probs: list[float] = []
+        self.last_query_candidate_chunk_metrics: list[dict[str, object]] = []
+        self.last_query_selected_chunk_metrics: dict[str, object] | None = None
         self.last_query_selected_candidate_idx: int = 0
         self.last_query_action_success_probs: list[float] = []
         self.last_query_execute_horizon: int = 0
+        self.last_query_representation_metrics: dict[str, object] | None = None
         self.last_raw_action: np.ndarray | None = None
         self.last_chunk_id: int | None = None
         self.last_action_offset_in_chunk: int | None = None
@@ -233,14 +244,20 @@ class VAMInference:
         return embeddings
 
     @staticmethod
-    def _load_regen_model(regen_model_path: pathlib.Path | None):
+    def _load_regen_model(regen_model_path: pathlib.Path | None) -> tuple[object | None, list[str]]:
         if regen_model_path is None:
-            return None
+            return None, list(REGEN_FEATURES)
         from catboost import CatBoostClassifier
 
         model = CatBoostClassifier()
         model.load_model(str(regen_model_path))
-        return model
+        features_path = pathlib.Path(regen_model_path).parent / "catboost_chunk_regen_features.json"
+        if features_path.is_file():
+            with features_path.open(encoding="utf-8") as f:
+                features = json.load(f)["features"]
+        else:
+            features = list(REGEN_FEATURES)
+        return model, features
 
     def reset(self, task_description: str) -> None:
         """Reset internal state for a new task/episode."""
@@ -257,9 +274,12 @@ class VAMInference:
         self.last_query_regen_attempts = 0
         self.last_query_was_regenerated = False
         self.last_query_candidate_probs = []
+        self.last_query_candidate_chunk_metrics = []
+        self.last_query_selected_chunk_metrics = None
         self.last_query_selected_candidate_idx = 0
         self.last_query_action_success_probs = []
         self.last_query_execute_horizon = 0
+        self.last_query_representation_metrics = None
         self.last_raw_action = None
         self.last_chunk_id = None
         self.last_action_offset_in_chunk = None
@@ -341,7 +361,9 @@ class VAMInference:
         accepted_probability = None
         attempts_used = 0
         candidate_probs: list[float] = []
+        candidate_chunk_metrics: list[dict[str, object]] = []
         selected_candidate_idx = 0
+        accepted_chunk_metrics: dict[str, object] | None = None
 
         if self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}:
             candidates: list[tuple[np.ndarray, dict[str, float], dict[str, object], float]] = []
@@ -352,13 +374,19 @@ class VAMInference:
                     task_description=task_description,
                     sample_seed=base_seed + candidate_idx,
                 )
+                chunk_metrics = dict(chunk_metrics)
+                chunk_metrics["query_latency_sec"] = float(time.perf_counter() - start_time)
+                chunk_metrics["catboost_failure_probability"] = float(probability)
+                chunk_metrics["catboost_success_probability"] = float(1.0 - probability)
                 candidates.append((actions_np, diagnostics, chunk_metrics, probability))
                 candidate_probs.append(probability)
+                candidate_chunk_metrics.append(chunk_metrics)
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
 
             selected_candidate_idx = int(np.argmin(candidate_probs))
-            accepted_actions, accepted_diagnostics, _, accepted_probability = candidates[selected_candidate_idx]
+            accepted_actions, accepted_diagnostics, accepted_metrics, accepted_probability = candidates[selected_candidate_idx]
+            accepted_chunk_metrics = dict(accepted_metrics)
             attempts_used = self.regen_num_candidates - 1
         else:
             for attempt in range(max(self.regen_max_attempts, 0) + 1):
@@ -375,6 +403,7 @@ class VAMInference:
                 accepted_diagnostics = diagnostics
                 accepted_probability = probability
                 attempts_used = attempt
+                accepted_chunk_metrics = dict(chunk_metrics)
                 if (
                     self.regen_strategy != "threshold"
                     or self.regen_model is None
@@ -390,8 +419,14 @@ class VAMInference:
         self.last_query_regen_probability = accepted_probability
         self.last_query_regen_attempts = attempts_used
         self.last_query_candidate_probs = candidate_probs
+        self.last_query_candidate_chunk_metrics = candidate_chunk_metrics
         self.last_query_selected_candidate_idx = selected_candidate_idx
+        self.last_query_selected_chunk_metrics = accepted_chunk_metrics
         self.last_query_action_success_probs = []
+        if self.diagnostics_mode == "encoder_hidden":
+            self.last_query_representation_metrics = _structured_model_metrics(self.last_query_diagnostics)
+        else:
+            self.last_query_representation_metrics = None
         if self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}:
             self.last_query_was_regenerated = selected_candidate_idx > 0
         else:
@@ -449,7 +484,7 @@ class VAMInference:
     def _regen_probability(self, metrics: dict[str, object]) -> float:
         if self.regen_model is None:
             return float("nan")
-        row = [[float(metrics.get(feature, np.nan)) for feature in REGEN_FEATURES]]
+        row = [[float(metrics.get(feature, np.nan)) for feature in self.regen_features]]
         return float(self.regen_model.predict_proba(row)[0, 1])
 
     def _process_image(self, image: np.ndarray) -> np.ndarray:
@@ -540,6 +575,18 @@ def _clean_model_metrics(diagnostics: dict[str, float] | None) -> dict[str, floa
         for key, value in diagnostics.items()
         if isinstance(value, (int, float, np.integer, np.floating)) and math.isfinite(float(value))
     }
+
+
+def _structured_model_metrics(diagnostics: dict[str, object] | None) -> dict[str, object]:
+    if not diagnostics:
+        return {}
+    result: dict[str, object] = {}
+    for key, value in diagnostics.items():
+        if isinstance(value, (str, bool, int, float, np.integer, np.floating)):
+            result[key] = _jsonable(value)
+        elif isinstance(value, (list, tuple, dict, np.ndarray)):
+            result[key] = _jsonable(value)
+    return result
 
 
 def _chunk_action_metrics(raw_chunk: np.ndarray | None) -> dict[str, object]:
@@ -659,6 +706,58 @@ def _flatten_chunk_rows(episode_traces: list[dict[str, object]]) -> list[dict[st
     return rows
 
 
+def _flatten_candidate_chunk_rows(episode_traces: list[dict[str, object]]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for episode in episode_traces:
+        meta = episode["meta"]
+        for chunk in episode["chunks"]:
+            for candidate in chunk.get("candidate_chunk_metrics") or []:
+                row = {
+                    "total_episode_idx": meta["total_episode_idx"],
+                    "task_id": meta["task_id"],
+                    "episode_idx": meta["episode_idx"],
+                    "task_description": meta["task_description"],
+                    "success": meta["success"],
+                    "termination_reason": meta["termination_reason"],
+                    "chunk_id": chunk["chunk_id"],
+                    "inference_step_idx": chunk["inference_step_idx"],
+                    "query_timestep": chunk["query_timestep"],
+                    "selected_candidate_idx": chunk.get("selected_candidate_idx"),
+                    "candidate_idx": candidate["candidate_idx"],
+                    "catboost_failure_probability": candidate.get("catboost_failure_probability"),
+                    "catboost_success_probability": candidate.get("catboost_success_probability"),
+                    "is_selected": int(candidate["candidate_idx"]) == int(chunk.get("selected_candidate_idx", -1)),
+                }
+                row.update(candidate.get("metrics") or {})
+                rows.append(row)
+    return rows
+
+
+def _flatten_representation_rows(episode_traces: list[dict[str, object]]) -> list[dict[str, object]]:
+    rows: list[dict[str, object]] = []
+    for episode in episode_traces:
+        meta = episode["meta"]
+        for chunk in episode["chunks"]:
+            representation_metrics = chunk.get("representation_metrics") or {}
+            if not representation_metrics:
+                continue
+            row = {
+                "total_episode_idx": meta["total_episode_idx"],
+                "task_id": meta["task_id"],
+                "episode_idx": meta["episode_idx"],
+                "task_description": meta["task_description"],
+                "success": meta["success"],
+                "termination_reason": meta["termination_reason"],
+                "chunk_id": chunk["chunk_id"],
+                "inference_step_idx": chunk["inference_step_idx"],
+                "query_timestep": chunk["query_timestep"],
+                "query_latency_sec": chunk["query_latency_sec"],
+            }
+            row.update(representation_metrics)
+            rows.append(row)
+    return rows
+
+
 def _flatten_action_rows(episode_traces: list[dict[str, object]]) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for episode in episode_traces:
@@ -707,11 +806,16 @@ def _trim_failure_episode_metrics(episode_trace: dict[str, object]) -> dict[str,
 def _write_trace_outputs(metrics_dir: Path, episode_traces: list[dict[str, object]]) -> None:
     episode_traces = [_trim_failure_episode_metrics(ep) for ep in episode_traces]
     chunk_rows = _flatten_chunk_rows(episode_traces)
+    candidate_rows = _flatten_candidate_chunk_rows(episode_traces)
+    representation_rows = _flatten_representation_rows(episode_traces)
     action_rows = _flatten_action_rows(episode_traces)
     _write_jsonl(metrics_dir / "episode_traces.jsonl", episode_traces)
     _write_jsonl(metrics_dir / "chunk_metrics.jsonl", chunk_rows)
+    _write_jsonl(metrics_dir / "candidate_chunk_metrics.jsonl", candidate_rows)
+    _write_jsonl(metrics_dir / "representation_metrics.jsonl", representation_rows)
     _write_jsonl(metrics_dir / "action_metrics.jsonl", action_rows)
     _write_csv_rows(metrics_dir / "chunk_metrics.csv", chunk_rows)
+    _write_csv_rows(metrics_dir / "candidate_chunk_metrics.csv", candidate_rows)
     _write_csv_rows(metrics_dir / "action_metrics.csv", action_rows)
     summary = {
         "num_episodes": len(episode_traces),
@@ -760,8 +864,23 @@ def run_episode(
             action = policy.step(image, task_description, obs)
 
             if policy.last_step_used_query:
-                chunk_metrics = _chunk_action_metrics(policy.last_query_actions)
-                chunk_metrics.update(_clean_model_metrics(policy.last_query_diagnostics))
+                if policy.last_query_selected_chunk_metrics is not None:
+                    chunk_metrics = dict(policy.last_query_selected_chunk_metrics)
+                else:
+                    chunk_metrics = _chunk_action_metrics(policy.last_query_actions)
+                    chunk_metrics.update(_clean_model_metrics(policy.last_query_diagnostics))
+                    chunk_metrics["query_latency_sec"] = float(policy.last_query_latency_sec or 0.0)
+                candidate_rows = [
+                    {
+                        "candidate_idx": int(idx),
+                        "catboost_failure_probability": float(prob),
+                        "catboost_success_probability": float(1.0 - prob),
+                        "metrics": dict(metrics),
+                    }
+                    for idx, (prob, metrics) in enumerate(
+                        zip(policy.last_query_candidate_probs, policy.last_query_candidate_chunk_metrics)
+                    )
+                ]
                 trace["chunks"].append(
                     {
                         "chunk_id": int(policy.last_chunk_id if policy.last_chunk_id is not None else len(trace["chunks"])),
@@ -779,9 +898,11 @@ def run_episode(
                         ),
                         "selected_candidate_idx": int(policy.last_query_selected_candidate_idx),
                         "candidate_regen_probabilities": list(policy.last_query_candidate_probs),
+                        "candidate_chunk_metrics": candidate_rows,
                         "execute_horizon": int(policy.last_query_execute_horizon),
                         "action_conf_threshold": float(policy.action_conf_threshold),
                         "action_success_probabilities": list(policy.last_query_action_success_probs),
+                        "representation_metrics": dict(policy.last_query_representation_metrics or {}),
                         "metrics": chunk_metrics,
                         "actions": [],
                     }

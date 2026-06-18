@@ -1,0 +1,7 @@
+{
+  "num_rollouts": 40,
+  "num_success": 19,
+  "num_fail": 21,
+  "max_chunk_id_common": 15,
+  "success_rate": 0.475
+}

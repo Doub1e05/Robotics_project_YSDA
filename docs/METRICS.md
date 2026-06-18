@@ -5,8 +5,12 @@ The eval writes model-output metrics without episode-level averaging.
 ## Files
 - `episode_traces.jsonl`: one JSON object per episode with `meta`, `chunks`, and nested `actions`.
 - `chunk_metrics.csv` / `chunk_metrics.jsonl`: one row per model inference chunk.
+- `candidate_chunk_metrics.csv` / `candidate_chunk_metrics.jsonl`: one row per (chunk, candidate) when using `catboost_select` / `hybrid`.
 - `action_metrics.csv` / `action_metrics.jsonl`: one row per executed action, suitable for filtering actions.
 - `summary.json`: only counts and eval labels, not metric aggregates.
+
+## Detailed docs
+See `docs/METRICS_DETAILS.md` (Russian) for a full explanation of metric sources and formulas.
 
 ## Chunk-Level Metrics
 Chunk rows contain one copy of diagnostics that belong to the whole predicted action chunk,
