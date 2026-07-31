@@ -12,15 +12,44 @@ class Video2World2ActionPipeline(nn.Module):
         video2world_pipeline: Video2WorldPipeline,
         world2action_pipeline: World2ActionPipeline,
         diagnostics_mode: str = "default",
+        representation_layer_indices: list[int] | None = None,
+        decoder_capture_block_indices: list[int] | None = None,
+        replay_payload_mode: str = "full",
     ) -> None:
         super().__init__()
 
         self.video2world_pipeline = video2world_pipeline
         self.world2action_pipeline = world2action_pipeline
-        if diagnostics_mode not in {"default", "encoder_hidden"}:
+        if diagnostics_mode not in {"default", "encoder_hidden", "decoder_hidden"}:
             raise ValueError(f"Unsupported diagnostics_mode={diagnostics_mode!r}")
+        if replay_payload_mode not in {"full", "decoder_only", "none"}:
+            raise ValueError(f"Unsupported replay_payload_mode={replay_payload_mode!r}")
         self.diagnostics_mode = diagnostics_mode
+        self.replay_payload_mode = replay_payload_mode
+        decoder_layer_idx = int(self.world2action_pipeline.config.xattn_layer_idx)
+        self.representation_layer_indices = sorted(
+            {int(idx) for idx in (representation_layer_indices or [decoder_layer_idx])}
+        )
+        self.decoder_capture_block_indices = sorted({int(idx) for idx in (decoder_capture_block_indices or [])})
         self.last_diagnostics: dict[str, object] = {}
+        self.last_replay_payload: dict[str, object] = {}
+        self.last_decoder_hidden_states_by_block: dict[int, torch.Tensor] = {}
+
+    @staticmethod
+    def _resolve_decoder_block_request(
+        decoder_hidden_state_list: list[torch.Tensor],
+        requested_block_idx: int,
+    ) -> tuple[int, torch.Tensor]:
+        num_blocks = len(decoder_hidden_state_list)
+        if requested_block_idx == num_blocks:
+            actual_block_idx = num_blocks - 1
+        else:
+            actual_block_idx = requested_block_idx
+        if actual_block_idx < 0 or actual_block_idx >= num_blocks:
+            raise IndexError(
+                f"Requested decoder block {requested_block_idx} is out of range for {num_blocks} captured blocks."
+            )
+        return actual_block_idx, decoder_hidden_state_list[actual_block_idx]
 
     @staticmethod
     def _entropy(prob: torch.Tensor) -> torch.Tensor:
@@ -133,11 +162,10 @@ class Video2World2ActionPipeline(nn.Module):
     def _to_serializable_list(tensor: torch.Tensor) -> list:
         return tensor.detach().float().cpu().tolist()
 
-    def _collect_encoder_hidden_diagnostics(
+    def _collect_encoder_hidden_layer_metrics(
         self,
         *,
         hidden_state_grid: torch.Tensor,
-        video_sigma: torch.Tensor,
     ) -> dict[str, object]:
         hidden = hidden_state_grid.detach().float()
         hidden_norm = F.normalize(hidden, dim=-1, eps=1e-12)
@@ -163,10 +191,7 @@ class Video2World2ActionPipeline(nn.Module):
 
         batch_idx = 0
         return {
-            "diagnostics_mode": self.diagnostics_mode,
-            "encoder_xattn_layer_idx": int(self.world2action_pipeline.config.xattn_layer_idx),
             "encoder_hidden_state_shape": list(hidden.shape),
-            "encoder_context_sigma": self._to_serializable_list(video_sigma),
             "encoder_pooled_hw_l2_normalized_t_d": self._to_serializable_list(pooled_t_d[batch_idx]),
             "encoder_pooled_hw_l2_normalized_delta_t_d": self._to_serializable_list(pooled_delta_t_d[batch_idx]),
             "encoder_adjacent_pooled_cosine_t_minus_1": self._to_serializable_list(pooled_adjacent_cos[batch_idx]),
@@ -188,10 +213,145 @@ class Video2World2ActionPipeline(nn.Module):
             ),
         }
 
+    def _collect_encoder_hidden_diagnostics(
+        self,
+        *,
+        hidden_states_by_layer: dict[int, torch.Tensor],
+        video_sigma: torch.Tensor,
+    ) -> dict[str, object]:
+        layer_metrics = {
+            int(layer_idx): self._collect_encoder_hidden_layer_metrics(hidden_state_grid=hidden_state_grid)
+            for layer_idx, hidden_state_grid in sorted(hidden_states_by_layer.items())
+        }
+        return {
+            "diagnostics_mode": self.diagnostics_mode,
+            "encoder_decoder_xattn_layer_idx": int(self.world2action_pipeline.config.xattn_layer_idx),
+            "encoder_capture_layer_indices": list(layer_metrics.keys()),
+            "encoder_context_sigma": self._to_serializable_list(video_sigma),
+            "layer_metrics": layer_metrics,
+        }
+
+    def _collect_decoder_hidden_layer_metrics(
+        self,
+        *,
+        hidden_state_seq: torch.Tensor,
+    ) -> dict[str, object]:
+        hidden = hidden_state_seq.detach().float()
+        hidden_norm = F.normalize(hidden, dim=-1, eps=1e-12)
+        delta_t_d = hidden_norm[:, 1:, :] - hidden_norm[:, :-1, :] if hidden_norm.shape[1] > 1 else hidden_norm[:, :0, :]
+        adjacent_cos = (
+            F.cosine_similarity(hidden_norm[:, 1:, :], hidden_norm[:, :-1, :], dim=-1)
+            if hidden_norm.shape[1] > 1
+            else torch.empty((hidden.shape[0], 0), device=hidden.device, dtype=hidden.dtype)
+        )
+        initial_final_cos = F.cosine_similarity(hidden_norm[:, 0, :], hidden_norm[:, -1, :], dim=-1)
+        norms = torch.linalg.norm(hidden_norm, dim=-1)
+        delta_norms = (
+            torch.linalg.norm(delta_t_d, dim=-1)
+            if delta_t_d.numel()
+            else torch.empty((hidden.shape[0], 0), device=hidden.device, dtype=hidden.dtype)
+        )
+
+        batch_idx = 0
+        return {
+            "decoder_hidden_state_shape": list(hidden.shape),
+            "decoder_l2_normalized_t_d": self._to_serializable_list(hidden_norm[batch_idx]),
+            "decoder_l2_normalized_delta_t_d": self._to_serializable_list(delta_t_d[batch_idx]),
+            "decoder_adjacent_cosine_t_minus_1": self._to_serializable_list(adjacent_cos[batch_idx]),
+            "decoder_initial_final_cosine": float(initial_final_cos[batch_idx].cpu().item()),
+            "decoder_norm_mean": float(norms.mean().cpu().item()),
+            "decoder_norm_std": float(norms.std(unbiased=False).cpu().item()),
+            "decoder_delta_norm_mean": float(delta_norms.mean().cpu().item()) if delta_norms.numel() else 0.0,
+            "decoder_delta_norm_std": float(delta_norms.std(unbiased=False).cpu().item()) if delta_norms.numel() else 0.0,
+            "decoder_adjacent_cosine_mean": float(adjacent_cos.mean().cpu().item()) if adjacent_cos.numel() else 1.0,
+        }
+
+    def _collect_decoder_hidden_diagnostics(
+        self,
+        *,
+        decoder_hidden_states_by_block: dict[int, torch.Tensor],
+        obs_token_count: int,
+        executed_action_count: int,
+    ) -> dict[str, object]:
+        layer_metrics: dict[int, dict[str, object]] = {}
+        for block_idx, hidden_state in sorted(decoder_hidden_states_by_block.items()):
+            action_hidden = hidden_state[:, obs_token_count:, :].detach().float()
+            if action_hidden.shape[1] == 0:
+                continue
+            prefix_len = min(int(executed_action_count), int(action_hidden.shape[1]))
+            prefix_hidden = action_hidden[:, :prefix_len, :] if prefix_len > 0 else action_hidden[:, :1, :]
+            layer_metrics[int(block_idx)] = {
+                "full_chunk": {
+                    "action_subset": "full_chunk",
+                    "action_count": int(action_hidden.shape[1]),
+                    **self._collect_decoder_hidden_layer_metrics(hidden_state_seq=action_hidden),
+                },
+                "first_k_actions": {
+                    "action_subset": "first_k_actions",
+                    "action_count": int(prefix_len),
+                    **self._collect_decoder_hidden_layer_metrics(hidden_state_seq=prefix_hidden),
+                },
+            }
+        return {
+            "diagnostics_mode": self.diagnostics_mode,
+            "decoder_capture_block_indices": list(layer_metrics.keys()),
+            "executed_action_count": int(executed_action_count),
+            "layer_metrics": layer_metrics,
+        }
+
+    def _build_replay_payload(
+        self,
+        *,
+        hidden_states_by_layer: dict[int, torch.Tensor],
+        state_B_HO_O: torch.Tensor,
+        video_sigma: torch.Tensor,
+        actions: torch.Tensor,
+        decoder_hidden_states_by_block: dict[int, torch.Tensor] | None,
+        prompt: str,
+        seed: int,
+        num_sampling_step: int,
+        stop_after_step: int | None,
+        use_cuda_graphs: bool,
+    ) -> dict[str, object]:
+        decoder_layer_idx = int(self.world2action_pipeline.config.xattn_layer_idx)
+        decoder_hidden_grid = hidden_states_by_layer[decoder_layer_idx].detach().cpu().to(dtype=torch.bfloat16)
+        payload = {
+            "prompt": prompt,
+            "seed": int(seed),
+            "num_sampling_step": int(num_sampling_step),
+            "stop_after_step": int(stop_after_step) if stop_after_step is not None else None,
+            "use_cuda_graphs": bool(use_cuda_graphs),
+            "decoder_xattn_layer_idx": decoder_layer_idx,
+            "representation_layer_indices": list(self.representation_layer_indices),
+            "encoder_hidden_grid_B_T_H_W_D": decoder_hidden_grid,
+            "encoder_hidden_grid_shape": list(decoder_hidden_grid.shape),
+            "context_timesteps_B_1": video_sigma.unsqueeze(1).detach().cpu().to(dtype=torch.float32),
+            "video_sigma_B": video_sigma.detach().cpu().to(dtype=torch.float32),
+            "state_B_HO_O": state_B_HO_O.detach().cpu().to(dtype=torch.float32),
+            "pred_actions_B_HA_A": actions.detach().cpu().to(dtype=torch.float32),
+            "decoder_capture_block_indices": list(sorted((decoder_hidden_states_by_block or {}).keys())),
+            "decoder_hidden_states_by_block": {
+                int(block_idx): hidden_state.detach().cpu().to(dtype=torch.bfloat16)
+                for block_idx, hidden_state in sorted((decoder_hidden_states_by_block or {}).items())
+            },
+        }
+        if self.replay_payload_mode == "none":
+            return {}
+        if self.replay_payload_mode == "decoder_only":
+            payload.pop("encoder_hidden_grid_B_T_H_W_D", None)
+            payload.pop("encoder_hidden_grid_shape", None)
+            payload.pop("context_timesteps_B_1", None)
+            payload.pop("video_sigma_B", None)
+            return payload
+        return payload
+
     def _collect_diagnostics(
         self,
         *,
-        hidden_state_grid: torch.Tensor,
+        hidden_states_by_layer: dict[int, torch.Tensor],
+        decoder_hidden_states_by_block: dict[int, torch.Tensor],
+        obs_token_count: int,
+        executed_action_count: int,
         flat_crossattn_emb: torch.Tensor,
         actions: torch.Tensor,
         prompt_embedding: torch.Tensor | None,
@@ -199,8 +359,14 @@ class Video2World2ActionPipeline(nn.Module):
     ) -> dict[str, object]:
         if self.diagnostics_mode == "encoder_hidden":
             return self._collect_encoder_hidden_diagnostics(
-                hidden_state_grid=hidden_state_grid,
+                hidden_states_by_layer=hidden_states_by_layer,
                 video_sigma=video_sigma,
+            )
+        if self.diagnostics_mode == "decoder_hidden":
+            return self._collect_decoder_hidden_diagnostics(
+                decoder_hidden_states_by_block=decoder_hidden_states_by_block,
+                obs_token_count=obs_token_count,
+                executed_action_count=executed_action_count,
             )
         return self._collect_default_diagnostics(
             flat_crossattn_emb=flat_crossattn_emb,
@@ -238,7 +404,9 @@ class Video2World2ActionPipeline(nn.Module):
         T = input_vid.shape[2]
         assert T in {1, 5}
 
-        crossattn_grid, video_sigma = self.video2world_pipeline.generate_video(
+        decoder_layer_idx = int(self.world2action_pipeline.config.xattn_layer_idx)
+        capture_layers = sorted({decoder_layer_idx, *self.representation_layer_indices})
+        hidden_state_payload, video_sigma = self.video2world_pipeline.generate_video(
             vid_input=input_vid,
             num_latent_conditional_frames=1 if T == 1 else 2,
             prompt=prompt,
@@ -249,23 +417,59 @@ class Video2World2ActionPipeline(nn.Module):
             seed=seed,
             use_cuda_graphs=use_cuda_graphs,
             return_context_at_step=stop_after_step,
-            hidden_state_layer_idx=self.world2action_pipeline.config.xattn_layer_idx,
+            hidden_state_layer_idx=capture_layers,
         )
+        if isinstance(hidden_state_payload, dict):
+            hidden_states_by_layer = {int(layer_idx): tensor for layer_idx, tensor in hidden_state_payload.items()}
+        else:
+            hidden_states_by_layer = {capture_layers[0]: hidden_state_payload}
+        crossattn_grid = hidden_states_by_layer[decoder_layer_idx]
         hidden_state_shape = crossattn_grid.shape
         crossattn_emb = crossattn_grid.reshape(hidden_state_shape[0], -1, hidden_state_shape[-1])
 
-        actions = self.world2action_pipeline(
+        world2action_out = self.world2action_pipeline(
             state_B_HO_O=state_B_HO_O,
             crossattn_emb=crossattn_emb,
             context_timesteps_B_1=video_sigma.unsqueeze(1),
             seed=seed,
             use_cuda_graphs=use_cuda_graphs,
+            return_hidden_states=bool(self.decoder_capture_block_indices),
         )
+        decoder_hidden_states_by_block: dict[int, torch.Tensor] = {}
+        if self.decoder_capture_block_indices:
+            actions, decoder_hidden_state_list = world2action_out
+            for requested_block_idx in self.decoder_capture_block_indices:
+                _, hidden_state = self._resolve_decoder_block_request(
+                    decoder_hidden_state_list,
+                    int(requested_block_idx),
+                )
+                decoder_hidden_states_by_block[int(requested_block_idx)] = hidden_state
+        else:
+            actions = world2action_out
+        self.last_decoder_hidden_states_by_block = {
+            int(block_idx): hidden_state.detach().cpu()
+            for block_idx, hidden_state in decoder_hidden_states_by_block.items()
+        }
         self.last_diagnostics = self._collect_diagnostics(
-            hidden_state_grid=crossattn_grid,
+            hidden_states_by_layer=hidden_states_by_layer,
+            decoder_hidden_states_by_block=decoder_hidden_states_by_block,
+            obs_token_count=int(state_B_HO_O.shape[1]),
+            executed_action_count=int(actions.shape[1]),
             flat_crossattn_emb=crossattn_emb,
             actions=actions,
             prompt_embedding=prompt_embedding,
             video_sigma=video_sigma,
+        )
+        self.last_replay_payload = self._build_replay_payload(
+            hidden_states_by_layer=hidden_states_by_layer,
+            state_B_HO_O=state_B_HO_O,
+            video_sigma=video_sigma,
+            actions=actions,
+            decoder_hidden_states_by_block=decoder_hidden_states_by_block,
+            prompt=prompt,
+            seed=seed,
+            num_sampling_step=num_sampling_step,
+            stop_after_step=stop_after_step,
+            use_cuda_graphs=use_cuda_graphs,
         )
         return actions

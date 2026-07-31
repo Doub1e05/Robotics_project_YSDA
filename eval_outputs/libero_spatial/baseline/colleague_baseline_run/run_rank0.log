@@ -1,189 +1,0 @@
-Traceback (most recent call last):
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/__init__.py", line 2, in <module>
-    from robosuite.macros_private import *
-ModuleNotFoundError: No module named 'robosuite.macros_private'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/motovilovil/Robotics/robotics_project/mimic-video/eval/libero/run.py", line 24, in <module>
-    from libero.libero.envs import OffScreenRenderEnv
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/libero/libero/envs/__init__.py", line 1, in <module>
-    from .bddl_base_domain import TASK_MAPPING
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/libero/libero/envs/bddl_base_domain.py", line 3, in <module>
-    import robosuite.utils.transform_utils as T
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/__init__.py", line 5, in <module>
-    from robosuite.utils.log_utils import ROBOSUITE_DEFAULT_LOGGER
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/utils/log_utils.py", line 94, in <module>
-    ROBOSUITE_DEFAULT_LOGGER = DefaultLogger(
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/utils/log_utils.py", line 71, in __init__
-    fh = logging.FileHandler("/tmp/robosuite.log")
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/logging/__init__.py", line 1169, in __init__
-    StreamHandler.__init__(self, self._open())
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/logging/__init__.py", line 1201, in _open
-    return open_func(self.baseFilename, self.mode,
-PermissionError: [Errno 13] Permission denied: '/tmp/robosuite.log'
-Traceback (most recent call last):
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/__init__.py", line 2, in <module>
-    from robosuite.macros_private import *
-ModuleNotFoundError: No module named 'robosuite.macros_private'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/motovilovil/Robotics/robotics_project/mimic-video/eval/libero/run.py", line 24, in <module>
-    from libero.libero.envs import OffScreenRenderEnv
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/libero/libero/envs/__init__.py", line 1, in <module>
-    from .bddl_base_domain import TASK_MAPPING
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/libero/libero/envs/bddl_base_domain.py", line 3, in <module>
-    import robosuite.utils.transform_utils as T
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/__init__.py", line 5, in <module>
-    from robosuite.utils.log_utils import ROBOSUITE_DEFAULT_LOGGER
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/utils/log_utils.py", line 94, in <module>
-    ROBOSUITE_DEFAULT_LOGGER = DefaultLogger(
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/utils/log_utils.py", line 71, in __init__
-    fh = logging.FileHandler("/tmp/robosuite.log")
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/logging/__init__.py", line 1169, in __init__
-    StreamHandler.__init__(self, self._open())
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/logging/__init__.py", line 1201, in _open
-    return open_func(self.baseFilename, self.mode,
-PermissionError: [Errno 13] Permission denied: '/tmp/robosuite.log'
-[robosuite WARNING] No private macro file found! (__init__.py:7)
-[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
-[robosuite WARNING] To setup, run: python /home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
-Traceback (most recent call last):
-  File "/home/motovilovil/Robotics/robotics_project/mimic-video/eval/libero/run.py", line 27, in <module>
-    from cosmos_predict2.configs.config import make_config
-  File "/home/motovilovil/Robotics/robotics_project/mimic-video/model/cosmos_predict2/configs/config.py", line 20, in <module>
-    from cosmos_predict2.configs.defaults.callbacks import register_callbacks
-  File "/home/motovilovil/Robotics/robotics_project/mimic-video/model/cosmos_predict2/configs/defaults/callbacks.py", line 16, in <module>
-    from hydra.core.config_store import ConfigStore
-  File "/home/motovilovil/.local/lib/python3.10/site-packages/hydra/__init__.py", line 5, in <module>
-    from hydra import utils
-  File "/home/motovilovil/.local/lib/python3.10/site-packages/hydra/utils.py", line 3, in <module>
-    import logging.config
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/logging/config.py", line 30, in <module>
-    import logging.handlers
-  File "/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/logging/handlers.py", line 45, in <module>
-    class BaseRotatingHandler(logging.FileHandler):
-TypeError: function() argument 'code' must be code, not str
-[robosuite WARNING] No private macro file found! (__init__.py:7)
-[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
-[robosuite WARNING] To setup, run: python /home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
-/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/megatron/core/inference/contexts/__init__.py:9: DeprecationWarning: The following imports from `dynamic_context.py` will be removed in this file in `megatron-core` 0.14. The imports here result in a cyclic import issue that causes rotary embeddings to import from Apex rather than Transformer Engine.
-  warnings.warn(
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
-[06-16 08:32:02|CRITICAL|model/imaginaire/utils/config_helper.py:171:import_all_modules_from_package] Reloading all modules from package cosmos_predict2.configs.experiment
-[06-16 08:32:03|CRITICAL|model/cosmos_predict2/configs/config.py:91:make_config] Finished importing config modules.
-[06-16 08:32:04|WARNING|model/cosmos_predict2/pipelines/video2world.py:277:from_config] precision torch.bfloat16
-[06-16 08:32:08|INFO|model/cosmos_predict2/tokenizers/tokenizer.py:687:_video_vae] Loading /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[06-16 08:32:08|SUCCESS|model/cosmos_predict2/tokenizers/tokenizer.py:689:_video_vae] Successfully loaded /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[06-16 08:32:08|INFO|model/cosmos_predict2/pipelines/video2world.py:335:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[06-16 08:32:31|SUCCESS|model/cosmos_predict2/pipelines/video2world.py:354:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[06-16 08:32:32|WARNING|model/cosmos_predict2/pipelines/world2action.py:71:from_config] precision torch.bfloat16
-[06-16 08:32:33|INFO|model/cosmos_predict2/pipelines/world2action.py:86:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-[06-16 08:32:38|SUCCESS|model/cosmos_predict2/pipelines/world2action.py:96:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-Using max_control_steps=120 (regen_strategy=none, regen_threshold=0.38, regen_max_attempts=0, regen_num_candidates=3, action_conf_threshold=0.62, action_min_execute_actions=3, action_max_execute_actions=8)
-Tasks:   0%|          | 0/10 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
-Assets already downloaded at /home/motovilovil/.cache/libero/assets
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A[A
-
-                                                        [A[A
-Episodes:  10%|█         | 1/10 [01:29<13:27, 89.73s/it][A

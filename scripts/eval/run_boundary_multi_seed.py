@@ -7,20 +7,38 @@ import pathlib
 import sys
 from pathlib import Path
 
+import torch
 import tqdm
 import tyro
+
+_orig_torch_load = torch.load
+
+
+def _torch_load(*args, **kwargs):
+    kwargs.setdefault("weights_only", False)
+    return _orig_torch_load(*args, **kwargs)
+
+
+torch.load = _torch_load
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT / "eval" / "libero") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "eval" / "libero"))
 
+from decoder_metric_select import (  # noqa: E402
+    DECODER_LINEAR_COMBO_V1_NAME,
+    DECODER_METRIC_SELECT_LAYER,
+    DECODER_METRIC_SELECT_NAME,
+    DECODER_METRIC_SELECT_REDUCE,
+    DECODER_METRIC_SELECT_SUBSET,
+)
 from run import (  # noqa: E402
-    LIBERO_SUITE_MAX_STEPS,
     _termination_reason,
     _trim_failure_episode_metrics,
     _write_trace_outputs,
     benchmark,
     get_libero_env,
+    get_max_steps_for_suite,
     run_episode,
     save_rollout_video,
     set_seed_everywhere,
@@ -35,6 +53,26 @@ def assigned_rollout_ids(num_rollouts: int, eval_rank: int, eval_world_size: int
 def episode_video_path(videos_dir: Path, rollout_id: int) -> Path | None:
     matches = sorted(videos_dir.glob(f"episode{rollout_id + 1}_*.mp4"))
     return matches[0] if matches else None
+
+
+def write_summary_only(metrics_dir: Path, episode_traces: list[dict[str, object]]) -> None:
+    """Persist only aggregate rollout statistics, without trajectory traces."""
+    summary = {
+        "num_episodes": len(episode_traces),
+        "num_successes": int(sum(bool(ep["meta"]["success"]) for ep in episode_traces)),
+        "success_rate": (
+            sum(bool(ep["meta"]["success"]) for ep in episode_traces) / max(len(episode_traces), 1)
+        ),
+        "total_chunks": int(sum(int(ep["meta"]["chunk_count"]) for ep in episode_traces)),
+        "total_actions": int(sum(int(ep["meta"]["action_count"]) for ep in episode_traces)),
+        "total_regenerated_chunks": int(
+            sum(int(ep["meta"].get("regenerated_chunk_count", 0)) for ep in episode_traces)
+        ),
+    }
+    (metrics_dir / "summary.json").write_text(
+        json.dumps(summary, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
 
 
 def run_boundary_multi_seed(
@@ -67,10 +105,26 @@ def run_boundary_multi_seed(
     regen_strategy: str = "none",
     regen_model_path: pathlib.Path | None = None,
     regen_num_candidates: int = 3,
+    decoder_metric_select_layer: int = DECODER_METRIC_SELECT_LAYER,
+    decoder_metric_select_name: str = DECODER_METRIC_SELECT_NAME,
+    decoder_metric_select_action_subset: str = DECODER_METRIC_SELECT_SUBSET,
+    decoder_metric_select_reduce: str = DECODER_METRIC_SELECT_REDUCE,
+    consensus_medoid_horizon: int | None = None,
+    consensus_medoid_temporal_discount: float = 0.9,
+    consensus_medoid_translation_weight: float = 1.0,
+    consensus_medoid_rotation_weight: float = 0.5,
+    consensus_medoid_gripper_weight: float = 0.25,
+    consensus_medoid_continuity_weight: float = 0.25,
+    consensus_medoid_smoothness_weight: float = 0.10,
+    consensus_medoid_gripper_switch_weight: float = 0.10,
+    diagnostics_mode: str = "default",
+    decoder_capture_block_indices: list[int] | None = None,
+    replay_payload_mode: str = "full",
     eval_rank: int = 0,
     eval_world_size: int = 1,
     resume: bool = True,
-    diagnostics_mode: str = "default",
+    progress_label: str | None = None,
+    summary_only: bool = False,
 ) -> None:
     rollout_dir = Path(rollout_dir)
     metrics_root = Path(metrics_dir or rollout_dir / "metrics")
@@ -93,17 +147,32 @@ def run_boundary_multi_seed(
         "seed_stride": seed_stride,
         "max_control_steps": max_control_steps,
         "regen_strategy": regen_strategy,
+        "regen_num_candidates": regen_num_candidates,
+        "decoder_metric_select_layer": decoder_metric_select_layer,
+        "decoder_metric_select_name": decoder_metric_select_name,
+        "decoder_metric_select_action_subset": decoder_metric_select_action_subset,
+        "decoder_metric_select_reduce": decoder_metric_select_reduce,
+        "consensus_medoid_horizon": consensus_medoid_horizon or vam_num_execute_actions,
+        "consensus_medoid_temporal_discount": consensus_medoid_temporal_discount,
+        "consensus_medoid_translation_weight": consensus_medoid_translation_weight,
+        "consensus_medoid_rotation_weight": consensus_medoid_rotation_weight,
+        "consensus_medoid_gripper_weight": consensus_medoid_gripper_weight,
+        "consensus_medoid_continuity_weight": consensus_medoid_continuity_weight,
+        "consensus_medoid_smoothness_weight": consensus_medoid_smoothness_weight,
+        "consensus_medoid_gripper_switch_weight": consensus_medoid_gripper_switch_weight,
+        "diagnostics_mode": diagnostics_mode,
+        "decoder_capture_block_indices": decoder_capture_block_indices,
         "eval_rank": eval_rank,
         "eval_world_size": eval_world_size,
         "video_catchup": video_catchup,
-        "diagnostics_mode": diagnostics_mode,
     }
-    (metrics_root / "run_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
+    if not summary_only:
+        (metrics_root / "run_config.json").write_text(json.dumps(config, indent=2), encoding="utf-8")
 
     episode_traces: list[dict[str, object]] = []
     completed_seeds: set[int] = set()
     traces_path = metrics_dir / "episode_traces.jsonl"
-    if resume and traces_path.is_file():
+    if resume and not summary_only and traces_path.is_file():
         for line in traces_path.read_text(encoding="utf-8").splitlines():
             if not line.strip():
                 continue
@@ -119,7 +188,7 @@ def run_boundary_multi_seed(
         raise ValueError(f"episode_idx={episode_idx} out of range for task {task_id} ({len(initial_states)} inits).")
 
     env, task_description = get_libero_env(task)
-    max_steps = min(max_control_steps, LIBERO_SUITE_MAX_STEPS[task_suite_name])
+    max_steps = min(max_control_steps, get_max_steps_for_suite(task_suite_name))
 
     policy = VAMInference(
         vam_experiment_name,
@@ -134,16 +203,30 @@ def run_boundary_multi_seed(
         t5_embeddings_path,
         use_cuda_graphs,
         regen_model_path,
-        0.38,
-        0,
-        regen_strategy,
-        regen_num_candidates,
-        None,
-        0.62,
-        3,
-        8,
-        seed_base,
-        diagnostics_mode,
+        regen_threshold=0.38,
+        regen_max_attempts=0,
+        regen_strategy=regen_strategy,
+        regen_num_candidates=regen_num_candidates,
+        decoder_metric_select_layer=decoder_metric_select_layer,
+        decoder_metric_select_name=decoder_metric_select_name,
+        decoder_metric_select_action_subset=decoder_metric_select_action_subset,
+        decoder_metric_select_reduce=decoder_metric_select_reduce,
+        consensus_medoid_horizon=consensus_medoid_horizon,
+        consensus_medoid_temporal_discount=consensus_medoid_temporal_discount,
+        consensus_medoid_translation_weight=consensus_medoid_translation_weight,
+        consensus_medoid_rotation_weight=consensus_medoid_rotation_weight,
+        consensus_medoid_gripper_weight=consensus_medoid_gripper_weight,
+        consensus_medoid_continuity_weight=consensus_medoid_continuity_weight,
+        consensus_medoid_smoothness_weight=consensus_medoid_smoothness_weight,
+        consensus_medoid_gripper_switch_weight=consensus_medoid_gripper_switch_weight,
+        action_regen_model_path=None,
+        action_conf_threshold=0.62,
+        action_min_execute_actions=3,
+        action_max_execute_actions=8,
+        seed=seed_base,
+        diagnostics_mode=diagnostics_mode,
+        decoder_capture_block_indices=decoder_capture_block_indices,
+        replay_payload_mode=replay_payload_mode,
     )
 
     rollout_ids = assigned_rollout_ids(num_rollouts, eval_rank, eval_world_size)
@@ -172,7 +255,8 @@ def run_boundary_multi_seed(
         )
 
     try:
-        for rollout_id in tqdm.tqdm(pending, desc=f"Rollouts rank{eval_rank}"):
+        progress_desc = progress_label or f"Rollouts rank{eval_rank}"
+        for rollout_id in tqdm.tqdm(pending, desc=progress_desc):
             rollout_seed = seed_base + seed_stride * rollout_id
             metrics_done = rollout_seed in completed_seeds
             if metrics_done and not video_catchup:
@@ -231,14 +315,26 @@ def run_boundary_multi_seed(
                     "inference_step_count": int(len(trace["chunks"])),
                     "chunk_count": int(len(trace["chunks"])),
                     "action_count": int(trace["action_count"]),
+                    "regenerated_chunk_count": int(
+                        sum(bool(chunk.get("was_regenerated")) for chunk in trace["chunks"])
+                    ),
                     "regen_strategy": str(regen_strategy),
                     "max_control_steps": int(max_steps),
                 },
-                "chunks": trace["chunks"],
+                "chunks": [] if summary_only else trace["chunks"],
             }
-            episode_traces.append(_trim_failure_episode_metrics(episode_trace))
+            if summary_only:
+                episode_traces.append(episode_trace)
+            else:
+                episode_traces.append(_trim_failure_episode_metrics(episode_trace))
             completed_seeds.add(rollout_seed)
-            _write_trace_outputs(metrics_dir, episode_traces)
+            if summary_only:
+                write_summary_only(metrics_dir, episode_traces)
+            else:
+                _write_trace_outputs(
+                    metrics_dir,
+                    episode_traces,
+                )
     finally:
         env.close()
 

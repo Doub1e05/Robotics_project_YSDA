@@ -876,8 +876,8 @@ class Video2WorldPipeline(BasePipeline):
         use_cuda_graphs: bool = False,
         return_context_at_step: int | None = None,
         return_all_context: bool = False,
-        hidden_state_layer_idx: int | None = None,
-    ) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor] | list[torch.Tensor]:
+        hidden_state_layer_idx: int | list[int] | tuple[int, ...] | None = None,
+    ) -> torch.Tensor | tuple[torch.Tensor | dict[int, torch.Tensor], torch.Tensor] | list[torch.Tensor]:
         # Prepare the data batch with text embeddings
         data_batch = self._get_data_batch_input(
             vid_input,
@@ -934,6 +934,21 @@ class Video2WorldPipeline(BasePipeline):
         sample = x_sigma_max.to(dtype=torch.float32)
 
         x0_prev: torch.Tensor | None = None
+        requested_hidden_state_layers = (
+            sorted({int(idx) for idx in hidden_state_layer_idx})
+            if isinstance(hidden_state_layer_idx, (list, tuple, set))
+            else [int(hidden_state_layer_idx)]
+            if hidden_state_layer_idx is not None
+            else []
+        )
+        max_requested_hidden_state_layer = max(requested_hidden_state_layers) if requested_hidden_state_layers else None
+
+        def selected_hidden_states(hidden_states: list[torch.Tensor]) -> torch.Tensor | dict[int, torch.Tensor]:
+            if not requested_hidden_state_layers:
+                raise ValueError("hidden_state_layer_idx must be provided when requesting hidden states.")
+            if len(requested_hidden_state_layers) == 1:
+                return hidden_states[requested_hidden_state_layers[0]]
+            return {layer_idx: hidden_states[layer_idx] for layer_idx in requested_hidden_state_layers}
 
         context = []
         for i, _ in enumerate(tqdm(scheduler.timesteps, desc="Generating world", leave=False)):
@@ -947,7 +962,7 @@ class Video2WorldPipeline(BasePipeline):
             if return_all_context:
                 return_only_hidden_states_up_to = float("inf")
             elif i == return_context_at_step:
-                return_only_hidden_states_up_to = hidden_state_layer_idx
+                return_only_hidden_states_up_to = max_requested_hidden_state_layer
             else:
                 return_only_hidden_states_up_to = None
             # x0 prediction with conditional and unconditional branches
@@ -956,10 +971,10 @@ class Video2WorldPipeline(BasePipeline):
                 x0_pred, hidden_states = x0_pred
 
             if i == return_context_at_step:
-                return hidden_states[hidden_state_layer_idx], sigma_in
+                return selected_hidden_states(hidden_states), sigma_in
 
             if return_all_context:
-                context.append((sigma_in, hidden_states[hidden_state_layer_idx]))
+                context.append((sigma_in, selected_hidden_states(hidden_states)))
 
             # Scheduler step updates the noisy sample and returns the cached x0.
             sample, x0_prev = scheduler.step(
@@ -985,11 +1000,11 @@ class Video2WorldPipeline(BasePipeline):
             samples = cat_outputs_cp(samples, seq_dim=2, cp_group=self.get_context_parallel_group())
 
         if return_all_context:
-            context.append((sigma_in, hidden_states[hidden_state_layer_idx]))
+            context.append((sigma_in, selected_hidden_states(hidden_states)))
             return context
 
         if i + 1 == return_context_at_step:
-            return hidden_states[hidden_state_layer_idx], sigma_min
+            return selected_hidden_states(hidden_states), sigma_min
 
         # shape: (B, C, T, H, W), possibly out of [-1, 1]
         return self.decode(samples)

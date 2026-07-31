@@ -1,1577 +1,0 @@
-[robosuite WARNING] No private macro file found! (__init__.py:7)
-[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
-[robosuite WARNING] To setup, run: python /home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
-/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/megatron/core/inference/contexts/__init__.py:9: DeprecationWarning: The following imports from `dynamic_context.py` will be removed in this file in `megatron-core` 0.14. The imports here result in a cyclic import issue that causes rotary embeddings to import from Apex rather than Transformer Engine.
-  warnings.warn(
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
-[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-Local assets not found. Downloading from HuggingFace Hub...
-Assets already downloaded at /home/motovilovil/.cache/libero/assets
-[06-12 13:04:24|CRITICAL|model/imaginaire/utils/config_helper.py:171:import_all_modules_from_package] Reloading all modules from package cosmos_predict2.configs.experiment
-[06-12 13:04:25|CRITICAL|model/cosmos_predict2/configs/config.py:91:make_config] Finished importing config modules.
-[06-12 13:04:26|WARNING|model/cosmos_predict2/pipelines/video2world.py:277:from_config] precision torch.bfloat16
-[06-12 13:04:27|INFO|model/cosmos_predict2/tokenizers/tokenizer.py:687:_video_vae] Loading /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[06-12 13:04:27|SUCCESS|model/cosmos_predict2/tokenizers/tokenizer.py:689:_video_vae] Successfully loaded /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[06-12 13:04:27|INFO|model/cosmos_predict2/pipelines/video2world.py:335:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[06-12 13:04:35|SUCCESS|model/cosmos_predict2/pipelines/video2world.py:354:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[06-12 13:04:38|WARNING|model/cosmos_predict2/pipelines/world2action.py:71:from_config] precision torch.bfloat16
-[06-12 13:04:38|INFO|model/cosmos_predict2/pipelines/world2action.py:86:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-[06-12 13:04:40|SUCCESS|model/cosmos_predict2/pipelines/world2action.py:96:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-Rollouts rank0:   0%|          | 0/40 [00:00<?, ?it/s]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:   2%|▎         | 1/40 [02:35<1:41:18, 155.85s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode1_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  10%|█         | 4/40 [05:21<44:31, 74.20s/it]   Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode4_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  18%|█▊        | 7/40 [07:10<29:38, 53.89s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode7_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  25%|██▌       | 10/40 [08:15<19:56, 39.90s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode10_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  32%|███▎      | 13/40 [11:19<21:39, 48.12s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  40%|████      | 16/40 [14:27<21:18, 53.26s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  48%|████▊     | 19/40 [16:16<16:40, 47.65s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  55%|█████▌    | 22/40 [19:03<15:03, 50.20s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  62%|██████▎   | 25/40 [21:41<12:44, 50.97s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  70%|███████   | 28/40 [22:39<08:13, 41.10s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  78%|███████▊  | 31/40 [25:14<06:39, 44.37s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  85%|████████▌ | 34/40 [26:12<03:40, 36.72s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  92%|█████████▎| 37/40 [28:47<02:03, 41.26s/it]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0: 100%|██████████| 40/40 [29:45<00:00, 34.60s/it]Rollouts rank0: 100%|██████████| 40/40 [29:45<00:00, 44.63s/it]
-[rank 0/3] finished 14 rollouts | successes=6 | SR=0.429
-Metrics: /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/metrics/rank0
-sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
-[robosuite WARNING] No private macro file found! (__init__.py:7)
-[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
-[robosuite WARNING] To setup, run: python /home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
-/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/megatron/core/inference/contexts/__init__.py:9: DeprecationWarning: The following imports from `dynamic_context.py` will be removed in this file in `megatron-core` 0.14. The imports here result in a cyclic import issue that causes rotary embeddings to import from Apex rather than Transformer Engine.
-  warnings.warn(
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
-[info] using task orders [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-Local assets not found. Downloading from HuggingFace Hub...
-Assets already downloaded at /home/motovilovil/.cache/libero/assets
-[06-12 13:36:28|CRITICAL|model/imaginaire/utils/config_helper.py:171:import_all_modules_from_package] Reloading all modules from package cosmos_predict2.configs.experiment
-[06-12 13:36:29|CRITICAL|model/cosmos_predict2/configs/config.py:91:make_config] Finished importing config modules.
-[06-12 13:36:30|WARNING|model/cosmos_predict2/pipelines/video2world.py:277:from_config] precision torch.bfloat16
-[06-12 13:36:31|INFO|model/cosmos_predict2/tokenizers/tokenizer.py:687:_video_vae] Loading /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[06-12 13:36:31|SUCCESS|model/cosmos_predict2/tokenizers/tokenizer.py:689:_video_vae] Successfully loaded /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[06-12 13:36:31|INFO|model/cosmos_predict2/pipelines/video2world.py:335:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[06-12 13:36:37|SUCCESS|model/cosmos_predict2/pipelines/video2world.py:354:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[06-12 13:36:38|WARNING|model/cosmos_predict2/pipelines/world2action.py:71:from_config] precision torch.bfloat16
-[06-12 13:36:39|INFO|model/cosmos_predict2/pipelines/world2action.py:86:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-[06-12 13:36:40|SUCCESS|model/cosmos_predict2/pipelines/world2action.py:96:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-[rank 0] video catchup: 10 missing videos (metrics already complete for this rank)
-Rollouts rank0:   0%|          | 0/10 [00:00<?, ?it/s]
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  10%|█         | 1/10 [01:11<10:46, 71.88s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode13_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  20%|██        | 2/10 [03:48<16:11, 121.44s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode16_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  30%|███       | 3/10 [06:24<16:01, 137.36s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode19_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  40%|████      | 4/10 [07:26<10:45, 107.51s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode22_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  50%|█████     | 5/10 [10:01<10:24, 124.96s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode25_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  60%|██████    | 6/10 [11:20<07:17, 109.34s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode28_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  70%|███████   | 7/10 [12:19<04:37, 92.63s/it] Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode31_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  80%|████████  | 8/10 [14:55<03:45, 112.74s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode34_failure_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0:  90%|█████████ | 9/10 [16:00<01:37, 97.94s/it] Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode37_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [A
-Generating world:   0%|          | 0/35 [00:00<?, ?it/s][A
-                                                        [ARollouts rank0: 100%|██████████| 10/10 [16:58<00:00, 85.56s/it]Rollouts rank0: 100%|██████████| 10/10 [16:58<00:00, 101.82s/it]
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/rank0/videos/episode40_success_pick_up_the_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate.mp4
-[rank 0/3] traces=14 | videos=14/14 | successes=6 | SR=0.429
-Metrics: /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_spatial/boundary_runs/task0_init9_baseline_40rollouts/metrics/rank0
-sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

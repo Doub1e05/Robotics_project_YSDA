@@ -202,7 +202,8 @@ class World2ActionPipeline(BasePipeline):
         context_timesteps_B_1: torch.Tensor,
         seed: int = 0,
         use_cuda_graphs: bool = False,
-    ) -> torch.Tensor:
+        return_hidden_states: bool = False,
+    ) -> torch.Tensor | tuple[torch.Tensor, list[torch.Tensor]]:
         B, HO, _O = state_B_HO_O.shape
         T = self.config.net.max_horizon
         HA = T - HO
@@ -221,7 +222,9 @@ class World2ActionPipeline(BasePipeline):
             device=self.tensor_kwargs["device"],
         )
 
-        for _ in range(self.scheduler.num_denoising_steps):
+        final_hidden_states: list[torch.Tensor] | None = None
+        for denoise_step in range(self.scheduler.num_denoising_steps):
+            request_hidden_states = return_hidden_states and denoise_step == self.scheduler.num_denoising_steps - 1
             vt_pred_B_HA_A = self.denoise(
                 sample_B_HA_A,
                 timestep_B_HA_1,
@@ -230,14 +233,20 @@ class World2ActionPipeline(BasePipeline):
                 context_timesteps_B_1,
                 obs_dropout=0.0,
                 use_cuda_graphs=use_cuda_graphs,
+                return_hidden_states=request_hidden_states,
             )
+            if request_hidden_states:
+                vt_pred_B_HA_A, final_hidden_states = vt_pred_B_HA_A
             sample_B_HA_A, timestep_B_HA_1 = self.scheduler.step(
                 vt_pred_B_HA_A,
                 sample_B_HA_A,
                 timestep_B_HA_1,
             )
 
-        return self.normalizer.norms["action/lowdim_concat"].unnormalize(sample_B_HA_A)
+        actions_B_HA_A = self.normalizer.norms["action/lowdim_concat"].unnormalize(sample_B_HA_A)
+        if return_hidden_states:
+            return actions_B_HA_A, list(final_hidden_states or [])
+        return actions_B_HA_A
 
     @contextmanager
     def ema_scope(self, context: None, is_cpu: bool = False):

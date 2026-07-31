@@ -1,531 +1,0 @@
-[runner] Python: /home/motovilovil/miniconda3/envs/mimic_video_eval/bin/python
-[runner] Project root: /home/motovilovil/Robotics/robotics_project/mimic-video
-[runner] Notebook: /home/motovilovil/Robotics/robotics_project/mimic-video/notebooks/libero_mimic_eval_5eps.ipynb
-[runner] Code cells: 5
-
-[runner] START cell 1/5
-Python: /home/motovilovil/miniconda3/envs/mimic_video_eval/bin/python
-CUDA_VISIBLE_DEVICES: 1
-Output: /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback
-T5 embeddings: /home/motovilovil/.cache/huggingface/hub/models--nvidia--Cosmos-Policy-LIBERO-Predict2-2B/snapshots/cb689ec0e3347c13667d70a78a3447388f5c3bb8/libero_t5_embeddings.pkl
-Missing T5 prompts: nearest cached embedding fallback is enabled in run.py
-[runner] END cell 1/5
-
-[runner] START cell 2/5
-All required files are present.
-[runner] END cell 2/5
-
-[runner] START cell 3/5
-Single-process command template (not executed):
-/home/motovilovil/miniconda3/envs/mimic_video_eval/bin/python run.py --vam_experiment_name w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128 --vam_video_model_path /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt --vam_action_model_path /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt --vam_dataset_statistics_path /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/dataset_statistics/libero_spatial_one.json --vam_img_horizon 5 --vam_lowdim_horizon 1 --vam_stop_video_denoising_step 0 --vam_num_execute_actions 5 --task_suite_name libero_90 --num_trials_per_task 10 --max_eval_episodes 190 --rollout_dir /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/videos --metrics_dir /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/metrics --t5_embeddings_path /home/motovilovil/.cache/huggingface/hub/models--nvidia--Cosmos-Policy-LIBERO-Predict2-2B/snapshots/cb689ec0e3347c13667d70a78a3447388f5c3bb8/libero_t5_embeddings.pkl --seed 0 --no-use-cuda-graphs
-Template only; the next cell launches the single-GPU eval on CUDA device 1.
-[runner] END cell 3/5
-
-[runner] START cell 4/5
-Launching eval on CUDA device 1:
-/home/motovilovil/miniconda3/envs/mimic_video_eval/bin/python run.py --vam_experiment_name w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128 --vam_video_model_path /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt --vam_action_model_path /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt --vam_dataset_statistics_path /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/dataset_statistics/libero_spatial_one.json --vam_img_horizon 5 --vam_lowdim_horizon 1 --vam_stop_video_denoising_step 0 --vam_num_execute_actions 5 --task_suite_name libero_90 --num_trials_per_task 10 --max_eval_episodes 190 --eval_world_size 1 --t5_embeddings_path /home/motovilovil/.cache/huggingface/hub/models--nvidia--Cosmos-Policy-LIBERO-Predict2-2B/snapshots/cb689ec0e3347c13667d70a78a3447388f5c3bb8/libero_t5_embeddings.pkl --seed 0 --no-use-cuda-graphs --eval_rank 0 --rollout_dir /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos --metrics_dir /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/metrics
-[robosuite WARNING] No private macro file found! (__init__.py:7)
-[robosuite WARNING] It is recommended to use a private macro file (__init__.py:8)
-[robosuite WARNING] To setup, run: python /home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/robosuite/scripts/setup_macros.py (__init__.py:9)
-/home/motovilovil/miniconda3/envs/mimic_video_eval/lib/python3.10/site-packages/megatron/core/inference/contexts/__init__.py:9: DeprecationWarning: The following imports from `dynamic_context.py` will be removed in this file in `megatron-core` 0.14. The imports here result in a cyclic import issue that causes rotary embeddings to import from Apex rather than Transformer Engine.
-  warnings.warn(
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
-<frozen importlib._bootstrap>:241: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
-[05-16 23:32:07|CRITICAL|../../model/imaginaire/utils/config_helper.py:171:import_all_modules_from_package] Reloading all modules from package cosmos_predict2.configs.experiment
-[05-16 23:32:08|CRITICAL|../../model/cosmos_predict2/configs/config.py:91:make_config] Finished importing config modules.
-[05-16 23:32:09|WARNING|../../model/cosmos_predict2/pipelines/video2world.py:277:from_config] precision torch.bfloat16
-[05-16 23:32:10|INFO|../../model/cosmos_predict2/tokenizers/tokenizer.py:687:_video_vae] Loading /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[05-16 23:32:10|SUCCESS|../../model/cosmos_predict2/tokenizers/tokenizer.py:689:_video_vae] Successfully loaded /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone//tokenizer/tokenizer.pth
-[05-16 23:32:10|INFO|../../model/cosmos_predict2/pipelines/video2world.py:335:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[05-16 23:32:16|SUCCESS|../../model/cosmos_predict2/pipelines/video2world.py:354:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/video_backbone/v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused.pt
-[05-16 23:32:17|WARNING|../../model/cosmos_predict2/pipelines/world2action.py:71:from_config] precision torch.bfloat16
-[05-16 23:32:18|INFO|../../model/cosmos_predict2/pipelines/world2action.py:86:from_config] Loading DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-[05-16 23:32:19|SUCCESS|../../model/cosmos_predict2/pipelines/world2action.py:96:from_config] Successfully loaded DiT from /home/motovilovil/Robotics/robotics_project/mimic-video/model/checkpoints/action_decoder/w2a_libero_spatial_one_v2w_libero_spatial_agentview_lora_rank256_lr1.778e-04_bsz32_iter_000007540_fused_lr1.000e-04_layer20_bsz128_iter_000019998.pt
-Tasks:   0%|          | 0/90 [00:00<?, ?it/s]Local assets not found. Downloading from HuggingFace Hub...
-Assets already downloaded at /home/motovilovil/.cache/libero/assets
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:48<1:01:16, 408.50s/it][A
-Episodes:  20%|██        | 2/10 [13:39<54:38, 409.86s/it]  [A
-Episodes:  30%|███       | 3/10 [20:31<47:55, 410.76s/it][A
-Episodes:  40%|████      | 4/10 [27:22<41:05, 410.90s/it][A
-Episodes:  50%|█████     | 5/10 [34:13<34:15, 411.13s/it][A
-Episodes:  60%|██████    | 6/10 [41:05<27:25, 411.26s/it][A
-Episodes:  70%|███████   | 7/10 [47:55<20:32, 410.99s/it][A
-Episodes:  80%|████████  | 8/10 [54:51<13:44, 412.46s/it][A
-Episodes:  90%|█████████ | 9/10 [1:01:44<06:52, 412.60s/it][A
-Episodes: 100%|██████████| 10/10 [1:08:37<00:00, 412.68s/it][A
-                                                            [ATasks:   1%|          | 1/90 [1:08:42<101:54:22, 4122.05s/it][warning] No exact precomputed T5 embedding for 'close the top drawer of the cabinet'; using nearest cached embedding 'open the middle drawer of the cabinet'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode1_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode2_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode3_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode4_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode5_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode6_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode7_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode8_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode9_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode10_failure_close_the_top_drawer_of_the_cabinet.mp4
-Task 0 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 0 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:53<1:02:01, 413.55s/it][A
-Episodes:  20%|██        | 2/10 [13:47<55:08, 413.52s/it]  [A
-Episodes:  30%|███       | 3/10 [20:38<48:09, 412.74s/it][A
-Episodes:  40%|████      | 4/10 [27:30<41:12, 412.14s/it][A
-Episodes:  50%|█████     | 5/10 [34:21<34:19, 411.91s/it][A
-Episodes:  60%|██████    | 6/10 [41:12<27:26, 411.60s/it][A
-Episodes:  70%|███████   | 7/10 [48:03<20:34, 411.38s/it][A
-Episodes:  80%|████████  | 8/10 [54:54<13:42, 411.33s/it][A
-Episodes:  90%|█████████ | 9/10 [1:01:45<06:51, 411.18s/it][A
-Episodes: 100%|██████████| 10/10 [1:08:36<00:00, 411.11s/it][A
-                                                            [ATasks:   2%|▏         | 2/90 [2:17:20<100:42:30, 4119.89s/it][warning] No exact precomputed T5 embedding for 'close the top drawer of the cabinet and put the bowl on top of it'; using nearest cached embedding 'open the top drawer and put the bowl inside'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode11_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode12_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode13_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode14_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode15_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode16_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode17_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode18_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode19_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode20_failure_close_the_top_drawer_of_the_cabinet_and_put_the_bowl_on_top_of_it.mp4
-Task 1 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 1 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:50<1:01:37, 410.86s/it][A
-Episodes:  20%|██        | 2/10 [13:42<54:48, 411.04s/it]  [A
-Episodes:  30%|███       | 3/10 [20:33<47:57, 411.07s/it][A
-Episodes:  40%|████      | 4/10 [27:24<41:06, 411.05s/it][A
-Episodes:  50%|█████     | 5/10 [34:15<34:15, 411.08s/it][A
-Episodes:  60%|██████    | 6/10 [41:07<27:25, 411.31s/it][A
-Episodes:  70%|███████   | 7/10 [47:58<20:34, 411.41s/it][A
-Episodes:  80%|████████  | 8/10 [54:50<13:42, 411.44s/it][A
-Episodes:  90%|█████████ | 9/10 [1:01:41<06:51, 411.54s/it][A
-Episodes: 100%|██████████| 10/10 [1:08:34<00:00, 411.72s/it][A
-                                                            [ATasks:   3%|▎         | 3/90 [3:25:56<99:31:11, 4118.06s/it] [warning] No exact precomputed T5 embedding for 'put the bowl in the top drawer of the cabinet'; using nearest cached embedding 'put the bowl on top of the cabinet'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode21_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode22_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode23_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode24_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode25_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode26_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode27_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode28_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode29_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode30_failure_put_the_bowl_in_the_top_drawer_of_the_cabinet.mp4
-Task 2 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 2 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:51<1:01:42, 411.44s/it][A
-Episodes:  20%|██        | 2/10 [13:42<54:49, 411.15s/it]  [A
-Episodes:  30%|███       | 3/10 [20:32<47:54, 410.61s/it][A
-Episodes:  40%|████      | 4/10 [27:22<41:03, 410.51s/it][A
-Episodes:  50%|█████     | 5/10 [34:13<34:12, 410.44s/it][A
-Episodes:  60%|██████    | 6/10 [41:04<27:22, 410.63s/it][A
-Episodes:  70%|███████   | 7/10 [47:55<20:32, 410.94s/it][A
-Episodes:  80%|████████  | 8/10 [54:48<13:42, 411.50s/it][A
-Episodes:  90%|█████████ | 9/10 [1:01:41<06:51, 411.99s/it][A
-Episodes: 100%|██████████| 10/10 [1:08:32<00:00, 411.81s/it][A
-                                                            [ATasks:   4%|▍         | 4/90 [4:34:30<98:20:32, 4116.65s/it][warning] No exact precomputed T5 embedding for 'put the butter at the back in the top drawer of the cabinet and close it'; using nearest cached embedding 'put the black bowl in the bottom drawer of the cabinet and close it'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode31_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode32_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode33_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode34_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode35_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode36_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode37_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode38_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode39_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode40_failure_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 3 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 3 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:51<1:01:43, 411.54s/it][A
-Episodes:  20%|██        | 2/10 [13:43<54:54, 411.85s/it]  [A
-Episodes:  30%|███       | 3/10 [20:34<48:01, 411.60s/it][A
-Episodes:  40%|████      | 4/10 [27:26<41:08, 411.49s/it][A
-Episodes:  50%|█████     | 5/10 [34:17<34:17, 411.45s/it][A
-Episodes:  60%|██████    | 6/10 [41:08<27:25, 411.38s/it][A
-Episodes:  70%|███████   | 7/10 [47:58<20:32, 410.94s/it][A
-Episodes:  80%|████████  | 8/10 [54:49<13:41, 410.92s/it][A
-Episodes:  90%|█████████ | 9/10 [1:01:40<06:50, 410.86s/it][A
-Episodes: 100%|██████████| 10/10 [1:08:31<00:00, 410.90s/it][A
-                                                            [ATasks:   6%|▌         | 5/90 [5:43:04<97:10:10, 4115.42s/it][warning] No exact precomputed T5 embedding for 'put the butter at the front in the top drawer of the cabinet and close it'; using nearest cached embedding 'put the black bowl in the bottom drawer of the cabinet and close it'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode41_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode42_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode43_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode44_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode45_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode46_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode47_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode48_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode49_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode50_failure_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 4 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 4 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:51<1:01:40, 411.13s/it][A
-Episodes:  20%|██        | 2/10 [13:42<54:52, 411.50s/it]  [A
-Episodes:  30%|███       | 3/10 [20:34<48:00, 411.43s/it][A
-Episodes:  40%|████      | 4/10 [27:25<41:08, 411.36s/it][A
-Episodes:  50%|█████     | 5/10 [34:17<34:17, 411.52s/it][A
-Episodes:  60%|██████    | 6/10 [41:09<27:26, 411.69s/it][A
-Episodes:  70%|███████   | 7/10 [48:01<20:35, 411.95s/it][A
-Episodes:  80%|████████  | 8/10 [54:53<13:43, 411.93s/it][A
-Episodes:  90%|█████████ | 9/10 [1:01:46<06:52, 412.06s/it][A
-Episodes: 100%|██████████| 10/10 [1:08:38<00:00, 412.26s/it][A
-                                                            [ATasks:   7%|▋         | 6/90 [6:51:44<96:03:59, 4117.13s/it][warning] No exact precomputed T5 embedding for 'put the chocolate pudding in the top drawer of the cabinet and close it'; using nearest cached embedding 'put the black bowl in the bottom drawer of the cabinet and close it'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode51_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode52_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode53_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode54_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode55_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode56_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode57_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode58_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode59_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode60_failure_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it.mp4
-Task 5 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 5 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:52<1:01:53, 412.65s/it][A
-Episodes:  20%|██        | 2/10 [13:45<55:02, 412.79s/it]  [A
-Episodes:  30%|███       | 3/10 [20:38<48:09, 412.78s/it][A
-Episodes:  40%|████      | 4/10 [27:32<41:19, 413.24s/it][A
-Episodes:  50%|█████     | 5/10 [34:26<34:27, 413.50s/it][A
-Episodes:  60%|██████    | 6/10 [41:20<27:35, 413.91s/it][A
-Episodes:  70%|███████   | 7/10 [48:15<20:41, 413.97s/it][A
-Episodes:  80%|████████  | 8/10 [55:09<13:48, 414.29s/it][A
-Episodes:  90%|█████████ | 9/10 [1:02:05<06:54, 414.72s/it][A
-Episodes: 100%|██████████| 10/10 [1:09:01<00:00, 415.06s/it][A
-                                                            [ATasks:   8%|▊         | 7/90 [8:00:47<95:07:17, 4125.75s/it][warning] No exact precomputed T5 embedding for 'open the bottom drawer of the cabinet'; using nearest cached embedding 'open the middle drawer of the cabinet'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode61_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode62_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode63_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode64_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode65_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode66_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode67_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode68_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode69_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode70_failure_open_the_bottom_drawer_of_the_cabinet.mp4
-Task 6 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 6 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:56<1:02:26, 416.24s/it][A
-Episodes:  20%|██        | 2/10 [13:51<55:25, 415.67s/it]  [A
-Episodes:  30%|███       | 3/10 [20:48<48:34, 416.31s/it][A
-Episodes:  40%|████      | 4/10 [27:46<41:41, 416.94s/it][A
-Episodes:  50%|█████     | 5/10 [34:42<34:42, 416.46s/it][A
-Episodes:  60%|██████    | 6/10 [41:37<27:44, 416.04s/it][A
-Episodes:  70%|███████   | 7/10 [48:32<20:46, 415.64s/it][A
-Episodes:  80%|████████  | 8/10 [55:28<13:51, 415.91s/it][A
-Episodes:  90%|█████████ | 9/10 [1:02:25<06:56, 416.32s/it][A
-Episodes: 100%|██████████| 10/10 [1:09:21<00:00, 416.24s/it][A
-                                                            [ATasks:   9%|▉         | 8/90 [9:10:11<94:15:01, 4137.83s/it][warning] No exact precomputed T5 embedding for 'open the top drawer of the cabinet'; using nearest cached embedding 'open the middle drawer of the cabinet'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode71_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode72_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode73_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode74_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode75_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode76_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode77_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode78_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode79_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode80_failure_open_the_top_drawer_of_the_cabinet.mp4
-Task 7 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 7 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:55<1:02:21, 415.76s/it][A
-Episodes:  20%|██        | 2/10 [13:51<55:24, 415.52s/it]  [A
-Episodes:  30%|███       | 3/10 [20:47<48:30, 415.73s/it][A
-Episodes:  40%|████      | 4/10 [27:44<41:37, 416.24s/it][A
-Episodes:  50%|█████     | 5/10 [34:39<34:40, 416.02s/it][A
-Episodes:  60%|██████    | 6/10 [41:34<27:42, 415.73s/it][A
-Episodes:  70%|███████   | 7/10 [48:31<20:47, 415.92s/it][A
-Episodes:  80%|████████  | 8/10 [55:26<13:51, 415.69s/it][A
-Episodes:  90%|█████████ | 9/10 [1:02:21<06:55, 415.50s/it][A
-Episodes: 100%|██████████| 10/10 [1:09:17<00:00, 415.59s/it][A
-                                                            [ATasks:  10%|█         | 9/90 [10:19:30<93:15:00, 4144.45s/it][warning] No exact precomputed T5 embedding for 'open the top drawer of the cabinet and put the bowl in it'; using nearest cached embedding 'open the top drawer and put the bowl inside'.
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode81_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 1 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode82_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 2 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode83_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 3 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode84_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 4 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode85_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 5 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode86_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 6 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode87_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 7 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode88_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 8 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode89_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 9 | Success: False | Total Success Rate: 0.000
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode90_failure_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it.mp4
-Task 8 | Episode 10 | Success: False | Total Success Rate: 0.000
-
-Task 8 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [01:21<12:13, 81.53s/it][A
-Episodes:  20%|██        | 2/10 [02:36<10:19, 77.45s/it][A
-Episodes:  30%|███       | 3/10 [03:47<08:42, 74.69s/it][A
-Episodes:  40%|████      | 4/10 [05:07<07:41, 76.86s/it][A
-Episodes:  50%|█████     | 5/10 [06:24<06:24, 76.86s/it][A
-Episodes:  60%|██████    | 6/10 [07:43<05:10, 77.51s/it][A
-Episodes:  70%|███████   | 7/10 [08:58<03:49, 76.59s/it][A
-Episodes:  80%|████████  | 8/10 [10:12<02:31, 75.93s/it][A
-Episodes:  90%|█████████ | 9/10 [17:07<03:01, 181.85s/it][A
-Episodes: 100%|██████████| 10/10 [24:05<00:00, 254.75s/it][A
-                                                          [ATasks:  11%|█         | 10/90 [10:43:37<73:35:34, 3311.68s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode91_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 1 | Success: True | Total Success Rate: 0.011
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode92_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 2 | Success: True | Total Success Rate: 0.022
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode93_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 3 | Success: True | Total Success Rate: 0.032
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode94_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 4 | Success: True | Total Success Rate: 0.043
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode95_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 5 | Success: True | Total Success Rate: 0.053
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode96_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 6 | Success: True | Total Success Rate: 0.062
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode97_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 7 | Success: True | Total Success Rate: 0.072
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode98_success_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 8 | Success: True | Total Success Rate: 0.082
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode99_failure_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 9 | Success: False | Total Success Rate: 0.081
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode100_failure_put_the_bowl_on_the_plate.mp4
-Task 9 | Episode 10 | Success: False | Total Success Rate: 0.080
-
-Task 9 success rate: 0.800
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [06:57<1:02:38, 417.66s/it][A
-Episodes:  20%|██        | 2/10 [13:57<55:51, 418.88s/it]  [A
-Episodes:  30%|███       | 3/10 [20:59<49:02, 420.39s/it][A
-Episodes:  40%|████      | 4/10 [28:02<42:08, 421.37s/it][A
-Episodes:  50%|█████     | 5/10 [35:04<35:08, 421.72s/it][A
-Episodes:  60%|██████    | 6/10 [42:08<28:09, 422.36s/it][A
-Episodes:  70%|███████   | 7/10 [49:11<21:07, 422.46s/it][A
-Episodes:  80%|████████  | 8/10 [56:14<14:05, 422.83s/it][A
-Episodes:  90%|█████████ | 9/10 [1:03:18<07:03, 423.08s/it][A
-Episodes: 100%|██████████| 10/10 [1:10:22<00:00, 423.52s/it][A
-                                                            [ATasks:  12%|█▏        | 11/90 [11:54:02<78:48:20, 3591.15s/it]Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode101_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 1 | Success: False | Total Success Rate: 0.079
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode102_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 2 | Success: False | Total Success Rate: 0.078
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode103_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 3 | Success: False | Total Success Rate: 0.078
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode104_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 4 | Success: False | Total Success Rate: 0.077
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode105_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 5 | Success: False | Total Success Rate: 0.076
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode106_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 6 | Success: False | Total Success Rate: 0.075
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode107_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 7 | Success: False | Total Success Rate: 0.075
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode108_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 8 | Success: False | Total Success Rate: 0.074
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode109_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 9 | Success: False | Total Success Rate: 0.073
-
-Saved rollout MP4 at path /home/motovilovil/Robotics/robotics_project/mimic-video/eval_outputs/libero_90_19tasks_10eps_device1_trace_t5fallback/rank0/videos/episode110_failure_put_the_bowl_on_top_of_the_cabinet.mp4
-Task 10 | Episode 10 | Success: False | Total Success Rate: 0.073
-
-Task 10 success rate: 0.000
-
-Episodes:   0%|          | 0/10 [00:00<?, ?it/s][A
-Episodes:  10%|█         | 1/10 [07:07<1:04:11, 427.95s/it][A
-Episodes:  20%|██        | 2/10 [14:15<57:02, 427.85s/it]  [A

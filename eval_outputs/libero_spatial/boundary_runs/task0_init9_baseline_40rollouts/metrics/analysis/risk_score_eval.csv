@@ -1,4 +1,0 @@
-score,auc,direction,balanced_accuracy,threshold
-risk_high_uncertainty,0.5425,lower->fail,0.625,-1.7096497474403165
-risk_overconfidence_latent,0.65,lower->fail,0.625,33.579122602939606
-risk_overconfidence_action,0.6099999999999999,higher->fail,0.65,-0.9373898797438565

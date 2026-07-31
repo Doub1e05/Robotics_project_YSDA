@@ -15,6 +15,7 @@
 
 import itertools as it
 import math
+import pathlib
 from collections.abc import Callable
 
 import einops
@@ -804,6 +805,7 @@ class World2ActionDIT(nn.Module):
         self.use_adaln_lora = use_adaln_lora
         self.adaln_lora_dim = adaln_lora_dim
         self.t_embedder = PairTimeEmbedder(model_channels, pair_timestep_feature_rank, use_adaln_lora=use_adaln_lora)
+        self.decoder_steering: dict[str, object] | None = None
 
         self.blocks = nn.ModuleList(
             [
@@ -850,6 +852,56 @@ class World2ActionDIT(nn.Module):
         self.final_layer.init_weights()
         self.t_embedding_norm.reset_parameters()
 
+    def load_decoder_steering(
+        self,
+        steering_path: str | pathlib.Path,
+        *,
+        strength: float = 1.0,
+        target_block_indices: list[int] | None = None,
+        action_tokens_only: bool = True,
+    ) -> None:
+        payload = torch.load(pathlib.Path(steering_path), map_location="cpu", weights_only=False)
+        steer_matrix = payload["steer_matrix_D_D"].detach().float().cpu()
+        if steer_matrix.ndim != 2 or steer_matrix.shape[0] != steer_matrix.shape[1]:
+            raise ValueError(f"Expected square steer matrix, got shape={tuple(steer_matrix.shape)}")
+        self.decoder_steering = {
+            "steer_matrix_D_D": steer_matrix,
+            "strength": float(strength),
+            "target_block_indices": set(int(idx) for idx in (target_block_indices or payload.get("target_block_indices", []))),
+            "action_tokens_only": bool(action_tokens_only),
+            "metadata": dict(payload.get("metadata", {})),
+        }
+
+    def clear_decoder_steering(self) -> None:
+        self.decoder_steering = None
+
+    def _apply_decoder_steering(
+        self,
+        x_B_T_D: torch.Tensor,
+        *,
+        block_idx: int,
+        obs_token_count: int,
+    ) -> torch.Tensor:
+        if self.decoder_steering is None:
+            return x_B_T_D
+        target_blocks = self.decoder_steering["target_block_indices"]
+        if target_blocks and int(block_idx) not in target_blocks:
+            return x_B_T_D
+        steer_matrix_D_D = self.decoder_steering["steer_matrix_D_D"].to(device=x_B_T_D.device, dtype=torch.float32)
+        strength = float(self.decoder_steering["strength"])
+        action_tokens_only = bool(self.decoder_steering["action_tokens_only"])
+        if action_tokens_only:
+            prefix = x_B_T_D[:, :obs_token_count, :]
+            tokens_B_T_D = x_B_T_D[:, obs_token_count:, :]
+        else:
+            prefix = None
+            tokens_B_T_D = x_B_T_D
+        delta_B_T_D = torch.einsum("btd,df->btf", tokens_B_T_D.float(), steer_matrix_D_D)
+        steered_tokens_B_T_D = tokens_B_T_D + strength * delta_B_T_D.to(dtype=tokens_B_T_D.dtype)
+        if prefix is None:
+            return steered_tokens_B_T_D
+        return torch.cat((prefix, steered_tokens_B_T_D), dim=1)
+
     def prepare_embedded_sequence(
         self,
         state_B_HO_O: torch.Tensor,
@@ -887,6 +939,7 @@ class World2ActionDIT(nn.Module):
         """
         assert not (self.training and use_cuda_graphs), "CUDA Graphs are supported only for inference"
         x_B_T_D = self.prepare_embedded_sequence(state_B_HO_O, xt_B_HA_A, obs_dropout=obs_dropout)
+        obs_token_count = int(state_B_HO_O.shape[1])
         crossattn_emb = self.ctx_norm(crossattn_emb)
 
         t_embedding_B_T_DorR, adaln_lora_B_T_3D = self.t_embedder(timesteps_B_T, context_timesteps_B_1)
@@ -913,12 +966,17 @@ class World2ActionDIT(nn.Module):
             "extra_per_block_pos_emb": None,
         }
         hidden_states = []
-        for block in blocks:
+        for block_idx, block in enumerate(blocks):
             x_B_T_D = block(
                 x_B_T_D,
                 t_embedding_B_T_DorR,
                 crossattn_emb,
                 **block_kwargs,
+            )
+            x_B_T_D = self._apply_decoder_steering(
+                x_B_T_D,
+                block_idx=block_idx,
+                obs_token_count=obs_token_count,
             )
             if return_hidden_states:
                 hidden_states.append(x_B_T_D.detach().clone())

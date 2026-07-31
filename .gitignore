@@ -40,3 +40,12 @@ eval_outputs/**/metrics/chunk_distribution_plots/*.png
 
 # HuggingFace / local caches
 .cache/
+
+# Local evaluation bulk artifacts: keep only compact, curated summaries in Git.
+eval_outputs/**/logs/
+eval_outputs/**/*.log
+eval_outputs/**/*.jsonl
+eval_outputs/**/*.csv
+eval_outputs/**/*.pt
+eval_outputs/**/episode_artifacts/
+eval_outputs/**/videos/

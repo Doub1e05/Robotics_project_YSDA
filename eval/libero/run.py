@@ -19,6 +19,17 @@ import numpy as np
 import torch
 import tqdm
 import tyro
+
+_orig_torch_load = torch.load
+
+
+def _torch_load(*args, **kwargs):
+    kwargs.setdefault("weights_only", False)
+    return _orig_torch_load(*args, **kwargs)
+
+
+torch.load = _torch_load
+
 from einops import rearrange
 from libero.libero import benchmark, get_libero_path
 from libero.libero.envs import OffScreenRenderEnv
@@ -32,12 +43,32 @@ from cosmos_predict2.pipelines.world2action import World2ActionPipeline
 from imaginaire.lazy_config import instantiate
 from imaginaire.utils.config_helper import override
 
+from consensus_medoid import consensus_medoid_costs
+from decoder_metric_select import (
+    DECODER_LINEAR_COMBO_V1_NAME,
+    DECODER_METRIC_SELECT_LAYER,
+    DECODER_METRIC_SELECT_NAME,
+    DECODER_METRIC_SELECT_REDUCE,
+    DECODER_METRIC_SELECT_SUBSET,
+    decoder_linear_combo_v1_scores,
+    decoder_metric_selection_score,
+)
+
 LIBERO_SUITE_MAX_STEPS = {
     "libero_spatial": 220,
     "libero_object": 280,
     "libero_goal": 300,
     "libero_90": 600,
 }
+
+
+def get_max_steps_for_suite(task_suite_name: str) -> int:
+    if task_suite_name in LIBERO_SUITE_MAX_STEPS:
+        return LIBERO_SUITE_MAX_STEPS[task_suite_name]
+    for base_suite in sorted(LIBERO_SUITE_MAX_STEPS, key=len, reverse=True):
+        if task_suite_name == base_suite or task_suite_name.startswith(f"{base_suite}_"):
+            return LIBERO_SUITE_MAX_STEPS[base_suite]
+    raise ValueError(f"Task suite {task_suite_name} not available.")
 
 CAMERA_HEIGHT = 480
 CAMERA_WIDTH = 640
@@ -97,6 +128,9 @@ def load_video2world2action_pipeline(
     dtype: torch.dtype = torch.bfloat16,
     use_text_encoder: bool = True,
     diagnostics_mode: str = "default",
+    representation_layer_indices: list[int] | None = None,
+    decoder_capture_block_indices: list[int] | None = None,
+    replay_payload_mode: str = "full",
 ) -> Video2World2ActionPipeline:
     """Instantiate the video-to-world-to-action pipeline and load normalizer statistics."""
     config = make_config()
@@ -137,6 +171,9 @@ def load_video2world2action_pipeline(
         video2world_pipe,
         world2action_pipe,
         diagnostics_mode=diagnostics_mode,
+        representation_layer_indices=representation_layer_indices,
+        decoder_capture_block_indices=decoder_capture_block_indices,
+        replay_payload_mode=replay_payload_mode,
     ).cuda()
 
 
@@ -161,12 +198,27 @@ class VAMInference:
         regen_max_attempts: int = 0,
         regen_strategy: str = "none",
         regen_num_candidates: int = 3,
+        decoder_metric_select_layer: int = DECODER_METRIC_SELECT_LAYER,
+        decoder_metric_select_name: str = DECODER_METRIC_SELECT_NAME,
+        decoder_metric_select_action_subset: str = DECODER_METRIC_SELECT_SUBSET,
+        decoder_metric_select_reduce: str = DECODER_METRIC_SELECT_REDUCE,
+        consensus_medoid_horizon: int | None = None,
+        consensus_medoid_temporal_discount: float = 0.9,
+        consensus_medoid_translation_weight: float = 1.0,
+        consensus_medoid_rotation_weight: float = 0.5,
+        consensus_medoid_gripper_weight: float = 0.25,
+        consensus_medoid_continuity_weight: float = 0.25,
+        consensus_medoid_smoothness_weight: float = 0.10,
+        consensus_medoid_gripper_switch_weight: float = 0.10,
         action_regen_model_path: pathlib.Path | None = None,
         action_conf_threshold: float = 0.62,
         action_min_execute_actions: int = 3,
         action_max_execute_actions: int = 8,
         seed: int = 0,
         diagnostics_mode: str = "default",
+        representation_layer_indices: list[int] | None = None,
+        decoder_capture_block_indices: list[int] | None = None,
+        replay_payload_mode: str = "full",
     ):
         self._t5_embeddings = self._load_t5_embeddings(t5_embeddings_path)
         self.diagnostics_mode = diagnostics_mode
@@ -177,6 +229,9 @@ class VAMInference:
             dataset_statistics_path,
             use_text_encoder=t5_embeddings_path is None,
             diagnostics_mode=diagnostics_mode,
+            representation_layer_indices=representation_layer_indices,
+            decoder_capture_block_indices=decoder_capture_block_indices,
+            replay_payload_mode=replay_payload_mode,
         )
         self._image_horizon = img_horizon
         self._lowdim_horizon = lowdim_horizon
@@ -191,24 +246,60 @@ class VAMInference:
         self.regen_max_attempts = regen_max_attempts
         self.regen_strategy = regen_strategy
         self.regen_num_candidates = regen_num_candidates
+        self.decoder_metric_select_layer = decoder_metric_select_layer
+        self.decoder_metric_select_name = decoder_metric_select_name
+        self.decoder_metric_select_action_subset = decoder_metric_select_action_subset
+        self.decoder_metric_select_reduce = decoder_metric_select_reduce
+        self.consensus_medoid_horizon = int(consensus_medoid_horizon or num_execute_actions)
+        self.consensus_medoid_temporal_discount = float(consensus_medoid_temporal_discount)
+        self.consensus_medoid_translation_weight = float(consensus_medoid_translation_weight)
+        self.consensus_medoid_rotation_weight = float(consensus_medoid_rotation_weight)
+        self.consensus_medoid_gripper_weight = float(consensus_medoid_gripper_weight)
+        self.consensus_medoid_continuity_weight = float(consensus_medoid_continuity_weight)
+        self.consensus_medoid_smoothness_weight = float(consensus_medoid_smoothness_weight)
+        self.consensus_medoid_gripper_switch_weight = float(consensus_medoid_gripper_switch_weight)
         self.regen_model, self.regen_features = self._load_regen_model(regen_model_path)
         self.action_regen_model = self._load_regen_model(action_regen_model_path)[0]
         self.action_conf_threshold = action_conf_threshold
         self.action_min_execute_actions = action_min_execute_actions
         self.action_max_execute_actions = action_max_execute_actions
-        uses_chunk_selection = self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}
+        self.decoder_capture_block_indices = sorted(int(idx) for idx in (decoder_capture_block_indices or []))
+        uses_chunk_selection = self.regen_strategy in {
+            "catboost_select",
+            "hybrid_select_action_dynamic",
+            "decoder_metric_select",
+            "consensus_medoid",
+        }
+        uses_catboost = self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}
         uses_action_dynamic = self.regen_strategy in {"action_dynamic", "hybrid_select_action_dynamic"}
-        if uses_chunk_selection and self.regen_model is None:
+        if uses_catboost and self.regen_model is None:
             raise ValueError(
                 "regen_strategy in {'catboost_select','hybrid_select_action_dynamic'} requires --regen_model_path."
             )
         if uses_chunk_selection and self.regen_num_candidates < 2:
-            raise ValueError("regen_num_candidates must be >= 2 for catboost_select.")
+            raise ValueError("regen_num_candidates must be >= 2 for chunk selection strategies.")
         if uses_action_dynamic and self.action_regen_model is None:
             raise ValueError(
                 "regen_strategy in {'action_dynamic','hybrid_select_action_dynamic'} "
                 "requires --action_regen_model_path."
             )
+        if self.diagnostics_mode == "decoder_hidden" and not self.decoder_capture_block_indices:
+            raise ValueError("diagnostics_mode='decoder_hidden' requires decoder_capture_block_indices.")
+        if self.regen_strategy == "decoder_metric_select":
+            if self.diagnostics_mode != "decoder_hidden":
+                raise ValueError("regen_strategy='decoder_metric_select' requires diagnostics_mode='decoder_hidden'.")
+            if self.decoder_metric_select_layer not in self.decoder_capture_block_indices:
+                raise ValueError(
+                    "regen_strategy='decoder_metric_select' requires "
+                    f"decoder_capture_block_indices to include {self.decoder_metric_select_layer}."
+                )
+            if self.decoder_metric_select_reduce not in {"min", "max"}:
+                raise ValueError("decoder_metric_select_reduce must be either 'min' or 'max'.")
+        if self.regen_strategy == "consensus_medoid":
+            if self.consensus_medoid_horizon < 1:
+                raise ValueError("consensus_medoid_horizon must be >= 1.")
+            if not 0.0 < self.consensus_medoid_temporal_discount <= 1.0:
+                raise ValueError("consensus_medoid_temporal_discount must be in (0, 1].")
         if self.action_min_execute_actions < 1:
             raise ValueError("action_min_execute_actions must be >= 1.")
         if self.action_max_execute_actions < self.action_min_execute_actions:
@@ -365,8 +456,15 @@ class VAMInference:
         selected_candidate_idx = 0
         accepted_chunk_metrics: dict[str, object] | None = None
 
-        if self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}:
+        if self.regen_strategy in {
+            "catboost_select",
+            "hybrid_select_action_dynamic",
+            "decoder_metric_select",
+            "consensus_medoid",
+        }:
             candidates: list[tuple[np.ndarray, dict[str, float], dict[str, object], float]] = []
+            candidate_scores: list[float] = []
+            candidate_diagnostics_list: list[dict[str, object] | None] = []
             for candidate_idx in range(self.regen_num_candidates):
                 actions_np, diagnostics, chunk_metrics, probability = self._sample_chunk(
                     input_vid=input_vid,
@@ -378,13 +476,71 @@ class VAMInference:
                 chunk_metrics["query_latency_sec"] = float(time.perf_counter() - start_time)
                 chunk_metrics["catboost_failure_probability"] = float(probability)
                 chunk_metrics["catboost_success_probability"] = float(1.0 - probability)
+                if self.regen_strategy == "decoder_metric_select":
+                    chunk_metrics["decoder_metric_selection_layer"] = int(self.decoder_metric_select_layer)
+                    chunk_metrics["decoder_metric_selection_name"] = self.decoder_metric_select_name
+                    chunk_metrics["decoder_metric_selection_action_subset"] = self.decoder_metric_select_action_subset
+                    chunk_metrics["decoder_metric_selection_reduce"] = self.decoder_metric_select_reduce
+                elif self.regen_strategy == "consensus_medoid":
+                    chunk_metrics["consensus_horizon_config"] = int(self.consensus_medoid_horizon)
+                    chunk_metrics["consensus_temporal_discount"] = self.consensus_medoid_temporal_discount
+                    chunk_metrics["consensus_translation_weight"] = self.consensus_medoid_translation_weight
+                    chunk_metrics["consensus_rotation_weight"] = self.consensus_medoid_rotation_weight
+                    chunk_metrics["consensus_gripper_weight"] = self.consensus_medoid_gripper_weight
+                    chunk_metrics["consensus_continuity_weight"] = self.consensus_medoid_continuity_weight
+                    chunk_metrics["consensus_smoothness_weight"] = self.consensus_medoid_smoothness_weight
+                    chunk_metrics["consensus_gripper_switch_weight"] = self.consensus_medoid_gripper_switch_weight
                 candidates.append((actions_np, diagnostics, chunk_metrics, probability))
+                candidate_diagnostics_list.append(diagnostics)
                 candidate_probs.append(probability)
                 candidate_chunk_metrics.append(chunk_metrics)
                 if torch.cuda.is_available():
                     torch.cuda.empty_cache()
 
-            selected_candidate_idx = int(np.argmin(candidate_probs))
+            if self.regen_strategy == "consensus_medoid":
+                candidate_scores, medoid_details, pairwise_distances = consensus_medoid_costs(
+                    [candidate[0] for candidate in candidates],
+                    previous_action=self.last_raw_action,
+                    horizon=self.consensus_medoid_horizon,
+                    temporal_discount=self.consensus_medoid_temporal_discount,
+                    translation_weight=self.consensus_medoid_translation_weight,
+                    rotation_weight=self.consensus_medoid_rotation_weight,
+                    gripper_weight=self.consensus_medoid_gripper_weight,
+                    continuity_weight=self.consensus_medoid_continuity_weight,
+                    smoothness_weight=self.consensus_medoid_smoothness_weight,
+                    gripper_switch_weight=self.consensus_medoid_gripper_switch_weight,
+                )
+                selected_candidate_idx = int(np.argmin(candidate_scores))
+                for chunk_metrics, detail in zip(candidate_chunk_metrics, medoid_details):
+                    chunk_metrics.update(detail)
+                    chunk_metrics["consensus_pairwise_distance_matrix"] = pairwise_distances
+                    chunk_metrics["consensus_selected_by"] = "minimum_cost"
+            elif self.regen_strategy == "decoder_metric_select":
+                if self.decoder_metric_select_name == DECODER_LINEAR_COMBO_V1_NAME:
+                    candidate_scores, combo_details = decoder_linear_combo_v1_scores(
+                        candidate_diagnostics_list,
+                        layer_idx=self.decoder_metric_select_layer,
+                        action_subset=self.decoder_metric_select_action_subset,
+                    )
+                    for chunk_metrics, score, detail in zip(candidate_chunk_metrics, candidate_scores, combo_details):
+                        chunk_metrics["decoder_metric_selection_score"] = float(score)
+                        chunk_metrics.update(detail)
+                else:
+                    for chunk_metrics, diagnostics in zip(candidate_chunk_metrics, candidate_diagnostics_list):
+                        selection_score = decoder_metric_selection_score(
+                            diagnostics,
+                            layer_idx=self.decoder_metric_select_layer,
+                            metric_name=self.decoder_metric_select_name,
+                            action_subset=self.decoder_metric_select_action_subset,
+                        )
+                        chunk_metrics["decoder_metric_selection_score"] = float(selection_score)
+                        candidate_scores.append(selection_score)
+                if self.decoder_metric_select_reduce == "min":
+                    selected_candidate_idx = int(np.argmin(candidate_scores))
+                else:
+                    selected_candidate_idx = int(np.argmax(candidate_scores))
+            else:
+                selected_candidate_idx = int(np.argmin(candidate_probs))
             accepted_actions, accepted_diagnostics, accepted_metrics, accepted_probability = candidates[selected_candidate_idx]
             accepted_chunk_metrics = dict(accepted_metrics)
             attempts_used = self.regen_num_candidates - 1
@@ -427,7 +583,12 @@ class VAMInference:
             self.last_query_representation_metrics = _structured_model_metrics(self.last_query_diagnostics)
         else:
             self.last_query_representation_metrics = None
-        if self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}:
+        if self.regen_strategy in {
+            "catboost_select",
+            "hybrid_select_action_dynamic",
+            "decoder_metric_select",
+            "consensus_medoid",
+        }:
             self.last_query_was_regenerated = selected_candidate_idx > 0
         else:
             self.last_query_was_regenerated = attempts_used > 0
@@ -968,6 +1129,15 @@ def eval_vam_libero(
     selected_episodes: str = "",
     max_control_steps: int = FAILURE_METRICS_MAX_TIMESTEPS,
     append_metrics: bool = False,
+    consensus_medoid_horizon: int | None = None,
+    consensus_medoid_temporal_discount: float = 0.9,
+    consensus_medoid_translation_weight: float = 1.0,
+    consensus_medoid_rotation_weight: float = 0.5,
+    consensus_medoid_gripper_weight: float = 0.25,
+    consensus_medoid_continuity_weight: float = 0.25,
+    consensus_medoid_smoothness_weight: float = 0.10,
+    consensus_medoid_gripper_switch_weight: float = 0.10,
+    save_rollout_videos: bool = True,
 ) -> None:
     set_seed_everywhere(seed)
 
@@ -997,15 +1167,23 @@ def eval_vam_libero(
         t5_embeddings_path,
         use_cuda_graphs,
         regen_model_path,
-        regen_threshold,
-        regen_max_attempts,
-        regen_strategy,
-        regen_num_candidates,
-        action_regen_model_path,
-        action_conf_threshold,
-        action_min_execute_actions,
-        action_max_execute_actions,
-        seed,
+        regen_threshold=regen_threshold,
+        regen_max_attempts=regen_max_attempts,
+        regen_strategy=regen_strategy,
+        regen_num_candidates=regen_num_candidates,
+        consensus_medoid_horizon=consensus_medoid_horizon,
+        consensus_medoid_temporal_discount=consensus_medoid_temporal_discount,
+        consensus_medoid_translation_weight=consensus_medoid_translation_weight,
+        consensus_medoid_rotation_weight=consensus_medoid_rotation_weight,
+        consensus_medoid_gripper_weight=consensus_medoid_gripper_weight,
+        consensus_medoid_continuity_weight=consensus_medoid_continuity_weight,
+        consensus_medoid_smoothness_weight=consensus_medoid_smoothness_weight,
+        consensus_medoid_gripper_switch_weight=consensus_medoid_gripper_switch_weight,
+        action_regen_model_path=action_regen_model_path,
+        action_conf_threshold=action_conf_threshold,
+        action_min_execute_actions=action_min_execute_actions,
+        action_max_execute_actions=action_max_execute_actions,
+        seed=seed,
     )
 
     benchmark_dict = benchmark.get_benchmark_dict()
@@ -1014,7 +1192,7 @@ def eval_vam_libero(
     task_suite = benchmark_dict[task_suite_name]()
     num_tasks = task_suite.n_tasks
 
-    max_steps = min(max_control_steps, LIBERO_SUITE_MAX_STEPS[task_suite_name])
+    max_steps = min(max_control_steps, get_max_steps_for_suite(task_suite_name))
     print(
         f"Using max_control_steps={max_steps} "
         f"(regen_strategy={regen_strategy}, regen_threshold={regen_threshold}, "
@@ -1084,13 +1262,14 @@ def eval_vam_libero(
                     task_successes += 1
                     total_successes += 1
 
-                save_rollout_video(
-                    replay_images,
-                    video_idx,
-                    success,
-                    task_description,
-                    rollout_dir,
-                )
+                if save_rollout_videos:
+                    save_rollout_video(
+                        replay_images,
+                        video_idx,
+                        success,
+                        task_description,
+                        rollout_dir,
+                    )
                 episode_step_count = int(trace["action_count"])
                 episode_trace = _trim_failure_episode_metrics(
                     {
