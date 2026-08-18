@@ -1155,6 +1155,7 @@ def eval_vam_libero(
     consensus_medoid_smoothness_weight: float = 0.10,
     consensus_medoid_gripper_switch_weight: float = 0.10,
     save_rollout_videos: bool = True,
+    summary_only: bool = False,
 ) -> None:
     set_seed_everywhere(seed)
 
@@ -1165,6 +1166,8 @@ def eval_vam_libero(
     rollout_dir.mkdir(parents=True, exist_ok=True)
     metrics_dir = metrics_dir or (rollout_dir / "metrics")
     metrics_dir.mkdir(parents=True, exist_ok=True)
+    if summary_only and append_metrics:
+        raise ValueError("summary_only cannot be combined with append_metrics.")
     selected_pairs = {
         tuple(int(part) for part in item.split(":"))
         for item in selected_episodes.split(",")
@@ -1320,7 +1323,8 @@ def eval_vam_libero(
                 episode_traces.append(episode_trace)
                 completed_pairs.add((task_id, episode_idx))
                 total_episodes = len(episode_traces)
-                _write_trace_outputs(metrics_dir, episode_traces)
+                if not summary_only:
+                    _write_trace_outputs(metrics_dir, episode_traces)
 
                 success_rate = total_successes / max(total_episodes, 1)
                 print(
@@ -1334,13 +1338,30 @@ def eval_vam_libero(
         print(f"Task {task_id} success rate: {task_success_rate:.3f}")
 
     overall_success_rate = total_successes / max(total_episodes, 1)
-    _write_trace_outputs(metrics_dir, episode_traces)
+    if summary_only:
+        summary = {
+            "num_episodes": total_episodes,
+            "num_successes": total_successes,
+            "success_rate": overall_success_rate,
+            "task_suite_name": task_suite_name,
+            "seed": seed,
+            "regen_strategy": regen_strategy,
+            "regen_num_candidates": regen_num_candidates,
+            "num_trials_per_task": num_trials_per_task,
+            "max_control_steps": max_steps,
+            "summary_only": True,
+        }
+        (metrics_dir / "summary.json").write_text(
+            json.dumps(summary, indent=2, ensure_ascii=False) + chr(10), encoding="utf-8"
+        )
+    else:
+        _write_trace_outputs(metrics_dir, episode_traces)
     print(
         f"Completed {total_episodes} episodes | "
         f"Total successes: {total_successes} | "
         f"Overall success rate: {overall_success_rate:.3f}\n"
     )
-    print(f"Metrics written to: {metrics_dir}")
+    print(f"Summary written to: {metrics_dir / 'summary.json'}" if summary_only else f"Metrics written to: {metrics_dir}")
 
 
 if __name__ == "__main__":
