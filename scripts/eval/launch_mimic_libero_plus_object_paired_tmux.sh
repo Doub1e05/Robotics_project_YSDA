@@ -17,8 +17,9 @@ if tmux has-session -t "${SESSION}" 2>/dev/null; then
   exit 1
 fi
 mkdir -p "${OUT_ROOT}"
-tmux new-session -d -s "${SESSION}" -n "gpu${GPU}" \
-  "cd  && GPU= NUM_TRIALS_PER_TASK= MAX_EVAL_EPISODES= MAX_CONTROL_STEPS= SEED= OUT_ROOT= bash  2>&1 | tee /launcher.log; code=\${PIPESTATUS[0]}; echo \"=== PROCESS EXITED status=\${code} ===\"; exec bash"
+TMUX_COMMAND=$(printf 'cd %q && GPU=%q NUM_TRIALS_PER_TASK=%q MAX_EVAL_EPISODES=%q MAX_CONTROL_STEPS=%q SEED=%q OUT_ROOT=%q bash %q 2>&1 | tee %q; code=${PIPESTATUS[0]}; echo "=== PROCESS EXITED status=${code} ==="; exec bash' \
+  "${REPO_ROOT}" "${GPU}" "${NUM_TRIALS_PER_TASK}" "${MAX_EVAL_EPISODES}" "${MAX_CONTROL_STEPS}" "${SEED}" "${OUT_ROOT}" "${RUNNER}" "${OUT_ROOT}/launcher.log")
+tmux new-session -d -s "${SESSION}" -n "gpu${GPU}" "${TMUX_COMMAND}"
 echo "Started tmux session: ${SESSION}"
 echo "Output: ${OUT_ROOT}"
 echo "Attach: tmux attach -t ${SESSION}"
