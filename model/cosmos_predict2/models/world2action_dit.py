@@ -174,12 +174,11 @@ def torch_attention_op(q_B_S_H_D: torch.Tensor, k_B_S_H_D: torch.Tensor, v_B_S_H
     q_B_H_S_D = rearrange(q_B_S_H_D, "b ... h k -> b h ... k").view(in_q_shape[0], in_q_shape[-2], -1, in_q_shape[-1])
     k_B_H_S_D = rearrange(k_B_S_H_D, "b ... h v -> b h ... v").view(in_k_shape[0], in_k_shape[-2], -1, in_k_shape[-1])
     v_B_H_S_D = rearrange(v_B_S_H_D, "b ... h v -> b h ... v").view(in_k_shape[0], in_k_shape[-2], -1, in_k_shape[-1])
-    result_B_S_HD = rearrange(
+    # Match FlashAttention B,S,H,D output; the caller flattens heads.
+    return rearrange(
         torch.nn.functional.scaled_dot_product_attention(q_B_H_S_D, k_B_H_S_D, v_B_H_S_D),
-        "b h ... l -> b ... (h l)",
+        "b h s d -> b s h d",
     )
-
-    return result_B_S_HD
 
 
 class Attention(nn.Module):
@@ -266,9 +265,13 @@ class Attention(nn.Module):
         elif self.backend == "torch":
             self.attn_op = torch_attention_op
         elif self.backend == "flash_attn_no_cp":
-            from flash_attn.flash_attn_interface import flash_attn_func
-
-            self.attn_op = flash_attn_func
+            # FlashAttention 2 requires SM80+. T4 is SM75; use PyTorch SDPA,
+            # whose query-blocked T4 path is installed in module.attention.
+            if torch.cuda.is_available() and torch.cuda.get_device_capability()[0] < 8:
+                self.attn_op = torch_attention_op
+            else:
+                from flash_attn.flash_attn_interface import flash_attn_func
+                self.attn_op = flash_attn_func
         else:
             raise NotImplementedError(self.backend)
 
@@ -364,7 +367,7 @@ class ContinuousSinusoidalPosEmb(nn.Module):
         fraction = torch.linspace(0.0, 1.0, self._num_channels // 2, device=timesteps_B_T.device, dtype=torch.float64)
         freqs = math.tau / (self._min_period * (self._max_period / self._min_period) ** fraction)
         sinusoid_input_B_T_D = einops.einsum(timesteps_B_T, freqs, "b i, j -> b i j")
-        return torch.cat((torch.sin(sinusoid_input_B_T_D), torch.cos(sinusoid_input_B_T_D)), dim=-1).bfloat16()
+        return torch.cat((torch.sin(sinusoid_input_B_T_D), torch.cos(sinusoid_input_B_T_D)), dim=-1).to(dtype=timesteps_B_T.dtype)
 
 
 class PairTimestepEmbedding(nn.Module):

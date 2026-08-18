@@ -96,8 +96,12 @@ def attention(
     q_scale=None,
     causal=False,
     deterministic=False,
-    dtype=torch.bfloat16,
+    dtype=None,
 ):
+    # Turing GPUs (e.g. Tesla T4, SM75) cannot execute BF16 SDPA kernels.
+    # Use FP16 for the attention operation there; newer GPUs retain input dtype.
+    if dtype is None:
+        dtype = torch.float16 if get_device_cc(q.device) < 80 and q.dtype == torch.bfloat16 else q.dtype
     supported_dtypes = [torch.bfloat16, torch.float16, torch.float32]
     is_half = dtype in [torch.bfloat16, torch.float16]
     compute_cap = get_device_cc(q.device)
@@ -134,13 +138,19 @@ def attention(
                 SDPBackend.EFFICIENT_ATTENTION,
             ]
             BEST_SDPA_BACKEND = SDPBackend.CUDNN_ATTENTION
-        elif is_half:
+        elif is_half and compute_cap >= 80:
             SDPA_BACKENDS = [
                 SDPBackend.FLASH_ATTENTION,
                 SDPBackend.CUDNN_ATTENTION,
                 SDPBackend.EFFICIENT_ATTENTION,
             ]
-            BEST_SDPA_BACKEND = SDPBackend.FLASH_ATTENTION if compute_cap >= 80 else SDPBackend.EFFICIENT_ATTENTION
+            BEST_SDPA_BACKEND = SDPBackend.FLASH_ATTENTION
+        elif is_half:
+            # Turing / SM75 has neither Flash nor cuDNN SDPA. The PyTorch math
+            # implementation materializes the full QxK score matrix (about 22 GiB
+            # here), so the call below uses query blocks on this architecture.
+            SDPA_BACKENDS = [SDPBackend.MATH]
+            BEST_SDPA_BACKEND = SDPBackend.MATH
         else:
             assert dtype == torch.float32, f"Unrecognized {dtype=}."
             SDPA_BACKENDS = [SDPBackend.EFFICIENT_ATTENTION]
@@ -166,14 +176,33 @@ def attention(
         v = v.transpose(1, 2)
 
         with sdpa_kernel_(backends=SDPA_BACKENDS):
-            out = torch.nn.functional.scaled_dot_product_attention(
-                q,
-                k,
-                v,
-                is_causal=causal,
-                dropout_p=dropout_p,
-                scale=softmax_scale,
-            )
+            if compute_cap < 80 and BEST_SDPA_BACKEND == SDPBackend.MATH:
+                # Split queries only: every attention row still observes all keys,
+                # hence this is equivalent to a single full attention operation.
+                q_block = 64
+                out = torch.cat(
+                    [
+                        torch.nn.functional.scaled_dot_product_attention(
+                            q[:, :, start : start + q_block],
+                            k,
+                            v,
+                            is_causal=causal,
+                            dropout_p=dropout_p,
+                            scale=softmax_scale,
+                        )
+                        for start in range(0, q.shape[2], q_block)
+                    ],
+                    dim=2,
+                )
+            else:
+                out = torch.nn.functional.scaled_dot_product_attention(
+                    q,
+                    k,
+                    v,
+                    is_causal=causal,
+                    dropout_p=dropout_p,
+                    scale=softmax_scale,
+                )
 
         out = out.transpose(1, 2).contiguous()
         return out

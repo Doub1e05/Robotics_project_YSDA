@@ -62,11 +62,9 @@ class World2ActionPipeline(BasePipeline):
         # Create a pipe
         pipe = World2ActionPipeline(device=device, torch_dtype=dtype)
         pipe.config = config
-        pipe.precision = {
-            "float32": torch.float32,
-            "float16": torch.float16,
-            "bfloat16": torch.bfloat16,
-        }[config.precision]
+        # The runtime dtype is explicit so T4-compatible FP16 can override a
+        # checkpoint config that was trained with BF16.
+        pipe.precision = dtype
         pipe.tensor_kwargs = {"device": "cuda", "dtype": pipe.precision}
         log.warning(f"precision {pipe.precision}")
 
@@ -177,8 +175,11 @@ class World2ActionPipeline(BasePipeline):
         vt_pred_B_T_A = self.dit(
             state_B_HO_O=state_B_HO_O.to(**self.tensor_kwargs),
             xt_B_HA_A=xt_B_HA_A.to(**self.tensor_kwargs),
-            timesteps_B_T=timesteps_B_T_1.squeeze(2),
-            context_timesteps_B_1=context_timesteps_B_1,
+            # The DiT weights use the pipeline precision. Keep time features in
+            # that dtype too: on T4, FP32 timesteps otherwise reach FP16 linear
+            # layers and fail with a Float/Half matmul mismatch.
+            timesteps_B_T=timesteps_B_T_1.squeeze(2).to(**self.tensor_kwargs),
+            context_timesteps_B_1=context_timesteps_B_1.to(**self.tensor_kwargs),
             crossattn_emb=crossattn_emb.to(**self.tensor_kwargs),
             obs_dropout=obs_dropout,
             use_cuda_graphs=use_cuda_graphs,

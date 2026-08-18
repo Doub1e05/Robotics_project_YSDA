@@ -10,6 +10,7 @@ import random
 import csv
 import math
 import time
+import re
 from collections import deque
 from collections.abc import Iterable
 from pathlib import Path
@@ -193,6 +194,7 @@ class VAMInference:
         rollout_dir: pathlib.Path,
         t5_embeddings_path: pathlib.Path | None = None,
         use_cuda_graphs: bool = True,
+        dtype: torch.dtype = torch.bfloat16,
         regen_model_path: pathlib.Path | None = None,
         regen_threshold: float = 0.38,
         regen_max_attempts: int = 0,
@@ -221,12 +223,14 @@ class VAMInference:
         replay_payload_mode: str = "full",
     ):
         self._t5_embeddings = self._load_t5_embeddings(t5_embeddings_path)
+        self.dtype = dtype
         self.diagnostics_mode = diagnostics_mode
         self.model = load_video2world2action_pipeline(
             experiment_name,
             video_model_path,
             action_model_path,
             dataset_statistics_path,
+            dtype=dtype,
             use_text_encoder=t5_embeddings_path is None,
             diagnostics_mode=diagnostics_mode,
             representation_layer_indices=representation_layer_indices,
@@ -442,8 +446,8 @@ class VAMInference:
         images = np.concatenate(list(self._image_history)[::4], axis=1)  # downsample from 20 fps to 5
         lowdims = np.stack(list(self._lowdim_history), axis=0)
 
-        input_vid = torch.from_numpy(images[None]).cuda().to(dtype=torch.bfloat16)
-        state_tensor = torch.from_numpy(lowdims[None]).cuda().to(dtype=torch.bfloat16)
+        input_vid = torch.from_numpy(images[None]).cuda().to(dtype=self.dtype)
+        state_tensor = torch.from_numpy(lowdims[None]).cuda().to(dtype=self.dtype)
 
         start_time = time.perf_counter()
         base_seed = self.seed + self._query_counter * 100
@@ -637,9 +641,21 @@ class VAMInference:
             task_description.replace("bowl", "black bowl"),
             task_description.replace("black bowl", "bowl"),
         ]
+        # LIBERO-PLUS appends perturbation variant markers (e.g. "table 12")
+        # to filename-derived instructions. The VAM embeddings cover the base
+        # LIBERO instruction, not that non-semantic suffix.
+        normalized = re.sub(r"\s+(?:table|tb|view)\s+\d+$", "", task_description, flags=re.IGNORECASE)
+        if normalized != task_description:
+            candidates.extend(
+                [
+                    normalized,
+                    normalized.replace("bowl", "black bowl"),
+                    normalized.replace("black bowl", "bowl"),
+                ]
+            )
         for key in candidates:
             if key in self._t5_embeddings:
-                return self._t5_embeddings[key].cuda().to(dtype=torch.bfloat16)
+                return self._t5_embeddings[key].cuda().to(dtype=self.dtype)
         raise KeyError(f"No precomputed T5 embedding for {task_description!r}. Example keys: {list(self._t5_embeddings)[:5]}")
 
     def _regen_probability(self, metrics: dict[str, object]) -> float:
@@ -1117,6 +1133,7 @@ def eval_vam_libero(
     metrics_dir: pathlib.Path | None = None,
     t5_embeddings_path: pathlib.Path | None = None,
     use_cuda_graphs: bool = True,
+    use_fp16: bool = False,
     regen_model_path: pathlib.Path | None = None,
     regen_threshold: float = 0.38,
     regen_max_attempts: int = 0,
@@ -1166,7 +1183,8 @@ def eval_vam_libero(
         rollout_dir,
         t5_embeddings_path,
         use_cuda_graphs,
-        regen_model_path,
+        dtype=torch.float16 if use_fp16 else torch.bfloat16,
+        regen_model_path=regen_model_path,
         regen_threshold=regen_threshold,
         regen_max_attempts=regen_max_attempts,
         regen_strategy=regen_strategy,

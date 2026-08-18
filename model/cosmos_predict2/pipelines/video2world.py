@@ -268,11 +268,9 @@ class Video2WorldPipeline(BasePipeline):
         # Create a pipe
         pipe = Video2WorldPipeline(device=device, torch_dtype=torch_dtype)
         pipe.config = config
-        pipe.precision = {
-            "float32": torch.float32,
-            "float16": torch.float16,
-            "bfloat16": torch.bfloat16,
-        }[config.precision]
+        # The runtime dtype is explicit so T4-compatible FP16 can override a
+        # checkpoint config that was trained with BF16.
+        pipe.precision = torch_dtype
         pipe.tensor_kwargs = {"device": "cuda", "dtype": pipe.precision}
         log.warning(f"precision {pipe.precision}")
 
@@ -441,7 +439,7 @@ class Video2WorldPipeline(BasePipeline):
         # Move tensors to GPU and convert to bfloat16 if they are floating point
         for k, v in data_batch.items():
             if isinstance(v, torch.Tensor) and torch.is_floating_point(data_batch[k]):
-                data_batch[k] = v.cuda().to(dtype=torch.bfloat16)
+                data_batch[k] = v.cuda().to(dtype=self.torch_dtype)
 
         return data_batch
 
