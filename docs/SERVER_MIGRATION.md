@@ -179,3 +179,7 @@ docker build -t cosmos-policy docker
 - Ошибка отсутствующего checkpoint: убедитесь, что переменные в eval-скрипте
   указывают на `mimic-video/model/checkpoints/`, а не на абсолютный путь старого
   сервера.
+
+## A100 paired LIBERO-PLUS Object evaluation
+
+For the current baseline-versus-consensus experiment, follow [A100_LIBERO_PLUS_OBJECT_EVAL.md](A100_LIBERO_PLUS_OBJECT_EVAL.md). It documents checkpoint/assets downloads and starts tmux in strict baseline-first, consensus-only-second order with summary-only outputs. Use Ampere-or-newer hardware.
