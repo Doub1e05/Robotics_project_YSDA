@@ -49,3 +49,10 @@ eval_outputs/**/*.csv
 eval_outputs/**/*.pt
 eval_outputs/**/episode_artifacts/
 eval_outputs/**/videos/
+
+# Generated SIMPLER / INT-ACT rollout products (summaries are compact and may be curated separately)
+eval_outputs/**/result/
+eval_outputs/**/t5_embeddings/
+eval_outputs/**/*.diagnostics.json
+eval_outputs/**/run_all.sh
+eval_outputs/**/resume_*.sh

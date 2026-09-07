@@ -113,6 +113,15 @@ def get_args():
     parser.add_argument("--vam-lowdim-horizon", type=int, required=True)
     parser.add_argument("--vam-stop-video-denoising-step", type=int, required=True)
     parser.add_argument("--vam-num-execute-actions", type=int, required=True)
+    parser.add_argument("--logging-dir", type=pathlib.Path, default=pathlib.Path("./results"))
+    parser.add_argument("--vam-prompt-embeddings-path", type=pathlib.Path, required=True)
+    parser.add_argument("--vam-consensus-medoid-only", action="store_true")
+    parser.add_argument("--vam-consensus-num-candidates", type=int, default=1)
+    parser.add_argument("--vam-consensus-rank-fusion", action="store_true")
+    parser.add_argument("--vam-diagnostics-mode", choices=["default", "encoder_hidden", "decoder_hidden", "all"], default="default")
+    parser.add_argument("--vam-representation-layer-indices", type=int, nargs="*", default=None)
+    parser.add_argument("--vam-decoder-capture-block-indices", type=int, nargs="*", default=None)
+    parser.add_argument("--vam-save-diagnostics", action="store_true")
 
     args = parser.parse_args()
 

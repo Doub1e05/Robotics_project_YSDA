@@ -3,11 +3,13 @@ Evaluate a model on ManiSkill2 environment.
 """
 
 import gc
+import json
 import os
 import pathlib
 
 import numpy as np
 from transforms3d.euler import quat2euler
+from PIL import Image, ImageDraw, ImageFont
 
 from simpler_env.utils.env.env_builder import (
     build_maniskill2_env,
@@ -40,6 +42,7 @@ def run_maniskill2_eval_single_episode(
     enable_raytracing=False,
     additional_env_save_tags=None,
     logging_dir="./results",
+    save_diagnostics=False,
 ):
     if additional_env_build_kwargs is None:
         additional_env_build_kwargs = {}
@@ -59,8 +62,9 @@ def run_maniskill2_eval_single_episode(
 
     r, p, y = quat2euler(robot_init_quat)
 
-    video_dir = f"{ckpt_path_basename}/{scene_name}/{control_mode}/{env_save_name}/rob_{robot_init_x}_{robot_init_y}_rot_{r:.3f}_{p:.3f}_{y:.3f}_rgb_overlay_{rgb_overlay_path_str}"
+    video_dir = f"{env_save_name}/rob_{robot_init_x}_{robot_init_y}_rot_{r:.3f}_{p:.3f}_{y:.3f}_rgb_overlay_{rgb_overlay_path_str}"
     video_dir = os.path.join(logging_dir, video_dir)
+    os.makedirs(video_dir, exist_ok=True)
 
     if os.path.exists(video_dir):
         for mp4 in pathlib.Path(video_dir).iterdir():
@@ -172,7 +176,23 @@ def run_maniskill2_eval_single_episode(
         print(timestep, info)
 
         image = get_image_from_maniskill2_obs_dict(env, obs, camera_name=obs_camera_name)
-        images.append(image)
+        # Keep the inference chunk visible in the rollout video. A new chunk is queried
+        # every num_execute_actions environment steps; _query_idx is incremented after query.
+        chunk_id = max(int(getattr(model, "_query_idx", 1)) - 1, 0)
+        frame = Image.fromarray(np.asarray(image).astype(np.uint8), mode="RGB")
+        draw = ImageDraw.Draw(frame)
+        text = f"chunk {chunk_id}"
+        try:
+            font = ImageFont.truetype("DejaVuSans-Bold.ttf", max(16, frame.height // 28))
+        except Exception:
+            font = ImageFont.load_default()
+        bbox = draw.textbbox((0, 0), text, font=font)
+        pad = 8
+        x0 = frame.width - (bbox[2] - bbox[0]) - 2 * pad
+        y0 = pad
+        draw.rectangle((x0 - pad, y0 - pad, frame.width - 2, y0 + (bbox[3] - bbox[1]) + pad), fill=(0, 0, 0))
+        draw.text((x0, y0), text, fill=(255, 255, 0), font=font)
+        images.append(np.asarray(frame))
         timestep += 1
 
     env.close()
@@ -191,6 +211,12 @@ def run_maniskill2_eval_single_episode(
     video_name = video_name + ".mp4"
     video_path = os.path.join(video_dir, video_name)
     write_video(video_path, images, fps=5)
+    if save_diagnostics:
+        diagnostics_path = video_path.replace(".mp4", ".diagnostics.json")
+        records = getattr(model, "_chunk_records", [])
+        pathlib.Path(diagnostics_path).write_text(
+            json.dumps(records, indent=2, ensure_ascii=False, default=str), encoding="utf-8"
+        )
 
     # save action trajectory
     action_path = video_path.replace(".mp4", ".png")
@@ -228,6 +254,8 @@ def maniskill2_evaluator(model, args):
                     enable_raytracing=args.enable_raytracing,
                     additional_env_save_tags=args.additional_env_save_tags,
                     obs_camera_name=args.obs_camera_name,
+                    logging_dir=args.logging_dir,
+                    save_diagnostics=args.vam_save_diagnostics,
                 )
                 if args.obj_variation_mode == "xy":
                     for obj_init_x in args.obj_init_xs:

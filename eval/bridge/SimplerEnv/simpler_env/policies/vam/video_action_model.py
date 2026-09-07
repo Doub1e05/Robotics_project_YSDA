@@ -1,4 +1,5 @@
 import collections
+import os
 import json
 import pathlib
 from collections.abc import Sequence
@@ -21,6 +22,7 @@ from cosmos_predict2.pipelines.video2world2action_gtvid import (
 from cosmos_predict2.pipelines.world2action import World2ActionPipeline
 from imaginaire.lazy_config import instantiate
 from imaginaire.utils.config_helper import override
+from consensus_medoid import consensus_medoid_costs, action_distance
 
 
 def load_video2world2action_pipeline(
@@ -29,6 +31,9 @@ def load_video2world2action_pipeline(
     action_model_path: str,
     dataset_statistics_path: pathlib.Path,
     is_hil: bool,
+    diagnostics_mode: str = "default",
+    representation_layer_indices: list[int] | None = None,
+    decoder_capture_block_indices: list[int] | None = None,
 ):
     config = make_config()
     config = override(config, ["--", f"experiment={experiment_name}"])
@@ -42,6 +47,7 @@ def load_video2world2action_pipeline(
         device="cuda",
         torch_dtype=torch.bfloat16,
         load_ema_to_reg=False,
+        use_text_encoder=False,
     )
 
     world2action_pipe = World2ActionPipeline.from_config(
@@ -65,7 +71,7 @@ def load_video2world2action_pipeline(
     if is_hil:
         return HILVideo2World2ActionPipeline(video2world_pipe, world2action_pipe).cuda()
 
-    return Video2World2ActionPipeline(video2world_pipe, world2action_pipe).cuda()
+    return Video2World2ActionPipeline(video2world_pipe, world2action_pipe, diagnostics_mode=diagnostics_mode, representation_layer_indices=representation_layer_indices, decoder_capture_block_indices=decoder_capture_block_indices).cuda()
 
 
 class VAMInference:
@@ -80,21 +86,64 @@ class VAMInference:
         stop_video_denoising_step: int,
         num_execute_actions: int,
         is_hil: bool,
+        prompt_embeddings_path: pathlib.Path | None = None,
+        consensus_medoid_only: bool = False,
+        consensus_num_candidates: int = 1,
+        consensus_rank_fusion: bool = False,
+        diagnostics_mode: str = "default",
+        representation_layer_indices: list[int] | None = None,
+        decoder_capture_block_indices: list[int] | None = None,
     ):
+        if diagnostics_mode == "all":
+            representation_layer_indices = representation_layer_indices or [4, 8, 12, 16, 20, 24, 28]
+            decoder_capture_block_indices = decoder_capture_block_indices or [8, 16, 23]
         self.model = load_video2world2action_pipeline(
             experiment_name,
             video_model_path,
             action_model_path,
             dataset_statistics_path,
             is_hil,
+            diagnostics_mode=diagnostics_mode,
+            representation_layer_indices=representation_layer_indices,
+            decoder_capture_block_indices=decoder_capture_block_indices,
         )
 
         self._image_horizon = img_horizon
         self._lowdim_horizon = lowdim_horizon
         self.stop_video_denoising_step = stop_video_denoising_step
         self.num_execute_actions = num_execute_actions
+        self.consensus_medoid_only = consensus_medoid_only
+        self.consensus_num_candidates = consensus_num_candidates
+        self.consensus_rank_fusion = bool(consensus_rank_fusion)
+        # Per-process seed for reproducible baseline evaluation.  Consensus can
+        # optionally use an explicit comma-separated list of candidate seeds.
+        self.sampling_seed = int(os.environ.get("MIMIC_VIDEO_SAMPLING_SEED", "0"))
+        candidate_seed_spec = os.environ.get("MIMIC_VIDEO_CANDIDATE_SEEDS", "")
+        if candidate_seed_spec.strip():
+            try:
+                self.candidate_seeds = [int(item.strip()) for item in candidate_seed_spec.split(",") if item.strip()]
+            except ValueError as exc:
+                raise ValueError(
+                    "MIMIC_VIDEO_CANDIDATE_SEEDS must be a comma-separated list of integers"
+                ) from exc
+        else:
+            self.candidate_seeds = list(range(self.consensus_num_candidates))
+        if any(seed < 0 for seed in self.candidate_seeds):
+            raise ValueError("Candidate seeds must be non-negative")
+        if (self.consensus_medoid_only or self.consensus_rank_fusion) and len(self.candidate_seeds) < self.consensus_num_candidates:
+            raise ValueError(
+                "MIMIC_VIDEO_CANDIDATE_SEEDS must provide at least consensus_num_candidates values"
+            )
+        if (self.consensus_medoid_only or self.consensus_rank_fusion) and self.consensus_num_candidates < 2:
+            raise ValueError("Consensus-medoid selection requires at least two candidates")
 
         self.is_hil = is_hil
+        self._prompt_embeddings = None
+        if prompt_embeddings_path is not None:
+            loaded = torch.load(prompt_embeddings_path, map_location="cpu", weights_only=True)
+            if not isinstance(loaded, dict):
+                raise ValueError(f"Expected a dict of prompt embeddings in {prompt_embeddings_path}")
+            self._prompt_embeddings = loaded
 
     def reset(self, task_description):
         self._image_history = None
@@ -103,12 +152,14 @@ class VAMInference:
         self.action_buffer = None
         self.action_buffer_idx = 0
         self._viz_records = []  # each: {"obs": lowdim(10,), "pred_gripper": (H,1)}
+        self._chunk_records = []
         self._obs_hist = []  # per-step proprio: list of dict(pos, rot, gripper)
         self._plan_abs_Ts = None  # (H,4,4) absolute target poses in world
         self._last_target_p = None
         self._global_step = 0
 
         self._future_vid = None
+        self._query_idx = 0
 
     def _process_image(self, image: np.ndarray) -> np.ndarray:
         image = np.array(
@@ -138,6 +189,67 @@ class VAMInference:
             axis=1,
             mode="clip",
         )
+
+    @staticmethod
+    def _ascending_ranks(scores: list[float]) -> np.ndarray:
+        """Return average ascending ranks; lower score is better."""
+        values = np.asarray(scores, dtype=np.float64)
+        order = np.argsort(values, kind="stable")
+        ranks = np.empty(len(values), dtype=np.float64)
+        start = 0
+        while start < len(order):
+            end = start + 1
+            while end < len(order) and np.isclose(values[order[end]], values[order[start]], rtol=1e-7, atol=1e-9):
+                end += 1
+            ranks[order[start:end]] = (start + 1 + end) / 2.0
+            start = end
+        return ranks
+
+    def _action_centrality_with_executed_prefix_weight(
+        self, candidates: list[np.ndarray]
+    ) -> tuple[list[float], list[list[float]]]:
+        """Pairwise action centrality, weighting the executed prefix 4x higher."""
+        count = len(candidates)
+        pairwise = np.zeros((count, count), dtype=np.float64)
+        for first_idx in range(count):
+            for second_idx in range(first_idx + 1, count):
+                first = np.asarray(candidates[first_idx], dtype=np.float64)
+                second = np.asarray(candidates[second_idx], dtype=np.float64)
+                length = min(len(first), len(second))
+                weights = np.full(length, 0.25, dtype=np.float64)
+                weights[: min(self.num_execute_actions, length)] = 1.0
+                distances = np.asarray(
+                    [
+                        action_distance(
+                            first[timestep], second[timestep],
+                            translation_weight=1.0,
+                            rotation_weight=0.5,
+                            gripper_weight=0.25,
+                        )
+                        for timestep in range(length)
+                    ],
+                    dtype=np.float64,
+                )
+                distance = float(np.average(distances, weights=weights))
+                pairwise[first_idx, second_idx] = distance
+                pairwise[second_idx, first_idx] = distance
+        return [float(np.delete(pairwise[idx], idx).mean()) for idx in range(count)], pairwise.tolist()
+
+    def _pooled_encoder_hidden(self) -> np.ndarray:
+        """Read the current candidate encoder representation without another forward pass."""
+        hidden = self.model.last_replay_payload.get("encoder_hidden_grid_B_T_H_W_D")
+        if not isinstance(hidden, torch.Tensor):
+            raise RuntimeError("Rank fusion requires the encoder hidden grid from the MIMIC pipeline")
+        vector = hidden[0].float().mean(dim=(0, 1, 2)).cpu().numpy()
+        return vector / max(float(np.linalg.norm(vector)), 1e-12)
+
+    @staticmethod
+    def _hidden_centrality(hidden_vectors: list[np.ndarray]) -> tuple[list[float], list[list[float]]]:
+        vectors = np.asarray(hidden_vectors, dtype=np.float64)
+        similarities = np.clip(vectors @ vectors.T, -1.0, 1.0)
+        distances = 1.0 - similarities
+        np.fill_diagonal(distances, 0.0)
+        return [float(np.delete(distances[idx], idx).mean()) for idx in range(len(vectors))], distances.tolist()
 
     def step(
         self,
@@ -177,27 +289,80 @@ class VAMInference:
 
             lowdims = np.stack(self._lowdim_history, axis=0)
 
+            model_kwargs = {
+                "input_vid": torch.from_numpy(images[None]).cuda().bfloat16(),
+                "state_B_HO_O": torch.from_numpy(lowdims[None]).cuda().bfloat16(),
+                "prompt": None,
+                "prompt_embedding": self._get_prompt_embedding(task_description),
+                "num_sampling_step": 35,
+                "stop_after_step": self.stop_video_denoising_step,
+                "use_cuda_graphs": True,
+            }
             if self.is_hil:
-                pred_actions = self.model(
-                    input_vid=torch.from_numpy(images[None]).cuda().bfloat16(),
-                    gt_future_vid=torch.from_numpy(self._future_vid[None]).cuda().bfloat16(),
-                    state_B_HO_O=torch.from_numpy(lowdims[None]).cuda().bfloat16(),
-                    prompt=task_description,
-                    num_sampling_step=35,
-                    stop_after_step=self.stop_video_denoising_step,
-                    use_cuda_graphs=True,
-                )
-                self._future_vid = None
+                model_kwargs["gt_future_vid"] = torch.from_numpy(self._future_vid[None]).cuda().bfloat16()
+            if self.consensus_medoid_only or self.consensus_rank_fusion:
+                candidates = []
+                hidden_vectors = []
+                for candidate_idx in range(self.consensus_num_candidates):
+                    candidate_seed = self.candidate_seeds[candidate_idx]
+                    pred = self.model(
+                        **model_kwargs,
+                        seed=candidate_seed,
+                    )
+                    candidates.append(pred[0].float().cpu().numpy())
+                    if self.consensus_rank_fusion:
+                        hidden_vectors.append(self._pooled_encoder_hidden())
+
+                if self.consensus_rank_fusion:
+                    action_costs, action_pairwise = self._action_centrality_with_executed_prefix_weight(candidates)
+                    hidden_costs, hidden_pairwise = self._hidden_centrality(hidden_vectors)
+                    action_ranks = self._ascending_ranks(action_costs)
+                    hidden_ranks = self._ascending_ranks(hidden_costs)
+                    fused_scores = action_ranks + hidden_ranks
+                    selected_candidate_idx = min(
+                        range(self.consensus_num_candidates),
+                        key=lambda idx: (
+                            float(fused_scores[idx]),
+                            float(action_costs[idx]),
+                            float(hidden_costs[idx]),
+                            idx,
+                        ),
+                    )
+                    print(
+                        f"Consensus_rank_fusion candidate_seeds={self.candidate_seeds[:self.consensus_num_candidates]} "
+                        f"query={self._query_idx} selected={selected_candidate_idx} "
+                        f"action_costs={action_costs} hidden_costs={hidden_costs} "
+                        f"action_ranks={action_ranks.tolist()} hidden_ranks={hidden_ranks.tolist()} "
+                        f"fused_scores={fused_scores.tolist()} "
+                        f"action_pairwise={action_pairwise} hidden_pairwise={hidden_pairwise}",
+                        flush=True,
+                    )
+                else:
+                    action_costs, _details, _pairwise = consensus_medoid_costs(
+                        candidates,
+                        previous_action=None,
+                        horizon=self.num_execute_actions,
+                        temporal_discount=0.9,
+                        translation_weight=1.0,
+                        rotation_weight=0.5,
+                        gripper_weight=0.25,
+                        continuity_weight=0.0,
+                        smoothness_weight=0.0,
+                        gripper_switch_weight=0.0,
+                    )
+                    selected_candidate_idx = int(np.argmin(action_costs))
+                    print(
+                        f"Consensus_medoid_only candidate_seeds={self.candidate_seeds[:self.consensus_num_candidates]} query={self._query_idx} "
+                        f"selected={selected_candidate_idx} costs={action_costs}",
+                        flush=True,
+                    )
+                self.action_buffer = candidates[selected_candidate_idx]
             else:
-                pred_actions = self.model(
-                    input_vid=torch.from_numpy(images[None]).cuda().bfloat16(),
-                    state_B_HO_O=torch.from_numpy(lowdims[None]).cuda().bfloat16(),
-                    prompt=task_description,
-                    num_sampling_step=35,
-                    stop_after_step=self.stop_video_denoising_step,
-                    use_cuda_graphs=True,
-                )
-            self.action_buffer = pred_actions[0].float().cpu().numpy()
+                pred_actions = self.model(**model_kwargs, seed=self.sampling_seed)
+                self.action_buffer = pred_actions[0].float().cpu().numpy()
+            self._query_idx += 1
+            if self.is_hil:
+                self._future_vid = None
             self.action_buffer_idx = 0
 
             # store absolute pose targets for closed-loop deltas
@@ -209,6 +374,7 @@ class VAMInference:
             if self._last_target_p is None:
                 self._last_target_p = ee_pose_proprio.p
 
+            self._chunk_records.append({"chunk_id": int(self._query_idx - 1), "query_timestep": int(self._global_step), "seed": int(self.sampling_seed), "diagnostics": self.model.last_diagnostics})
             self._viz_records.append(
                 {
                     "pred_gripper": self.action_buffer[:, 9],  # (H,10)
@@ -254,6 +420,13 @@ class VAMInference:
         self._last_target_p = R_applied @ p_prev + p_cur + t_cmd - R_applied @ p_cur
 
         return sim_actions
+
+    def _get_prompt_embedding(self, task_description: str) -> torch.Tensor:
+        if self._prompt_embeddings is None:
+            raise RuntimeError("Prompt embeddings were not loaded")
+        if task_description not in self._prompt_embeddings:
+            raise KeyError(f"No precomputed embedding for instruction: {task_description!r}")
+        return self._prompt_embeddings[task_description].cuda(non_blocking=True).bfloat16()
 
     @staticmethod
     def _pose_from_lowdim(lowdim: np.ndarray) -> np.ndarray:

@@ -22,6 +22,13 @@ if __name__ == "__main__":
         args.vam_stop_video_denoising_step,
         args.vam_num_execute_actions,
         is_hil=False,
+        prompt_embeddings_path=args.vam_prompt_embeddings_path,
+        consensus_medoid_only=args.vam_consensus_medoid_only,
+        consensus_num_candidates=args.vam_consensus_num_candidates,
+        consensus_rank_fusion=args.vam_consensus_rank_fusion,
+        diagnostics_mode=args.vam_diagnostics_mode,
+        representation_layer_indices=args.vam_representation_layer_indices,
+        decoder_capture_block_indices=args.vam_decoder_capture_block_indices,
     )
     success_arr = maniskill2_evaluator(model, args)
     print(args)

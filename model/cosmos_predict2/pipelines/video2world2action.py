@@ -20,7 +20,7 @@ class Video2World2ActionPipeline(nn.Module):
 
         self.video2world_pipeline = video2world_pipeline
         self.world2action_pipeline = world2action_pipeline
-        if diagnostics_mode not in {"default", "encoder_hidden", "decoder_hidden"}:
+        if diagnostics_mode not in {"default", "encoder_hidden", "decoder_hidden", "all"}:
             raise ValueError(f"Unsupported diagnostics_mode={diagnostics_mode!r}")
         if replay_payload_mode not in {"full", "decoder_only", "none"}:
             raise ValueError(f"Unsupported replay_payload_mode={replay_payload_mode!r}")
@@ -368,6 +368,19 @@ class Video2World2ActionPipeline(nn.Module):
                 obs_token_count=obs_token_count,
                 executed_action_count=executed_action_count,
             )
+        if self.diagnostics_mode == "all":
+            default_metrics = self._collect_default_diagnostics(
+                flat_crossattn_emb=flat_crossattn_emb, actions=actions,
+                prompt_embedding=prompt_embedding, video_sigma=video_sigma,
+            )
+            encoder_metrics = self._collect_encoder_hidden_diagnostics(
+                hidden_states_by_layer=hidden_states_by_layer, video_sigma=video_sigma,
+            )
+            decoder_metrics = self._collect_decoder_hidden_diagnostics(
+                decoder_hidden_states_by_block=decoder_hidden_states_by_block,
+                obs_token_count=obs_token_count, executed_action_count=executed_action_count,
+            )
+            return {**default_metrics, "encoder_hidden": encoder_metrics, "decoder_hidden": decoder_metrics}
         return self._collect_default_diagnostics(
             flat_crossattn_emb=flat_crossattn_emb,
             actions=actions,
