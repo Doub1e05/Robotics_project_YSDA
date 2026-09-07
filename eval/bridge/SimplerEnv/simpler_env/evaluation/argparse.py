@@ -118,6 +118,12 @@ def get_args():
     parser.add_argument("--vam-consensus-medoid-only", action="store_true")
     parser.add_argument("--vam-consensus-num-candidates", type=int, default=1)
     parser.add_argument("--vam-consensus-rank-fusion", action="store_true")
+    parser.add_argument(
+        "--vam-latent-medoid-strategy",
+        choices=["none", "encoder", "encoder_robust", "decoder_action_tokens"],
+        default="none",
+        help="Select a consensus medoid directly in encoder or decoder hidden-state space.",
+    )
     parser.add_argument("--vam-diagnostics-mode", choices=["default", "encoder_hidden", "decoder_hidden", "all"], default="default")
     parser.add_argument("--vam-representation-layer-indices", type=int, nargs="*", default=None)
     parser.add_argument("--vam-decoder-capture-block-indices", type=int, nargs="*", default=None)

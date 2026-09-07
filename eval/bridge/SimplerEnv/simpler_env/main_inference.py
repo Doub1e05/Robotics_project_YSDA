@@ -26,6 +26,7 @@ if __name__ == "__main__":
         consensus_medoid_only=args.vam_consensus_medoid_only,
         consensus_num_candidates=args.vam_consensus_num_candidates,
         consensus_rank_fusion=args.vam_consensus_rank_fusion,
+        latent_medoid_strategy=args.vam_latent_medoid_strategy,
         diagnostics_mode=args.vam_diagnostics_mode,
         representation_layer_indices=args.vam_representation_layer_indices,
         decoder_capture_block_indices=args.vam_decoder_capture_block_indices,

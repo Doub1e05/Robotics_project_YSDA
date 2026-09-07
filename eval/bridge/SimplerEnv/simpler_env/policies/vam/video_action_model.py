@@ -90,13 +90,19 @@ class VAMInference:
         consensus_medoid_only: bool = False,
         consensus_num_candidates: int = 1,
         consensus_rank_fusion: bool = False,
+        latent_medoid_strategy: str = "none",
         diagnostics_mode: str = "default",
         representation_layer_indices: list[int] | None = None,
         decoder_capture_block_indices: list[int] | None = None,
     ):
+        if latent_medoid_strategy not in {"none", "encoder", "encoder_robust", "decoder_action_tokens"}:
+            raise ValueError(f"Unsupported latent_medoid_strategy={latent_medoid_strategy!r}")
         if diagnostics_mode == "all":
             representation_layer_indices = representation_layer_indices or [4, 8, 12, 16, 20, 24, 28]
             decoder_capture_block_indices = decoder_capture_block_indices or [8, 16, 23]
+        if latent_medoid_strategy == "decoder_action_tokens":
+            # Block 23 is the final block of the 24-block action transformer.
+            decoder_capture_block_indices = decoder_capture_block_indices or [23]
         self.model = load_video2world2action_pipeline(
             experiment_name,
             video_model_path,
@@ -115,6 +121,7 @@ class VAMInference:
         self.consensus_medoid_only = consensus_medoid_only
         self.consensus_num_candidates = consensus_num_candidates
         self.consensus_rank_fusion = bool(consensus_rank_fusion)
+        self.latent_medoid_strategy = latent_medoid_strategy
         # Per-process seed for reproducible baseline evaluation.  Consensus can
         # optionally use an explicit comma-separated list of candidate seeds.
         self.sampling_seed = int(os.environ.get("MIMIC_VIDEO_SAMPLING_SEED", "0"))
@@ -130,11 +137,16 @@ class VAMInference:
             self.candidate_seeds = list(range(self.consensus_num_candidates))
         if any(seed < 0 for seed in self.candidate_seeds):
             raise ValueError("Candidate seeds must be non-negative")
-        if (self.consensus_medoid_only or self.consensus_rank_fusion) and len(self.candidate_seeds) < self.consensus_num_candidates:
+        uses_multi_candidate_selection = (
+            self.consensus_medoid_only
+            or self.consensus_rank_fusion
+            or self.latent_medoid_strategy != "none"
+        )
+        if uses_multi_candidate_selection and len(self.candidate_seeds) < self.consensus_num_candidates:
             raise ValueError(
                 "MIMIC_VIDEO_CANDIDATE_SEEDS must provide at least consensus_num_candidates values"
             )
-        if (self.consensus_medoid_only or self.consensus_rank_fusion) and self.consensus_num_candidates < 2:
+        if uses_multi_candidate_selection and self.consensus_num_candidates < 2:
             raise ValueError("Consensus-medoid selection requires at least two candidates")
 
         self.is_hil = is_hil
@@ -251,6 +263,74 @@ class VAMInference:
         np.fill_diagonal(distances, 0.0)
         return [float(np.delete(distances[idx], idx).mean()) for idx in range(len(vectors))], distances.tolist()
 
+
+    @staticmethod
+    def _cosine_distance(first: np.ndarray, second: np.ndarray) -> np.ndarray:
+        """Cosine distance over the final feature dimension with safe zero handling."""
+        first = np.asarray(first, dtype=np.float32)
+        second = np.asarray(second, dtype=np.float32)
+        first = first / np.maximum(np.linalg.norm(first, axis=-1, keepdims=True), 1e-12)
+        second = second / np.maximum(np.linalg.norm(second, axis=-1, keepdims=True), 1e-12)
+        return 1.0 - np.clip(np.sum(first * second, axis=-1), -1.0, 1.0)
+
+    def _encoder_latent_trajectory(self) -> np.ndarray:
+        """Future encoder-token trajectory relative to its first future frame."""
+        hidden = self.model.last_replay_payload.get("encoder_hidden_grid_B_T_H_W_D")
+        if not isinstance(hidden, torch.Tensor) or hidden.ndim != 5:
+            raise RuntimeError("Encoder latent medoid requires encoder_hidden_grid_B_T_H_W_D")
+        trajectory = hidden[0].float().cpu().numpy()
+        # The five-frame VAM observation uses two latent condition frames.
+        # They are shared context and must not dilute candidate disagreement.
+        future = trajectory[min(2, trajectory.shape[0] - 1) :]
+        return future[1:] - future[:1] if future.shape[0] > 1 else future
+
+    def _decoder_action_token_trajectory(self) -> np.ndarray:
+        """Final decoder-block hidden states for the executed action prefix."""
+        hidden_by_block = self.model.last_replay_payload.get("decoder_hidden_states_by_block")
+        state = self.model.last_replay_payload.get("state_B_HO_O")
+        if not isinstance(hidden_by_block, dict) or not isinstance(state, torch.Tensor):
+            raise RuntimeError("Decoder latent medoid requires captured decoder hidden states")
+        if 23 not in hidden_by_block or not isinstance(hidden_by_block[23], torch.Tensor):
+            raise RuntimeError("Decoder latent medoid requires capture of final decoder block 23")
+        obs_token_count = int(state.shape[1])
+        action_hidden = hidden_by_block[23][0, obs_token_count:, :].float().cpu().numpy()
+        if action_hidden.shape[0] == 0:
+            raise RuntimeError("Decoder latent medoid found no action tokens")
+        return action_hidden[: min(self.num_execute_actions, action_hidden.shape[0])]
+
+    def _trajectory_medoid_costs(
+        self,
+        trajectories: list[np.ndarray],
+        *,
+        robust_spatial: bool = False,
+        early_weight: float = 4.0,
+        early_count: int | None = None,
+    ) -> tuple[list[float], list[list[float]]]:
+        """Time-aligned token-trajectory medoid costs without decoded action distances."""
+        count = len(trajectories)
+        pairwise = np.zeros((count, count), dtype=np.float64)
+        for first_idx in range(count):
+            for second_idx in range(first_idx + 1, count):
+                length = min(trajectories[first_idx].shape[0], trajectories[second_idx].shape[0])
+                if length < 1:
+                    raise RuntimeError("Latent medoid candidates must contain at least one aligned token step")
+                token_distance = self._cosine_distance(
+                    trajectories[first_idx][:length], trajectories[second_idx][:length]
+                )
+                reduce_axes = tuple(range(1, token_distance.ndim))
+                per_step = (
+                    np.median(token_distance, axis=reduce_axes)
+                    if robust_spatial and reduce_axes
+                    else np.mean(token_distance, axis=reduce_axes)
+                )
+                prefix = min(int(early_count or self.num_execute_actions), length)
+                weights = np.ones(length, dtype=np.float64)
+                weights[:prefix] = early_weight
+                distance = float(np.average(per_step, weights=weights))
+                pairwise[first_idx, second_idx] = distance
+                pairwise[second_idx, first_idx] = distance
+        return [float(np.delete(pairwise[idx], idx).mean()) for idx in range(count)], pairwise.tolist()
+
     def step(
         self,
         image: np.ndarray,
@@ -300,9 +380,10 @@ class VAMInference:
             }
             if self.is_hil:
                 model_kwargs["gt_future_vid"] = torch.from_numpy(self._future_vid[None]).cuda().bfloat16()
-            if self.consensus_medoid_only or self.consensus_rank_fusion:
+            if self.consensus_medoid_only or self.consensus_rank_fusion or self.latent_medoid_strategy != "none":
                 candidates = []
                 hidden_vectors = []
+                latent_trajectories = []
                 for candidate_idx in range(self.consensus_num_candidates):
                     candidate_seed = self.candidate_seeds[candidate_idx]
                     pred = self.model(
@@ -312,8 +393,34 @@ class VAMInference:
                     candidates.append(pred[0].float().cpu().numpy())
                     if self.consensus_rank_fusion:
                         hidden_vectors.append(self._pooled_encoder_hidden())
+                    if self.latent_medoid_strategy in {"encoder", "encoder_robust"}:
+                        latent_trajectories.append(self._encoder_latent_trajectory())
+                    elif self.latent_medoid_strategy == "decoder_action_tokens":
+                        latent_trajectories.append(self._decoder_action_token_trajectory())
 
-                if self.consensus_rank_fusion:
+                if self.latent_medoid_strategy != "none":
+                    early_count = self.num_execute_actions
+                    if self.latent_medoid_strategy in {"encoder", "encoder_robust"}:
+                        action_horizon = max(int(candidates[0].shape[0]), 1)
+                        early_count = max(
+                            1,
+                            int(np.ceil(latent_trajectories[0].shape[0] * self.num_execute_actions / action_horizon)),
+                        )
+                    latent_costs, latent_pairwise = self._trajectory_medoid_costs(
+                        latent_trajectories,
+                        robust_spatial=self.latent_medoid_strategy == "encoder_robust",
+                        early_weight=4.0,
+                        early_count=early_count,
+                    )
+                    selected_candidate_idx = int(np.argmin(latent_costs))
+                    print(
+                        f"Consensus_latent_medoid strategy={self.latent_medoid_strategy} "
+                        f"candidate_seeds={self.candidate_seeds[:self.consensus_num_candidates]} "
+                        f"query={self._query_idx} selected={selected_candidate_idx} "
+                        f"costs={latent_costs} pairwise={latent_pairwise}",
+                        flush=True,
+                    )
+                elif self.consensus_rank_fusion:
                     action_costs, action_pairwise = self._action_centrality_with_executed_prefix_weight(candidates)
                     hidden_costs, hidden_pairwise = self._hidden_centrality(hidden_vectors)
                     action_ranks = self._ascending_ranks(action_costs)
