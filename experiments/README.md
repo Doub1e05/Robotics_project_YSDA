@@ -6,7 +6,12 @@
 
 | Папка | Описание | Success |
 |-------|----------|---------|
-| [baseline/trace_100ep](../eval_outputs/libero_spatial/baseline/trace_100ep/) | 10 задач × 10 эп., trace-метрики, GPU 3 | **69/100 (69%)** |
+| [baseline/trace_100ep](../eval_outputs/libero_spatial/baseline/trace_100ep/) | 10 задач × 10 эп., trace-метрики, GPU 3 | **69/100, 69.00% [59.37, 77.22]** |
+
+CI в этой строке — двусторонний 95% Wilson interval. Сводная таблица новых
+baseline, consensus medoid и decoder action-token medoid запусков находится в
+[`docs/RESULTS.md`](../docs/RESULTS.md); незавершённые прогоны не включаются в
+headline results.
 | [baseline/modelonly_100ep](../eval_outputs/libero_spatial/baseline/modelonly_100ep/) | Ранний прогон без trace | — |
 | [baseline/modelonly_3tasks](../eval_outputs/libero_spatial/baseline/modelonly_3tasks/) | Отладка на 3 задачах | — |
 
@@ -40,7 +45,7 @@
 
 | Папка | Описание |
 |-------|----------|
-| [other/libero_90_19tasks_10eps](../eval_outputs/libero_spatial/other/libero_90_19tasks_10eps/) | LIBERO-90, 19 задач × 10 эп. |
+| `eval_outputs/libero_spatial/other/libero_90_19tasks_10eps/` | LIBERO-90, 19 задач × 10 эп.; локальный output, не включён в Git |
 
 ## Обученные модели (копии)
 

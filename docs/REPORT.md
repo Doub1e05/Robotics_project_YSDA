@@ -1,5 +1,10 @@
 # Отчёт по экспериментам: диагностика mimic-video и стратегии inference
 
+> Этот исторический отчёт описывает раннюю LIBERO-диагностику. Сводка новых
+> MIMIC-Video и GR00T N1.7 прогонов на SIMPLER, INT-ACT, LIBERO-Pro,
+> LIBERO-Plus и обычном LIBERO Spatial, включая 95% Wilson CI, поддерживается в
+> [RESULTS.md](RESULTS.md).
+
 Документ описывает проведённые исследования на базе предобученной **mimic-video** (Video2World + World2Action) в среде **LIBERO Spatial**: сбор диагностических метрик, статистический анализ различий success/failure, обучение CatBoost-классификаторов и три стратегии адаптивного inference при rollout.
 
 ---

@@ -1,0 +1,91 @@
+{
+  "model": "nvidia/GR00T-N1.7-SimplerEnv-Bridge",
+  "protocol": "INT-ACT Object OOD official 8-task subset; 24 episodes/task",
+  "planner": "consensus_only_action_medoid",
+  "candidate_seeds": [
+    2,
+    997,
+    996
+  ],
+  "environment_seed_start": 0,
+  "execution_horizon": 4,
+  "num_tasks": 8,
+  "episodes_per_task": 24,
+  "categories": {
+    "OOD Relation": {
+      "successes": 26,
+      "episodes": 96,
+      "success_rate": 0.2708333333333333
+    },
+    "OOD Source": {
+      "successes": 12,
+      "episodes": 48,
+      "success_rate": 0.25
+    },
+    "OOD Target": {
+      "successes": 15,
+      "episodes": 24,
+      "success_rate": 0.625
+    },
+    "OOD Source+Target": {
+      "successes": 10,
+      "episodes": 24,
+      "success_rate": 0.4166666666666667
+    }
+  },
+  "tasks": {
+    "widowx_cube_on_plate_clean": {
+      "category": "OOD Relation",
+      "successes": 4,
+      "episodes": 24,
+      "success_rate": 0.16666666666666666
+    },
+    "widowx_small_plate_on_green_cube_clean": {
+      "category": "OOD Relation",
+      "successes": 0,
+      "episodes": 24,
+      "success_rate": 0.0
+    },
+    "widowx_carrot_on_sponge_clean": {
+      "category": "OOD Relation",
+      "successes": 3,
+      "episodes": 24,
+      "success_rate": 0.125
+    },
+    "widowx_eggplant_on_sponge_clean": {
+      "category": "OOD Relation",
+      "successes": 19,
+      "episodes": 24,
+      "success_rate": 0.7916666666666666
+    },
+    "widowx_coke_can_on_plate_clean": {
+      "category": "OOD Source",
+      "successes": 9,
+      "episodes": 24,
+      "success_rate": 0.375
+    },
+    "widowx_pepsi_on_plate_clean": {
+      "category": "OOD Source",
+      "successes": 3,
+      "episodes": 24,
+      "success_rate": 0.125
+    },
+    "widowx_carrot_on_keyboard_clean": {
+      "category": "OOD Target",
+      "successes": 15,
+      "episodes": 24,
+      "success_rate": 0.625
+    },
+    "widowx_coke_can_on_keyboard_clean": {
+      "category": "OOD Source+Target",
+      "successes": 10,
+      "episodes": 24,
+      "success_rate": 0.4166666666666667
+    }
+  },
+  "overall": {
+    "successes": 63,
+    "episodes": 192,
+    "success_rate": 0.328125
+  }
+}

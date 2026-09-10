@@ -5,7 +5,14 @@ The eval writes model-output metrics without episode-level averaging.
 ## Files
 - `episode_traces.jsonl`: one JSON object per episode with `meta`, `chunks`, and nested `actions`.
 - `chunk_metrics.csv` / `chunk_metrics.jsonl`: one row per model inference chunk.
-- `candidate_chunk_metrics.csv` / `candidate_chunk_metrics.jsonl`: one row per (chunk, candidate) when using `catboost_select` / `hybrid`.
+- `candidate_chunk_metrics.csv` / `candidate_chunk_metrics.jsonl`: one row per
+  `(chunk, candidate)` for multi-candidate selectors, including CatBoost,
+  consensus and decoder action-token medoid runs.
+
+Decoder-token runs add `decoder_action_token_seed`,
+`decoder_action_token_medoid_cost`, the shared pairwise-distance matrix and the
+`minimum_cost` selection marker. These are selector diagnostics; headline
+quality is still calculated from binary episode outcomes in `summary.json`.
 - `action_metrics.csv` / `action_metrics.jsonl`: one row per executed action, suitable for filtering actions.
 - `summary.json`: only counts and eval labels, not metric aggregates.
 

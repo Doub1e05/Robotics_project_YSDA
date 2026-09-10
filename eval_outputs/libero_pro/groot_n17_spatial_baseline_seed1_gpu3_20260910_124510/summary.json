@@ -1,0 +1,38 @@
+{
+  "benchmark": "LIBERO-PRO Spatial",
+  "model": "GR00T-N1.7-LIBERO/libero_spatial",
+  "method": "baseline",
+  "action_seed": 1,
+  "expected_tasks": 40,
+  "expected_episodes": 400,
+  "tasks_complete": 40,
+  "episodes": 400,
+  "successes": 246,
+  "success_rate": 0.615,
+  "by_split": {
+    "lan": {
+      "tasks_complete": 10,
+      "episodes": 100,
+      "successes": 93,
+      "success_rate": 0.93
+    },
+    "object": {
+      "tasks_complete": 10,
+      "episodes": 100,
+      "successes": 99,
+      "success_rate": 0.99
+    },
+    "swap": {
+      "tasks_complete": 10,
+      "episodes": 100,
+      "successes": 2,
+      "success_rate": 0.02
+    },
+    "task": {
+      "tasks_complete": 10,
+      "episodes": 100,
+      "successes": 52,
+      "success_rate": 0.52
+    }
+  }
+}

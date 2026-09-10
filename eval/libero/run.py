@@ -246,6 +246,12 @@ class VAMInference:
         self.use_cuda_graphs = use_cuda_graphs
         self.seed = seed
         self._query_counter = 0
+        candidate_seed_spec = os.environ.get("MIMIC_VIDEO_CANDIDATE_SEEDS", "")
+        self.candidate_seeds = (
+            [int(value.strip()) for value in candidate_seed_spec.split(",") if value.strip()]
+            if candidate_seed_spec.strip()
+            else []
+        )
         self.regen_threshold = regen_threshold
         self.regen_max_attempts = regen_max_attempts
         self.regen_strategy = regen_strategy
@@ -273,6 +279,7 @@ class VAMInference:
             "hybrid_select_action_dynamic",
             "decoder_metric_select",
             "consensus_medoid",
+            "decoder_action_token_medoid",
         }
         uses_catboost = self.regen_strategy in {"catboost_select", "hybrid_select_action_dynamic"}
         uses_action_dynamic = self.regen_strategy in {"action_dynamic", "hybrid_select_action_dynamic"}
@@ -299,6 +306,19 @@ class VAMInference:
                 )
             if self.decoder_metric_select_reduce not in {"min", "max"}:
                 raise ValueError("decoder_metric_select_reduce must be either 'min' or 'max'.")
+        if self.regen_strategy == "decoder_action_token_medoid":
+            if self.diagnostics_mode != "decoder_hidden":
+                raise ValueError(
+                    "regen_strategy='decoder_action_token_medoid' requires diagnostics_mode='decoder_hidden'."
+                )
+            if 23 not in self.decoder_capture_block_indices:
+                raise ValueError(
+                    "regen_strategy='decoder_action_token_medoid' requires decoder block 23 capture."
+                )
+            if self.candidate_seeds and len(self.candidate_seeds) != self.regen_num_candidates:
+                raise ValueError(
+                    "MIMIC_VIDEO_CANDIDATE_SEEDS must contain exactly regen_num_candidates seeds."
+                )
         if self.regen_strategy == "consensus_medoid":
             if self.consensus_medoid_horizon < 1:
                 raise ValueError("consensus_medoid_horizon must be >= 1.")
@@ -441,6 +461,47 @@ class VAMInference:
         probability = self._regen_probability(chunk_metrics)
         return actions_np, diagnostics, chunk_metrics, probability
 
+    def _decoder_action_token_trajectory(self) -> np.ndarray:
+        """Return final-block action-token states for the executed prefix."""
+        payload = getattr(self.model, "last_replay_payload", {}) or {}
+        hidden_by_block = payload.get("decoder_hidden_states_by_block")
+        state = payload.get("state_B_HO_O")
+        if not isinstance(hidden_by_block, dict) or not isinstance(state, torch.Tensor):
+            raise RuntimeError("Decoder action-token medoid requires captured decoder hidden states.")
+        hidden = hidden_by_block.get(23)
+        if not isinstance(hidden, torch.Tensor):
+            raise RuntimeError("Decoder action-token medoid requires final decoder block 23.")
+        obs_token_count = int(state.shape[1])
+        tokens = hidden[0, obs_token_count:, :].float().cpu().numpy()
+        if tokens.shape[0] == 0:
+            raise RuntimeError("Decoder action-token medoid found no action tokens.")
+        return tokens[: min(self.num_execute_actions, tokens.shape[0])]
+
+    @staticmethod
+    def _decoder_action_token_medoid_costs(
+        trajectories: list[np.ndarray],
+    ) -> tuple[list[float], list[list[float]]]:
+        """Compute cosine medoid costs over time-aligned decoder action tokens."""
+        count = len(trajectories)
+        pairwise = np.zeros((count, count), dtype=np.float64)
+        for first_idx in range(count):
+            for second_idx in range(first_idx + 1, count):
+                length = min(trajectories[first_idx].shape[0], trajectories[second_idx].shape[0])
+                if length < 1:
+                    raise RuntimeError("Decoder medoid candidates must contain aligned action tokens.")
+                first = trajectories[first_idx][:length]
+                second = trajectories[second_idx][:length]
+                first = first / np.maximum(np.linalg.norm(first, axis=-1, keepdims=True), 1e-12)
+                second = second / np.maximum(np.linalg.norm(second, axis=-1, keepdims=True), 1e-12)
+                per_token = 1.0 - np.clip(np.sum(first * second, axis=-1), -1.0, 1.0)
+                weights = np.ones(length, dtype=np.float64)
+                weights[: min(4, length)] = 4.0
+                distance = float(np.average(per_token, weights=weights))
+                pairwise[first_idx, second_idx] = distance
+                pairwise[second_idx, first_idx] = distance
+        costs = [float(np.delete(pairwise[idx], idx).mean()) for idx in range(count)]
+        return costs, pairwise.tolist()
+
     def _query_policy(self, task_description: str) -> None:
         """Query the model and cache the planned action sequence."""
         images = np.concatenate(list(self._image_history)[::4], axis=1)  # downsample from 20 fps to 5
@@ -465,16 +526,23 @@ class VAMInference:
             "hybrid_select_action_dynamic",
             "decoder_metric_select",
             "consensus_medoid",
+            "decoder_action_token_medoid",
         }:
             candidates: list[tuple[np.ndarray, dict[str, float], dict[str, object], float]] = []
             candidate_scores: list[float] = []
             candidate_diagnostics_list: list[dict[str, object] | None] = []
+            candidate_token_trajectories: list[np.ndarray] = []
             for candidate_idx in range(self.regen_num_candidates):
+                candidate_seed = (
+                    self.candidate_seeds[candidate_idx]
+                    if self.candidate_seeds
+                    else base_seed + candidate_idx
+                )
                 actions_np, diagnostics, chunk_metrics, probability = self._sample_chunk(
                     input_vid=input_vid,
                     state_tensor=state_tensor,
                     task_description=task_description,
-                    sample_seed=base_seed + candidate_idx,
+                    sample_seed=candidate_seed,
                 )
                 chunk_metrics = dict(chunk_metrics)
                 chunk_metrics["query_latency_sec"] = float(time.perf_counter() - start_time)
@@ -494,6 +562,9 @@ class VAMInference:
                     chunk_metrics["consensus_continuity_weight"] = self.consensus_medoid_continuity_weight
                     chunk_metrics["consensus_smoothness_weight"] = self.consensus_medoid_smoothness_weight
                     chunk_metrics["consensus_gripper_switch_weight"] = self.consensus_medoid_gripper_switch_weight
+                elif self.regen_strategy == "decoder_action_token_medoid":
+                    candidate_token_trajectories.append(self._decoder_action_token_trajectory())
+                    chunk_metrics["decoder_action_token_seed"] = int(candidate_seed)
                 candidates.append((actions_np, diagnostics, chunk_metrics, probability))
                 candidate_diagnostics_list.append(diagnostics)
                 candidate_probs.append(probability)
@@ -519,6 +590,15 @@ class VAMInference:
                     chunk_metrics.update(detail)
                     chunk_metrics["consensus_pairwise_distance_matrix"] = pairwise_distances
                     chunk_metrics["consensus_selected_by"] = "minimum_cost"
+            elif self.regen_strategy == "decoder_action_token_medoid":
+                candidate_scores, pairwise_distances = self._decoder_action_token_medoid_costs(
+                    candidate_token_trajectories
+                )
+                selected_candidate_idx = int(np.argmin(candidate_scores))
+                for chunk_metrics, score in zip(candidate_chunk_metrics, candidate_scores):
+                    chunk_metrics["decoder_action_token_medoid_cost"] = float(score)
+                    chunk_metrics["decoder_action_token_pairwise_distance_matrix"] = pairwise_distances
+                    chunk_metrics["decoder_action_token_selected_by"] = "minimum_cost"
             elif self.regen_strategy == "decoder_metric_select":
                 if self.decoder_metric_select_name == DECODER_LINEAR_COMBO_V1_NAME:
                     candidate_scores, combo_details = decoder_linear_combo_v1_scores(
@@ -592,6 +672,7 @@ class VAMInference:
             "hybrid_select_action_dynamic",
             "decoder_metric_select",
             "consensus_medoid",
+            "decoder_action_token_medoid",
         }:
             self.last_query_was_regenerated = selected_candidate_idx > 0
         else:
@@ -1205,6 +1286,13 @@ def eval_vam_libero(
         action_min_execute_actions=action_min_execute_actions,
         action_max_execute_actions=action_max_execute_actions,
         seed=seed,
+        diagnostics_mode=(
+            "decoder_hidden" if regen_strategy == "decoder_action_token_medoid" else "default"
+        ),
+        decoder_capture_block_indices=(
+            [23] if regen_strategy == "decoder_action_token_medoid" else None
+        ),
+        replay_payload_mode="full",
     )
 
     benchmark_dict = benchmark.get_benchmark_dict()

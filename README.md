@@ -41,6 +41,7 @@ Cosmos-Predict2. Проект сохраняет upstream-код модели и
 |---|---|---|
 | Baseline MIMIC-Video | `eval/libero/run.py`, `video_action_model.py` | один sampled chunk на query |
 | Consensus medoid | `eval/libero/consensus_medoid.py` | `--vam-consensus-medoid-only --vam-consensus-num-candidates K` |
+| Decoder action-token medoid | Bridge wrapper, `eval/libero/run.py`, GR00T policy server | cosine medoid по final decoder action tokens |
 | Fixed candidate seeds | `video_action_model.py` | `MIMIC_VIDEO_CANDIDATE_SEEDS=2,996,997` |
 | Action/hidden rank fusion | `video_action_model.py` | `--vam-consensus-rank-fusion` |
 | Latent diagnostics | `video2world2action.py` и Bridge evaluator | `--vam-diagnostics-mode all --vam-save-diagnostics` |
@@ -68,6 +69,11 @@ selection.
 | SIMPLER-Bridge latent diagnostic subset | `scripts/eval/launch_mimic_simpler_bridge_latent_diagnostics_30_tmux.sh` |
 | INT-ACT 16-task baseline | `scripts/eval/launch_mimic_intact_object_ood_3seed_4gpu_tmux.sh` |
 | INT-ACT 8-task consensus with custom seeds | `scripts/eval/launch_mimic_intact_object_ood_consensus_seeds_2_996_997_gpu5_tmux.sh` |
+| INT-ACT 8-task GR00T baseline / consensus / decoder | `scripts/eval/launch_groot_n17_intact_object_ood_*.sh` |
+| LIBERO-Pro GR00T baseline / consensus | `scripts/eval/launch_groot_n17_libero_pro_spatial_*.sh` |
+| LIBERO-Plus GR00T paired run | `scripts/eval/launch_groot_n17_libero_plus_spatial_paired_gpu1_tmux.sh` |
+| LIBERO Spatial MIMIC decoder medoid | `scripts/eval/launch_mimic_libero_spatial_decoder_token_gpu0_tmux.sh` |
+| LIBERO Spatial GR00T decoder medoid pairs | `scripts/eval/launch_groot_n17_libero_spatial_decoder_gpu2_sequential_tmux.sh` |
 
 Все длинные launcher'ы создают `tmux`-сессию и печатают её имя вместе с
 путём к output directory. Они сохраняют `summary.json` и `summary.tsv` после
@@ -76,7 +82,7 @@ selection.
 
 ## Результаты и ограничения
 
-Актуальные компактные summaries, их протоколы и известные ограничения
+Актуальные компактные summaries, 95% Wilson CI, парные проверки, протоколы и известные ограничения
 собраны в [docs/RESULTS.md](docs/RESULTS.md). Не сравнивайте запуски с разными
 наборами задач, количеством rollout'ов или candidate seeds как прямые
 репликации друг друга.

@@ -183,3 +183,16 @@ docker build -t cosmos-policy docker
 ## A100 paired LIBERO-PLUS Object evaluation
 
 For the current baseline-versus-consensus experiment, follow [A100_LIBERO_PLUS_OBJECT_EVAL.md](A100_LIBERO_PLUS_OBJECT_EVAL.md). It documents checkpoint/assets downloads and starts tmux in strict baseline-first, consensus-only-second order with summary-only outputs. Use Ampere-or-newer hardware.
+
+## Current GR00T N1.7 evaluation additions
+
+The repository now contains separate policy servers and clients for
+SIMPLER-Bridge, the official 8-task INT-ACT Object OOD subset, LIBERO-Pro,
+LIBERO-Plus and standard LIBERO Spatial. Checkpoints and external benchmark
+trees remain local-only. Copy `scripts/eval/groot_n17_*`, the matching
+`collect_groot_n17_*` scripts, and the launchers together; they share output
+contracts documented in [EVALUATION.md](EVALUATION.md).
+
+Do not migrate `eval_outputs/**/logs`, rollout videos, downloaded checkpoints or
+the external benchmark checkouts through Git. Only compact summaries explicitly
+curated for a result snapshot should be committed.

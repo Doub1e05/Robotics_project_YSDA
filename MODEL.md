@@ -26,4 +26,21 @@ The config system is generally a [hydra](https://hydra.cc) setup but quite convo
 
 Most of the training config uses the python API to register individual config groups and full configs ("experiments") choosing values from each group. [configs/experiment/video2world.py](./model/cosmos_predict2/configs/experiment/video2world.py) registers config combinations to train video models and [configs/experiment/world2action.py](./model/cosmos_predict2/configs/experiment/world2action.py) registers config combinations to train action decoders given a frozen video model.
 
+## Inference-time candidate selectors in this fork
+
+The evaluation code can sample several action chunks for the same observation
+without retraining the checkpoint:
+
+- **action-space consensus medoid** selects the candidate with minimum mean
+  control-aware distance to the other decoded chunks;
+- **decoder action-token medoid** captures final World2Action decoder block 23,
+  removes observation tokens, compares time-aligned action-token trajectories by
+  cosine distance, and weights the first four executed tokens by `4`.
+
+For GR00T N1.7, the equivalent decoder selector is implemented as a policy-server
+wrapper around the final DiT action-token states. Fixed candidate seeds are
+reapplied at every policy query under a forked Torch RNG state. See
+[`docs/EVALUATION.md`](docs/EVALUATION.md) for launchers and
+[`docs/RESULTS.md`](docs/RESULTS.md) for complete-run confidence intervals.
+
 Video-Action dataloading loads its own hydra config from yaml files living in [configs/dataloading](./model/cosmos_predict2/configs/dataloading) instead. This dataloading config gets resolved as a standalone hydra config and is then inserted into the rest of the training config under the `data_config` group. Each `data_config` chooses a `dataset` specifying how to load and interpret the zarr data living on the disk, and a `policy_io` specifying the target fields that will end up in a training batch.

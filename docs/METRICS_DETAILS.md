@@ -202,6 +202,24 @@ Chunk CatBoost обучен на метке:
   - используйте `chunk_metrics.csv` и фильтр по `success`.
 - Хотите понять, почему select выбрал именно кандидата:
   - используйте `candidate_chunk_metrics.csv` и сравнивайте `is_selected=1` vs `0`.
+
+## 8. Decoder action-token medoid
+
+Для `regen_strategy=decoder_action_token_medoid` evaluator сохраняет hidden
+states final decoder block 23. Observation tokens отбрасываются; остаётся
+префикс action tokens длиной не больше `num_execute_actions`. Для каждой пары
+кандидатов считается cosine distance на одинаковых временных позициях, первые
+четыре позиции имеют вес `4`, остальные — `1`. Выбирается кандидат с минимальной
+средней дистанцией до остальных.
+
+Поля кандидата:
+
+- `decoder_action_token_seed`;
+- `decoder_action_token_medoid_cost`;
+- `decoder_action_token_pairwise_distance_matrix`;
+- `decoder_action_token_selected_by=minimum_cost`.
+
+95% CI в [RESULTS.md](RESULTS.md) считается не по этим метрикам, а по числу
+успешных эпизодов с Wilson score interval.
 - Хотите смотреть динамику внутри эпизода:
   - берите `episode_traces.jsonl` и раскладывайте `chunks[*].actions[*]`.
-

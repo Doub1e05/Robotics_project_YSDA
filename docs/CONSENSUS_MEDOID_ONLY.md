@@ -354,3 +354,13 @@ $$
 | Full consensus-medoid | 50 | 30/50 (**60%**) |
 
 Полного прогона consensus-only на всём LIBERO-PRO Spatial не было.
+
+## Action-space и decoder-token medoid — разные методы
+
+В актуальных таблицах `consensus medoid` означает medoid по уже декодированным
+action chunks. `decoder action-token medoid` сравнивает скрытые состояния final
+decoder block до проекции в действия. Для token-варианта используется cosine
+distance по time-aligned action tokens; первые четыре токена получают вес `4`.
+
+Оба метода используют `K=3`, но их результаты нельзя смешивать. Полная таблица
+завершённых запусков и 95% Wilson CI находится в [RESULTS.md](RESULTS.md).

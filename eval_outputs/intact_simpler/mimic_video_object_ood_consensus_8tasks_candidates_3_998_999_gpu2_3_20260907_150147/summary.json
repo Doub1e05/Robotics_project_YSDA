@@ -1,0 +1,109 @@
+{
+  "protocol": "MIMIC-Video bridge checkpoint; consensus-medoid-only; 8-task INT-ACT Object OOD subset; 24 episodes/task; candidate seeds are fixed per chunk",
+  "candidate_seeds": [
+    3,
+    998,
+    999
+  ],
+  "num_tasks": 8,
+  "episodes_per_task": 24,
+  "seeds": {
+    "0": {
+      "candidate_seeds": [
+        3,
+        998,
+        999
+      ],
+      "categories": {
+        "OOD Relation": {
+          "successes": 18,
+          "episodes": 96,
+          "sr": 0.1875
+        },
+        "OOD Source": {
+          "successes": 19,
+          "episodes": 48,
+          "sr": 0.3958333333333333
+        },
+        "OOD Target": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        },
+        "OOD Source+Target": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        }
+      },
+      "tasks": {
+        "widowx_cube_on_plate_clean": {
+          "successes": 10,
+          "episodes": 24,
+          "sr": 0.4166666666666667,
+          "category": "OOD Relation",
+          "environment": "PutGreenCubeOnPlateInScene-v2"
+        },
+        "widowx_small_plate_on_green_cube_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664,
+          "category": "OOD Relation",
+          "environment": "PutSmallPlateOnGreenCubeInScene-v2"
+        },
+        "widowx_carrot_on_sponge_clean": {
+          "successes": 4,
+          "episodes": 24,
+          "sr": 0.16666666666666666,
+          "category": "OOD Relation",
+          "environment": "PutCarrotOnSpongeLargerInScene-v2"
+        },
+        "widowx_eggplant_on_sponge_clean": {
+          "successes": 3,
+          "episodes": 24,
+          "sr": 0.125,
+          "category": "OOD Relation",
+          "environment": "PutEggplantOnSpongeLargerInScene-v2"
+        },
+        "widowx_coke_can_on_plate_clean": {
+          "successes": 9,
+          "episodes": 24,
+          "sr": 0.375,
+          "category": "OOD Source",
+          "environment": "PutCokeCanOnPlateInScene-v2"
+        },
+        "widowx_pepsi_on_plate_clean": {
+          "successes": 10,
+          "episodes": 24,
+          "sr": 0.4166666666666667,
+          "category": "OOD Source",
+          "environment": "PutPepsiCanOnPlateInScene-v2"
+        },
+        "widowx_carrot_on_keyboard_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664,
+          "category": "OOD Target",
+          "environment": "PutCarrotOnKeyboardInScene-v2"
+        },
+        "widowx_coke_can_on_keyboard_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664,
+          "category": "OOD Source+Target",
+          "environment": "PutCokeCanOnKeyboardInScene-v2"
+        }
+      },
+      "overall": {
+        "successes": 39,
+        "episodes": 192,
+        "sr": 0.203125
+      }
+    }
+  },
+  "overall": {
+    "successes": 39,
+    "episodes": 192,
+    "sr": 0.203125
+  }
+}

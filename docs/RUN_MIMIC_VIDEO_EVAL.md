@@ -145,7 +145,19 @@ export PYTHONPATH="/home/motovilovil/Robotics/robotics_project/mimic-video/model
   --task_suite_name libero_spatial --num_trials_per_task 10 \
   --max_eval_episodes 1 --max_control_steps 120 \
   --eval_rank 0 --eval_world_size 1 \
-  --t5_embeddings_path /home/motovilovil/.cache/huggingface/hub/models--nvidia--Cosmos-Policy-LIBERO-Predict2-2B/snapshots/cb689ec0e3347c13667d70a78a3447388f5c3bb8/libero_t5_embeddings.pkl \
+  --t5_embeddings_path /home/motovilovil/Robotics_project_YSDA/model/checkpoints/libero_t5_embeddings.pkl \
   --regen_strategy none \
   --no-use-cuda-graphs
 ```
+
+## Decoder action-token medoid
+
+Полный обычный LIBERO Spatial прогон на одной GPU:
+
+```bash
+bash scripts/eval/launch_mimic_libero_spatial_decoder_token_gpu0_tmux.sh
+```
+
+По умолчанию используются fixed candidate seeds `[0,1,2]`, `K=3`, block 23 и
+100 эпизодов. Нужные checkpoint-файлы и команда выборочной загрузки перечислены
+в [REPRODUCIBILITY.md](REPRODUCIBILITY.md).

@@ -1,0 +1,343 @@
+{
+  "protocol": "MIMIC-Video Bridge checkpoint; stop_video_denoising_step=0; INT-ACT Object Diversity; 16 tasks x 24 episodes x 3 seeds",
+  "seeds": {
+    "0": {
+      "categories": {
+        "OOD Source": {
+          "successes": 47,
+          "episodes": 96,
+          "sr": 0.4895833333333333
+        },
+        "OOD Target": {
+          "successes": 19,
+          "episodes": 96,
+          "sr": 0.19791666666666666
+        },
+        "OOD Source+Target": {
+          "successes": 35,
+          "episodes": 96,
+          "sr": 0.3645833333333333
+        },
+        "OOD Relation": {
+          "successes": 36,
+          "episodes": 96,
+          "sr": 0.375
+        }
+      },
+      "overall": {
+        "successes": 137,
+        "episodes": 384,
+        "sr": 0.3567708333333333
+      },
+      "tasks": {
+        "widowx_coke_can_on_plate_clean": {
+          "successes": 12,
+          "episodes": 24,
+          "sr": 0.5
+        },
+        "widowx_pepsi_on_plate_clean": {
+          "successes": 13,
+          "episodes": 24,
+          "sr": 0.5416666666666666
+        },
+        "widowx_orange_juice_on_plate_clean": {
+          "successes": 8,
+          "episodes": 24,
+          "sr": 0.3333333333333333
+        },
+        "widowx_nut_on_plate_clean": {
+          "successes": 14,
+          "episodes": 24,
+          "sr": 0.5833333333333334
+        },
+        "widowx_carrot_on_keyboard_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_eggplant_on_keyboard_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_carrot_on_ramekin_clean": {
+          "successes": 6,
+          "episodes": 24,
+          "sr": 0.25
+        },
+        "widowx_carrot_on_wheel_clean": {
+          "successes": 3,
+          "episodes": 24,
+          "sr": 0.125
+        },
+        "widowx_coke_can_on_keyboard_clean": {
+          "successes": 7,
+          "episodes": 24,
+          "sr": 0.2916666666666667
+        },
+        "widowx_coke_can_on_ramekin_clean": {
+          "successes": 12,
+          "episodes": 24,
+          "sr": 0.5
+        },
+        "widowx_coke_can_on_wheel_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_nut_on_wheel_clean": {
+          "successes": 11,
+          "episodes": 24,
+          "sr": 0.4583333333333333
+        },
+        "widowx_cube_on_plate_clean": {
+          "successes": 17,
+          "episodes": 24,
+          "sr": 0.7083333333333334
+        },
+        "widowx_small_plate_on_green_cube_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        },
+        "widowx_carrot_on_sponge_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_eggplant_on_sponge_clean": {
+          "successes": 13,
+          "episodes": 24,
+          "sr": 0.5416666666666666
+        }
+      }
+    },
+    "1": {
+      "categories": {
+        "OOD Source": {
+          "successes": 24,
+          "episodes": 96,
+          "sr": 0.25
+        },
+        "OOD Target": {
+          "successes": 8,
+          "episodes": 96,
+          "sr": 0.08333333333333333
+        },
+        "OOD Source+Target": {
+          "successes": 14,
+          "episodes": 96,
+          "sr": 0.14583333333333334
+        },
+        "OOD Relation": {
+          "successes": 20,
+          "episodes": 96,
+          "sr": 0.20833333333333334
+        }
+      },
+      "overall": {
+        "successes": 66,
+        "episodes": 384,
+        "sr": 0.171875
+      },
+      "tasks": {
+        "widowx_coke_can_on_plate_clean": {
+          "successes": 4,
+          "episodes": 24,
+          "sr": 0.16666666666666666
+        },
+        "widowx_pepsi_on_plate_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_orange_juice_on_plate_clean": {
+          "successes": 4,
+          "episodes": 24,
+          "sr": 0.16666666666666666
+        },
+        "widowx_nut_on_plate_clean": {
+          "successes": 11,
+          "episodes": 24,
+          "sr": 0.4583333333333333
+        },
+        "widowx_carrot_on_keyboard_clean": {
+          "successes": 2,
+          "episodes": 24,
+          "sr": 0.08333333333333333
+        },
+        "widowx_eggplant_on_keyboard_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_carrot_on_ramekin_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_carrot_on_wheel_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        },
+        "widowx_coke_can_on_keyboard_clean": {
+          "successes": 2,
+          "episodes": 24,
+          "sr": 0.08333333333333333
+        },
+        "widowx_coke_can_on_ramekin_clean": {
+          "successes": 2,
+          "episodes": 24,
+          "sr": 0.08333333333333333
+        },
+        "widowx_coke_can_on_wheel_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        },
+        "widowx_nut_on_wheel_clean": {
+          "successes": 9,
+          "episodes": 24,
+          "sr": 0.375
+        },
+        "widowx_cube_on_plate_clean": {
+          "successes": 9,
+          "episodes": 24,
+          "sr": 0.375
+        },
+        "widowx_small_plate_on_green_cube_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_carrot_on_sponge_clean": {
+          "successes": 7,
+          "episodes": 24,
+          "sr": 0.2916666666666667
+        },
+        "widowx_eggplant_on_sponge_clean": {
+          "successes": 4,
+          "episodes": 24,
+          "sr": 0.16666666666666666
+        }
+      }
+    },
+    "2": {
+      "categories": {
+        "OOD Source": {
+          "successes": 6,
+          "episodes": 96,
+          "sr": 0.0625
+        },
+        "OOD Target": {
+          "successes": 0,
+          "episodes": 96,
+          "sr": 0.0
+        },
+        "OOD Source+Target": {
+          "successes": 0,
+          "episodes": 96,
+          "sr": 0.0
+        },
+        "OOD Relation": {
+          "successes": 7,
+          "episodes": 96,
+          "sr": 0.07291666666666667
+        }
+      },
+      "overall": {
+        "successes": 13,
+        "episodes": 384,
+        "sr": 0.033854166666666664
+      },
+      "tasks": {
+        "widowx_coke_can_on_plate_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        },
+        "widowx_pepsi_on_plate_clean": {
+          "successes": 1,
+          "episodes": 24,
+          "sr": 0.041666666666666664
+        },
+        "widowx_orange_juice_on_plate_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_nut_on_plate_clean": {
+          "successes": 4,
+          "episodes": 24,
+          "sr": 0.16666666666666666
+        },
+        "widowx_carrot_on_keyboard_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_eggplant_on_keyboard_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_carrot_on_ramekin_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_carrot_on_wheel_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_coke_can_on_keyboard_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_coke_can_on_ramekin_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_coke_can_on_wheel_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_nut_on_wheel_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_cube_on_plate_clean": {
+          "successes": 5,
+          "episodes": 24,
+          "sr": 0.20833333333333334
+        },
+        "widowx_small_plate_on_green_cube_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_carrot_on_sponge_clean": {
+          "successes": 0,
+          "episodes": 24,
+          "sr": 0.0
+        },
+        "widowx_eggplant_on_sponge_clean": {
+          "successes": 2,
+          "episodes": 24,
+          "sr": 0.08333333333333333
+        }
+      }
+    }
+  },
+  "overall": {
+    "successes": 216,
+    "episodes": 1152,
+    "sr": 0.1875
+  }
+}

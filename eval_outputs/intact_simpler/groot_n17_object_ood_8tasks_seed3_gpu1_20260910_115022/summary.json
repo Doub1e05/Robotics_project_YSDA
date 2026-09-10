@@ -1,0 +1,86 @@
+{
+  "model": "nvidia/GR00T-N1.7-SimplerEnv-Bridge",
+  "protocol": "INT-ACT Object OOD official 8-task subset; 24 episodes/task",
+  "action_seed": 3,
+  "environment_seed_start": 0,
+  "execution_horizon": 4,
+  "num_tasks": 8,
+  "episodes_per_task": 24,
+  "categories": {
+    "OOD Relation": {
+      "successes": 36,
+      "episodes": 96,
+      "success_rate": 0.375
+    },
+    "OOD Source": {
+      "successes": 13,
+      "episodes": 48,
+      "success_rate": 0.2708333333333333
+    },
+    "OOD Target": {
+      "successes": 17,
+      "episodes": 24,
+      "success_rate": 0.7083333333333334
+    },
+    "OOD Source+Target": {
+      "successes": 10,
+      "episodes": 24,
+      "success_rate": 0.4166666666666667
+    }
+  },
+  "tasks": {
+    "widowx_cube_on_plate_clean": {
+      "category": "OOD Relation",
+      "successes": 9,
+      "episodes": 24,
+      "success_rate": 0.375
+    },
+    "widowx_small_plate_on_green_cube_clean": {
+      "category": "OOD Relation",
+      "successes": 0,
+      "episodes": 24,
+      "success_rate": 0.0
+    },
+    "widowx_carrot_on_sponge_clean": {
+      "category": "OOD Relation",
+      "successes": 7,
+      "episodes": 24,
+      "success_rate": 0.2916666666666667
+    },
+    "widowx_eggplant_on_sponge_clean": {
+      "category": "OOD Relation",
+      "successes": 20,
+      "episodes": 24,
+      "success_rate": 0.8333333333333334
+    },
+    "widowx_coke_can_on_plate_clean": {
+      "category": "OOD Source",
+      "successes": 6,
+      "episodes": 24,
+      "success_rate": 0.25
+    },
+    "widowx_pepsi_on_plate_clean": {
+      "category": "OOD Source",
+      "successes": 7,
+      "episodes": 24,
+      "success_rate": 0.2916666666666667
+    },
+    "widowx_carrot_on_keyboard_clean": {
+      "category": "OOD Target",
+      "successes": 17,
+      "episodes": 24,
+      "success_rate": 0.7083333333333334
+    },
+    "widowx_coke_can_on_keyboard_clean": {
+      "category": "OOD Source+Target",
+      "successes": 10,
+      "episodes": 24,
+      "success_rate": 0.4166666666666667
+    }
+  },
+  "overall": {
+    "successes": 76,
+    "episodes": 192,
+    "success_rate": 0.3958333333333333
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "protocol": "ftcosmos; stop_video_denoising_step=0; 4 tasks x 24 fixed episode variants",
+  "expected_rollouts": 96,
+  "completed_rollouts": 96,
+  "successes": 13,
+  "success_rate": 0.13541666666666666
+}
